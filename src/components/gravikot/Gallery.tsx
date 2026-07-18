@@ -165,10 +165,13 @@ function Lightbox({
   const [idx, setIdx] = useState(startIndex);
   const [zoom, setZoom] = useState(1);
   const [dragY, setDragY] = useState(0);
+  const [pan, setPan] = useState({ x: 0, y: 0 });
   const containerRef = useRef<HTMLDivElement>(null);
   const touchStartX = useRef<number | null>(null);
   const touchStartY = useRef<number | null>(null);
   const swipeAxis = useRef<"x" | "y" | null>(null);
+  const isPanning = useRef(false);
+  const panStart = useRef({ x: 0, y: 0, panX: 0, panY: 0 });
 
   const go = useCallback((delta: number) => {
     setZoom(1);
@@ -189,17 +192,34 @@ function Lightbox({
     touchStartX.current = e.touches[0].clientX;
     touchStartY.current = e.touches[0].clientY;
     swipeAxis.current = null;
+    if (zoom > 1) {
+      isPanning.current = true;
+      panStart.current = { x: e.touches[0].clientX, y: e.touches[0].clientY, panX: pan.x, panY: pan.y };
+    }
   };
   const onTouchMove = (e: React.TouchEvent) => {
-    if (touchStartX.current == null || touchStartY.current == null || zoom !== 1) return;
+    if (touchStartX.current == null || touchStartY.current == null) return;
     const dx = e.touches[0].clientX - touchStartX.current;
     const dy = e.touches[0].clientY - touchStartY.current;
+    // Panning when zoomed
+    if (zoom > 1 && isPanning.current) {
+      setPan({
+        x: panStart.current.panX + (e.touches[0].clientX - panStart.current.x),
+        y: panStart.current.panY + (e.touches[0].clientY - panStart.current.y),
+      });
+      return;
+    }
+    if (zoom !== 1) return;
     if (swipeAxis.current == null && (Math.abs(dx) > 8 || Math.abs(dy) > 8)) {
       swipeAxis.current = Math.abs(dy) > Math.abs(dx) ? "y" : "x";
     }
     if (swipeAxis.current === "y" && dy > 0) setDragY(dy);
   };
   const onTouchEnd = (e: React.TouchEvent) => {
+    if (zoom > 1 && isPanning.current) {
+      isPanning.current = false;
+      touchStartX.current = null; touchStartY.current = null; return;
+    }
     if (touchStartX.current == null || touchStartY.current == null || zoom !== 1) {
       touchStartX.current = null; touchStartY.current = null; swipeAxis.current = null; setDragY(0); return;
     }
@@ -213,6 +233,39 @@ function Lightbox({
     }
     touchStartX.current = null; touchStartY.current = null; swipeAxis.current = null;
   };
+
+  // Mouse panning when zoomed
+  const handleMouseDown = (e: React.MouseEvent) => {
+    if (zoom <= 1) return;
+    e.preventDefault();
+    e.stopPropagation();
+    isPanning.current = true;
+    panStart.current = { x: e.clientX, y: e.clientY, panX: pan.x, panY: pan.y };
+    const handleMove = (ev: MouseEvent) => {
+      if (!isPanning.current) return;
+      setPan({
+        x: panStart.current.panX + (ev.clientX - panStart.current.x),
+        y: panStart.current.panY + (ev.clientY - panStart.current.y),
+      });
+    };
+    const handleUp = () => {
+      isPanning.current = false;
+      window.removeEventListener("mousemove", handleMove);
+      window.removeEventListener("mouseup", handleUp);
+    };
+    window.addEventListener("mousemove", handleMove);
+    window.addEventListener("mouseup", handleUp);
+  };
+
+  // Reset pan when zoom changes to 1
+  useEffect(() => {
+    if (zoom <= 1) setPan({ x: 0, y: 0 });
+  }, [zoom]);
+
+  // Reset pan when image changes
+  useEffect(() => {
+    setPan({ x: 0, y: 0 });
+  }, [idx]);
 
   const hasMany = images.length > 1;
 
@@ -264,8 +317,9 @@ function Lightbox({
             <div key={i} className="absolute inset-0 flex items-center justify-center transition-opacity duration-500 ease-in-out overflow-hidden"
               style={{ opacity: active ? 1 : 0, pointerEvents: active ? "auto" : "none" }}>
               <img src={src} alt={`${title} ${i + 1}`} className="max-w-full max-h-full object-contain select-none"
-                onClick={(e) => { e.stopPropagation(); setZoom((z) => (z === 1 ? 2 : 1)); }}
-                style={{ transform: `scale(${active ? zoom : 1})`, transition: "transform 300ms ease", cursor: zoom > 1 ? "grab" : "zoom-in" }}
+                onClick={(e) => { e.stopPropagation(); if (zoom <= 1) setZoom((z) => (z === 1 ? 2 : 1)); }}
+                onMouseDown={handleMouseDown}
+                style={{ transform: `scale(${active ? zoom : 1}) translate(${active && zoom > 1 ? `${pan.x / zoom}px` : "0px"}, ${active && zoom > 1 ? `${pan.y / zoom}px` : "0px"})`, transition: isPanning.current ? "none" : "transform 300ms ease", cursor: zoom > 1 ? (isPanning.current ? "grabbing" : "grab") : "zoom-in" }}
                 draggable={false} />
             </div>
           );
