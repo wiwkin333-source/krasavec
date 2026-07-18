@@ -1,0 +1,523 @@
+[info] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[log] [HMR] connected
+[info] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[log] [HMR] connected
+[info] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[log] [HMR] connected
+[log] [Fast Refresh] rebuilding
+[log] [Fast Refresh] done in 224ms
+[log] [Fast Refresh] rebuilding
+[log] [Fast Refresh] done in 215ms
+[log] [Fast Refresh] rebuilding
+[log] [Fast Refresh] done in 214ms
+[info] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[log] [HMR] connected
+[error] A tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+%s%s https://react.dev/link/hydration-mismatch 
+
+  ...
+    <RenderFromTemplateContext>
+      <ScrollAndFocusHandler segmentPath={[...]}>
+        <InnerScrollAndFocusHandler segmentPath={[...]} focusAndScrollRef={{apply:false, ...}}>
+          <ErrorBoundary errorComponent={undefined} errorStyles={undefined} errorScripts={undefined}>
+            <LoadingBoundary name="/" loading={null}>
+              <HTTPAccessFallbackBoundary notFound={<SegmentViewNode>} forbidden={undefined} unauthorized={undefined}>
+                <HTTPAccessFallbackErrorBoundary pathname="/" notFound={<SegmentViewNode>} forbidden={undefined} ...>
+                  <RedirectBoundary>
+                    <RedirectErrorBoundary router={{...}}>
+                      <InnerLayoutRouter url="/?slow-pre..." tree={[...]} params={{}} cacheNode={{rsc:<Fragment>, ...}} ...>
+                        <SegmentViewNode type="page" pagePath="page.tsx">
+                          <SegmentTrieNode>
+                          <ClientPageRoot Component={function Home} serverProvidedParams={{...}}>
+                            <Home params={Promise} searchParams={Promise}>
+                              <StarrySky>
+                              <main
+                                className="min-h-screen relative"
+                                style={{
++                                 background: "transparent"
++                                 opacity: 1
+-                                 opacity: "0"
++                                 transform: "translateY(0)"
+-                                 transform: "translateY(8px)"
++                                 transition: "opacity 800ms cubic-bezier(0.4, 0, 0.2, 1), transform 800ms cubic-bezie..."
+-                                 background-image: "initial"
+-                                 background-position-x: "initial"
+-                                 background-position-y: "initial"
+-                                 background-size: "initial"
+-                                 background-repeat: "initial"
+-                                 background-attachment: "initial"
+-                                 background-origin: "initial"
+-                                 background-clip: "initial"
+-                                 background-color: "transparent"
+-                                 transition-behavior: "normal, normal"
+-                                 transition-duration: "800ms, 800ms"
+-                                 transition-timing-function: "cubic-bezier(0.4, 0, 0.2, 1), cubic-bezier(0.4, 0, 0.2, 1)"
+-                                 transition-delay: "0s, 0s"
+-                                 transition-property: "opacity, transform"
+                                }}
+                              >
+                                <section>
+                                <Gallery>
+                                <section>
+                                ...
+                                  <CatWizardButton onClick={function onOrder}>
+                                    <button onClick={function onOrder} aria-label="Запустить ..." ...>
+                                      <span aria-hidden={true} className="absolute i...">
+                                        <span
+                                          className="absolute rounded-full cat-firefly"
+                                          style={{
++                                           left: "85.2159534856442%"
+-                                           left: "68.6888%"
++                                           top: "60.616350338454396%"
+-                                           top: "5.81627%"
++                                           width: 4.475185174613607
+-                                           width: "2.96656px"
++                                           height: 4.475185174613607
+-                                           height: "2.96656px"
++                                           background: "#29e3ff"
++                                           boxShadow: "0 0 13.42555552384082px #29e3ff"
++                                           animationDelay: "3.6678626450345893s"
++                                           animationDuration: "4.29838043707373s"
+-                                           background-image: "initial"
+-                                           background-position-x: "initial"
+-                                           background-position-y: "initial"
+-                                           background-size: "initial"
+-                                           background-repeat: "initial"
+-                                           background-attachment: "initial"
+-                                           background-origin: "initial"
+-                                           background-clip: "initial"
+-                                           background-color: "rgb(41, 227, 255)"
+-                                           box-shadow: "rgb(41, 227, 255) 0px 0px 8.89969px"
+-                                           animation-delay: "3.88232s"
+-                                           animation-duration: "5.59346s"
+                                          }}
+                                        >
+                                        <span
+                                          className="absolute rounded-full cat-firefly"
+                                          style={{
++                                           left: "62.693406870321546%"
+-                                           left: "66.5182%"
++                                           top: "67.39170670201213%"
+-                                           top: "12.7363%"
++                                           width: 4.959307888366097
+-                                           width: "4.84921px"
++                                           height: 4.959307888366097
+-                                           height: "4.84921px"
++                                           background: "#8b5cf6"
++                                           boxShadow: "0 0 14.87792366509829px #8b5cf6"
++                                           animationDelay: "0.7652213597565201s"
++                                           animationDuration: "5.700933413263403s"
+-                                           background-image: "initial"
+-                                           background-position-x: "initial"
+-                                           background-position-y: "initial"
+-                                           background-size: "initial"
+-                                           background-repeat: "initial"
+-                                           background-attachment: "initial"
+-                                           background-origin: "initial"
+-                                           background-clip: "initial"
+-                                           background-color: "rgb(139, 92, 246)"
+-                                           box-shadow: "rgb(139, 92, 246) 0px 0px 14.5476px"
+-                                           animation-delay: "1.95051s"
+-                                           animation-duration: "6.30993s"
+                                          }}
+                                        >
+                                        <span
+                                          className="absolute rounded-full cat-firefly"
+                                          style={{
++                                           left: "47.08061219908078%"
+-                                           left: "43.5362%"
++                                           top: "87.46718282972445%"
+-                                           top: "41.7362%"
++                                           width: 2.9204173083354945
+-                                           width: "2.61032px"
++                                           height: 2.9204173083354945
+-                                           height: "2.61032px"
++                                           background: "#ff2bd6"
++                                           boxShadow: "0 0 8.761251925006484px #ff2bd6"
++                                           animationDelay: "1.6092854275122073s"
++                                           animationDuration: "5.475506632178881s"
+-                                           background-image: "initial"
+-                                           background-position-x: "initial"
+-                                           background-position-y: "initial"
+-                                           background-size: "initial"
+-                                           background-repeat: "initial"
+-                                           background-attachment: "initial"
+-                                           background-origin: "initial"
+-                                           background-clip: "initial"
+-                                           background-color: "rgb(255, 43, 214)"
+-                                           box-shadow: "rgb(255, 43, 214) 0px 0px 7.83095px"
+-                                           animation-delay: "2.73123s"
+-                                           animation-duration: "4.8327s"
+                                          }}
+                                        >
+                                        <span
+                                          className="absolute rounded-full cat-firefly"
+                                          style={{
++                                           left: "37.45811140757641%"
+-                                           left: "88.7813%"
++                                           top: "48.58830129558683%"
+-                                           top: "48.5613%"
++                                           width: 4.678276056741288
+-                                           width: "2.36874px"
++                                           height: 4.678276056741288
+-                                           height: "2.36874px"
++                                           background: "#29e3ff"
++                                           boxShadow: "0 0 14.034828170223864px #29e3ff"
++                                           animationDelay: "0.9366656566601175s"
++                                           animationDuration: "6.512308977542467s"
+-                                           background-image: "initial"
+-                                           background-position-x: "initial"
+-                                           background-position-y: "initial"
+-                                           background-size: "initial"
+-                                           background-repeat: "initial"
+-                                           background-attachment: "initial"
+-                                           background-origin: "initial"
+-                                           background-clip: "initial"
+-                                           background-color: "rgb(41, 227, 255)"
+-                                           box-shadow: "rgb(41, 227, 255) 0px 0px 7.10623px"
+-                                           animation-delay: "2.50502s"
+-                                           animation-duration: "6.14321s"
+                                          }}
+                                        >
+                                        <span
+                                          className="absolute rounded-full cat-firefly"
+                                          style={{
++                                           left: "31.1557130199137%"
+-                                           left: "47.6827%"
++                                           top: "1.8819615541251%"
+-                                           top: "54.0148%"
++                                           width: 4.862346276759615
+-                                           width: "2.61191px"
++                                           height: 4.862346276759615
+-                                           height: "2.61191px"
++                                           background: "#8b5cf6"
++                                           boxShadow: "0 0 14.587038830278845px #8b5cf6"
++                                           animationDelay: "0.13552348771531797s"
++                                           animationDuration: "5.5371099271559245s"
+-                                           background-image: "initial"
+-                                           background-position-x: "initial"
+-                                           background-position-y: "initial"
+-                                           background-size: "initial"
+-                                           background-repeat: "initial"
+-                                           background-attachment: "initial"
+-                                           background-origin: "initial"
+-                                           background-clip: "initial"
+-                                           background-color: "rgb(139, 92, 246)"
+-                                           box-shadow: "rgb(139, 92, 246) 0px 0px 7.83572px"
+-                                           animation-delay: "1.77898s"
+-                                           animation-duration: "4.0029s"
+                                          }}
+                                        >
+                                        <span
+                                          className="absolute rounded-full cat-firefly"
+                                          style={{
++                                           left: "10.328094204403836%"
+-                                           left: "87.2286%"
++                                           top: "54.271089433426035%"
+-                                           top: "77.721%"
++                                           width: 2.322912249442485
+-                                           width: "3.96678px"
++                                           height: 2.322912249442485
+-                                           height: "3.96678px"
++                                           background: "#ff2bd6"
++                                           boxShadow: "0 0 6.968736748327455px #ff2bd6"
++                                           animationDelay: "3.9794127110673685s"
++                                           animationDuration: "5.106628053283645s"
+-                                           background-image: "initial"
+-                                           background-position-x: "initial"
+-                                           background-position-y: "initial"
+-                                           background-size: "initial"
+-                                           background-repeat: "initial"
+-                                           background-attachment: "initial"
+-                                           background-origin: "initial"
+-                                           background-clip: "initial"
+-                                           background-color: "rgb(255, 43, 214)"
+-                                           box-shadow: "rgb(255, 43, 214) 0px 0px 11.9003px"
+-                                           animation-delay: "0.69489s"
+-                                           animation-duration: "3.07033s"
+                                          }}
+                                        >
+                                        <span
+                                          className="absolute rounded-full cat-firefly"
+                                          style={{
++                                           left: "81.59358552782517%"
+-                                           left: "82.4499%"
++                                           top: "42.18835072139049%"
+-                                           top: "73.9469%"
++                                           width: 3.706130517805462
+-                                           width: "2.23978px"
++                                           height: 3.706130517805462
+-                                           height: "2.23978px"
++                                           background: "#29e3ff"
++                                           boxShadow: "0 0 11.118391553416386px #29e3ff"
++                                           animationDelay: "2.251367195429279s"
++                                           animationDuration: "6.612828818470758s"
+-                                           background-image: "initial"
+-                                           background-position-x: "initial"
+-                                           background-position-y: "initial"
+-                                           background-size: "initial"
+-                                           background-repeat: "initial"
+-                                           background-attachment: "initial"
+-                                           background-origin: "initial"
+-                                           background-clip: "initial"
+-                                           background-color: "rgb(41, 227, 255)"
+-                                           box-shadow: "rgb(41, 227, 255) 0px 0px 6.71935px"
+-                                           animation-delay: "2.03049s"
+-                                           animation-duration: "3.477s"
+                                          }}
+                                        >
+                                        <span
+                                          className="absolute rounded-full cat-firefly"
+                                          style={{
++                                           left: "59.183559371446556%"
+-                                           left: "82.6435%"
++                                           top: "44.49254448816191%"
+-                                           top: "15.6476%"
++                                           width: 2.776345148071735
+-                                           width: "2.79932px"
++                                           height: 2.776345148071735
+-                                           height: "2.79932px"
++                                           background: "#8b5cf6"
++                                           boxShadow: "0 0 8.329035444215204px #8b5cf6"
++                                           animationDelay: "2.6026470956866605s"
++                                           animationDuration: "4.3936256333091s"
+-                                           background-image: "initial"
+-                                           background-position-x: "initial"
+-                                           background-position-y: "initial"
+-                                           background-size: "initial"
+-                                           background-repeat: "initial"
+-                                           background-attachment: "initial"
+-                                           background-origin: "initial"
+-                                           background-clip: "initial"
+-                                           background-color: "rgb(139, 92, 246)"
+-                                           box-shadow: "rgb(139, 92, 246) 0px 0px 8.39795px"
+-                                           animation-delay: "3.3822s"
+-                                           animation-duration: "5.54058s"
+                                          }}
+                                        >
+                                        <span
+                                          className="absolute rounded-full cat-firefly"
+                                          style={{
++                                           left: "63.20846688441068%"
+-                                           left: "27.2586%"
++                                           top: "74.75708716417535%"
+-                                           top: "14.7267%"
++                                           width: 2.1168495670389476
+-                                           width: "2.96879px"
++                                           height: 2.1168495670389476
+-                                           height: "2.96879px"
++                                           background: "#ff2bd6"
++                                           boxShadow: "0 0 6.350548701116843px #ff2bd6"
++                                           animationDelay: "2.501041277622003s"
++                                           animationDuration: "6.536865751465346s"
+-                                           background-image: "initial"
+-                                           background-position-x: "initial"
+-                                           background-position-y: "initial"
+-                                           background-size: "initial"
+-                                           background-repeat: "initial"
+-                                           background-attachment: "initial"
+-                                           background-origin: "initial"
+-                                           background-clip: "initial"
+-                                           background-color: "rgb(255, 43, 214)"
+-                                           box-shadow: "rgb(255, 43, 214) 0px 0px 8.90636px"
+-                                           animation-delay: "1.1558s"
+-                                           animation-duration: "3.12048s"
+                                          }}
+                                        >
+                                        <span
+                                          className="absolute rounded-full cat-firefly"
+                                          style={{
++                                           left: "99.21750297875792%"
+-                                           left: "60.4867%"
++                                           top: "88.23311444125011%"
+-                                           top: "57.3539%"
++                                           width: 2.4306064416526567
+-                                           width: "3.36292px"
++                                           height: 2.4306064416526567
+-                                           height: "3.36292px"
++                                           background: "#29e3ff"
++                                           boxShadow: "0 0 7.29181932495797px #29e3ff"
++                                           animationDelay: "0.9407492240302422s"
++                                           animationDuration: "4.282601044503574s"
+-                                           background-image: "initial"
+-                                           background-position-x: "initial"
+-                                           background-position-y: "initial"
+-                                           background-size: "initial"
+-                                           background-repeat: "initial"
+-                                           background-attachment: "initial"
+-                                           background-origin: "initial"
+-                                           background-clip: "initial"
+-                                           background-color: "rgb(41, 227, 255)"
+-                                           box-shadow: "rgb(41, 227, 255) 0px 0px 10.0888px"
+-                                           animation-delay: "2.58361s"
+-                                           animation-duration: "4.2992s"
+                                          }}
+                                        >
+                                        <span
+                                          className="absolute rounded-full cat-firefly"
+                                          style={{
++                                           left: "97.32189192632231%"
+-                                           left: "54.7592%"
++                                           top: "99.5276753964033%"
+-                                           top: "28.491%"
++                                           width: 3.928256988690203
+-                                           width: "3.46665px"
++                                           height: 3.928256988690203
+-                                           height: "3.46665px"
++                                           background: "#8b5cf6"
++                                           boxShadow: "0 0 11.784770966070608px #8b5cf6"
++                                           animationDelay: "0.011006798760884617s"
++                                           animationDuration: "4.926447609520894s"
+-                                           background-image: "initial"
+-                                           background-position-x: "initial"
+-                                           background-position-y: "initial"
+-                                           background-size: "initial"
+-                                           background-repeat: "initial"
+-                                           background-attachment: "initial"
+-                                           background-origin: "initial"
+-                                           background-clip: "initial"
+-                                           background-color: "rgb(139, 92, 246)"
+-                                           box-shadow: "rgb(139, 92, 246) 0px 0px 10.3999px"
+-                                           animation-delay: "3.37758s"
+-                                           animation-duration: "3.48507s"
+                                          }}
+                                        >
+                                        <span
+                                          className="absolute rounded-full cat-firefly"
+                                          style={{
++                                           left: "47.72865668473008%"
+-                                           left: "9.30152%"
++                                           top: "67.26316197908278%"
+-                                           top: "47.9871%"
++                                           width: 4.672219355187415
+-                                           width: "4.84313px"
++                                           height: 4.672219355187415
+-                                           height: "4.84313px"
++                                           background: "#ff2bd6"
++                                           boxShadow: "0 0 14.016658065562243px #ff2bd6"
++                                           animationDelay: "0.3871667168027497s"
++                                           animationDuration: "4.7650431782873905s"
+-                                           background-image: "initial"
+-                                           background-position-x: "initial"
+-                                           background-position-y: "initial"
+-                                           background-size: "initial"
+-                                           background-repeat: "initial"
+-                                           background-attachment: "initial"
+-                                           background-origin: "initial"
+-                                           background-clip: "initial"
+-                                           background-color: "rgb(255, 43, 214)"
+-                                           box-shadow: "rgb(255, 43, 214) 0px 0px 14.5294px"
+-                                           animation-delay: "0.284456s"
+-                                           animation-duration: "3.33751s"
+                                          }}
+                                        >
+                                        <span
+                                          className="absolute rounded-full cat-firefly"
+                                          style={{
++                                           left: "33.70588340622619%"
+-                                           left: "45.0194%"
++                                           top: "37.2215485378121%"
+-                                           top: "84.8127%"
++                                           width: 2.5236765481148344
+-                                           width: "2.07409px"
++                                           height: 2.5236765481148344
+-                                           height: "2.07409px"
++                                           background: "#29e3ff"
++                                           boxShadow: "0 0 7.571029644344503px #29e3ff"
++                                           animationDelay: "1.3584395506955396s"
++                                           animationDuration: "3.9397709949687534s"
+-                                           background-image: "initial"
+-                                           background-position-x: "initial"
+-                                           background-position-y: "initial"
+-                                           background-size: "initial"
+-                                           background-repeat: "initial"
+-                                           background-attachment: "initial"
+-                                           background-origin: "initial"
+-                                           background-clip: "initial"
+-                                           background-color: "rgb(41, 227, 255)"
+-                                           box-shadow: "rgb(41, 227, 255) 0px 0px 6.22227px"
+-                                           animation-delay: "3.46726s"
+-                                           animation-duration: "3.31107s"
+                                          }}
+                                        >
+                                        <span
+                                          className="absolute rounded-full cat-firefly"
+                                          style={{
++                                           left: "6.211223272723343%"
+-                                           left: "14.6729%"
++                                           top: "12.748450431193426%"
+-                                           top: "8.88067%"
++                                           width: 3.61240375541471
+-                                           width: "2.31226px"
++                                           height: 3.61240375541471
+-                                           height: "2.31226px"
++                                           background: "#8b5cf6"
++                                           boxShadow: "0 0 10.837211266244129px #8b5cf6"
++                                           animationDelay: "0.568145095522333s"
++                                           animationDuration: "5.192826494864849s"
+-                                           background-image: "initial"
+-                                           background-position-x: "initial"
+-                                           background-position-y: "initial"
+-                                           background-size: "initial"
+-                                           background-repeat: "initial"
+-                                           background-attachment: "initial"
+-                                           background-origin: "initial"
+-                                           background-clip: "initial"
+-                                           background-color: "rgb(139, 92, 246)"
+-                                           box-shadow: "rgb(139, 92, 246) 0px 0px 6.93679px"
+-                                           animation-delay: "3.50638s"
+-                                           animation-duration: "6.10968s"
+                                          }}
+                                        >
+                                        <span
+                                          className="absolute rounded-full cat-firefly"
+                                          style={{
++                                           left: "45.763696115507955%"
+-                                           left: "94.5604%"
++                                           top: "10.501233457577296%"
+-                                           top: "95.3545%"
++                                           width: 4.078964262644936
+-                                           width: "2.53533px"
++                                           height: 4.078964262644936
+-                                           height: "2.53533px"
++                                           background: "#ff2bd6"
++                                           boxShadow: "0 0 12.236892787934808px #ff2bd6"
++                                           animationDelay: "3.390981848498576s"
++                                           animationDuration: "3.7007399148409816s"
+-                                           background-image: "initial"
+-                                           background-position-x: "initial"
+-                                           background-position-y: "initial"
+-                                           background-size: "initial"
+-                                           background-repeat: "initial"
+-                                           background-attachment: "initial"
+-                                           background-origin: "initial"
+-                                           background-clip: "initial"
+-                                           background-color: "rgb(255, 43, 214)"
+-                                           box-shadow: "rgb(255, 43, 214) 0px 0px 7.606px"
+-                                           animation-delay: "2.2834s"
+-                                           animation-duration: "5.48505s"
+                                          }}
+                                        >
+                                      ...
+                                ...
+                        ...
+                      ...
+          ...
+
+[info] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[log] [HMR] connected
+[log] [Fast Refresh] rebuilding
+[log] [Fast Refresh] done in 223ms
+[log] [Fast Refresh] rebuilding
+[log] [Fast Refresh] done in 136ms
+[info] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[log] [HMR] connected
