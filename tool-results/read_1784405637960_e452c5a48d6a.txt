@@ -1,0 +1,671 @@
+     1→     1→     1→"use client";
+     2→     2→     2→
+     3→     3→     3→import { useEffect, useRef, useState, useCallback } from "react";
+     4→     4→     4→import { getHeroVideoUrl, getClickVideoUrl, resolveVideoUrl } from "./Preloader";
+     5→     5→     5→import { GiftMaketButton } from "./GiftMaketButton";
+     6→     6→     6→import { createPortal } from "react-dom";
+     7→     7→     7→
+     8→     8→     8→type VideoMode = "hero" | "click" | "poster";
+     9→     9→     9→
+    10→    10→    10→// Product images map
+    11→    11→    11→const productImages: Record<number, string> = {
+    12→    12→    12→  2: "/assets/products/p2.png",
+    13→    13→    13→  3: "/assets/products/p3.png",
+    14→    14→    14→  5: "/assets/products/p5.png",
+    15→    15→    15→  6: "/assets/products/p6.png",
+    16→    16→    16→  7: "/assets/products/p7.png",
+    17→    17→    17→  8: "/assets/products/p8.png",
+    18→    18→    18→  9: "/assets/products/p9.png",
+    19→    19→    19→  10: "/assets/products/p10.png",
+    20→    20→    20→};
+    21→    21→    21→const img = (n: number) => productImages[n];
+    22→    22→    22→
+    23→    23→    23→// Import product gallery images
+    24→    24→    24→const glass1 = "/assets/products/glass-1.png";
+    25→    25→    25→const glass2 = "/assets/products/glass-2.png";
+    26→    26→    26→const flute1 = "/assets/products/flute-1.png";
+    27→    27→    27→const flute2 = "/assets/products/flute-2.png";
+    28→    28→    28→const dresden1 = "/assets/products/dresden-1.png";
+    29→    29→    29→const dresden2 = "/assets/products/dresden-2.png";
+    30→    30→    30→const gramine1 = "/assets/products/gramine-1.jpg";
+    31→    31→    31→const gramine2 = "/assets/products/gramine-2.png";
+    32→    32→    32→const gramine3 = "/assets/products/gramine-3.png";
+    33→    33→    33→const gramine4 = "/assets/products/gramine-4.png";
+    34→    34→    34→const gramine5 = "/assets/products/gramine-5.png";
+    35→    35→    35→const gramine6 = "/assets/products/gramine-6.png";
+    36→    36→    36→const gramine7 = "/assets/products/gramine-7.png";
+    37→    37→    37→const maag1 = "/assets/products/maag-1.jpg";
+    38→    38→    38→const maag2 = "/assets/products/maag-2.jpg";
+    39→    39→    39→const maag3 = "/assets/products/maag-3.jpg";
+    40→    40→    40→const maag4 = "/assets/products/maag-4.jpg";
+    41→    41→    41→const maag5 = "/assets/products/maag-5.jpg";
+    42→    42→    42→const maag6 = "/assets/products/maag-6.jpg";
+    43→    43→    43→const collins1 = "/assets/products/collins-1.png";
+    44→    44→    44→const collins2 = "/assets/products/collins-2.png";
+    45→    45→    45→const collins3 = "/assets/products/collins-3.png";
+    46→    46→    46→const collins4 = "/assets/products/collins-4.png";
+    47→    47→    47→
+    48→    48→    48→type OrbPhase = "idle" | "entering-back" | "entering-front" | "front" | "leaving-front" | "leaving-back";
+    49→    49→    49→
+    50→    50→    50→function OrbCard({
+    51→    51→    51→  o,
+    52→    52→    52→  onClick,
+    53→    53→    53→}: {
+    54→    54→    54→  o: (typeof orbits)[number];
+    55→    55→    55→  onClick: () => void;
+    56→    56→    56→}) {
+    57→    57→    57→  const [phase, setPhase] = useState<OrbPhase>("idle");
+    58→    58→    58→  const timers = useRef<number[]>([]);
+    59→    59→    59→  const clearTimers = () => {
+    60→    60→    60→    timers.current.forEach((t) => window.clearTimeout(t));
+    61→    61→    61→    timers.current = [];
+    62→    62→    62→  };
+    63→    63→    63→  useEffect(() => () => clearTimers(), []);
+    64→    64→    64→
+    65→    65→    65→  const handleEnter = () => {
+    66→    66→    66→    clearTimers();
+    67→    67→    67→    setPhase("entering-back");
+    68→    68→    68→    timers.current.push(window.setTimeout(() => setPhase("entering-front"), 450));
+    69→    69→    69→    timers.current.push(window.setTimeout(() => setPhase("front"), 900));
+    70→    70→    70→  };
+    71→    71→    71→  const handleLeave = () => {
+    72→    72→    72→    clearTimers();
+    73→    73→    73→    setPhase("leaving-front");
+    74→    74→    74→    timers.current.push(window.setTimeout(() => setPhase("leaving-back"), 450));
+    75→    75→    75→    timers.current.push(window.setTimeout(() => setPhase("idle"), 900));
+    76→    76→    76→  };
+    77→    77→    77→
+    78→    78→    78→  const isFrontLayer =
+    79→    79→    79→    phase === "entering-front" || phase === "front" || phase === "leaving-front";
+    80→    80→    80→  const isEntering = phase === "entering-back" || phase === "entering-front";
+    81→    81→    81→  const isLeaving = phase === "leaving-front" || phase === "leaving-back";
+    82→    82→    82→  const isFrontFinal = phase === "front";
+    83→    83→    83→
+    84→    84→    84→  const isRight = o.corner.endsWith("r");
+    85→    85→    85→  const isBottom = o.corner.startsWith("b");
+    86→    86→    86→  const vOffset = "6%";
+    87→    87→    87→  const hOffset = "-3%";
+    88→    88→    88→
+    89→    89→    89→  return (
+    90→    90→    90→    <div
+    91→    91→    91→      className={`orb-wrapper hidden md:block absolute w-[42%] h-[32%] ${isFrontLayer ? "is-front" : ""}`}
+    92→    92→    92→      style={{
+    93→    93→    93→        top: isBottom ? "auto" : vOffset,
+    94→    94→    94→        bottom: isBottom ? vOffset : "auto",
+    95→    95→    95→        left: isRight ? "auto" : hOffset,
+    96→    96→    96→        right: isRight ? hOffset : "auto",
+    97→    97→    97→      }}
+    98→    98→    98→      onMouseEnter={handleEnter}
+    99→    99→    99→      onMouseLeave={handleLeave}
+   100→   100→   100→    >
+   101→   101→   101→      <button
+   102→   102→   102→        onClick={onClick}
+   103→   103→   103→        className={`card-emerge-orb relative block w-full h-full rounded-2xl glass conic-border overflow-hidden text-left ${
+   104→   104→   104→          isEntering ? "is-entering" : ""
+   105→   105→   105→        } ${isLeaving ? "is-leaving" : ""} ${isFrontFinal ? "is-front-final" : ""}`}
+   106→   106→   106→        style={{
+   107→   107→   107→          ["--orb-rot" as any]: o.tilt,
+   108→   108→   108→          ["--orb-shadow" as any]: o.color,
+   109→   109→   109→          ["--tilt" as any]: o.tilt,
+   110→   110→   110→          animation:
+   111→   111→   111→            phase === "idle"
+   112→   112→   112→              ? `float-slow ${o.dur} ease-in-out ${o.delay} infinite`
+   113→   113→   113→              : undefined,
+   114→   114→   114→          boxShadow: `0 12px 60px -20px ${o.color}`,
+   115→   115→   115→        }}
+   116→   116→   116→      >
+   117→   117→   117→        {o.image && (
+   118→   118→   118→          <img
+   119→   119→   119→            src={o.image}
+   120→   120→   120→            alt={`Коллекция ${o.label.replace(/[\u200B-\u200D\uFEFF]/g, "")} — лазерная гравировка на стекле`}
+   121→   121→   121→            className="absolute inset-0 w-full h-full object-cover"
+   122→   122→   122→          />
+   123→   123→   123→        )}
+   124→   124→   124→        <div
+   125→   125→   125→          className="absolute inset-0 pointer-events-none"
+   126→   126→   126→          style={{ background: `radial-gradient(circle, ${o.color}22, transparent 70%)` }}
+   127→   127→   127→        />
+   128→   128→   128→      </button>
+   129→   129→   129→    </div>
+   130→   130→   130→  );
+   131→   131→   131→}
+   132→   132→   132→
+   133→   133→   133→export interface Product { name?: string; desc: string; price: string; src?: string; gallery?: string[] }
+   134→   134→   134→
+   135→   135→   135→const categories: Record<string, { title: string; accent: string; products: Product[] }> = {
+   136→   136→   136→  vision: {
+   137→   137→   137→    title: "ВИЖН",
+   138→   138→   138→    accent: "#29e3ff",
+   139→   139→   139→    products: [
+   140→   140→   140→      { name: "Грамине", desc: "Теплый свет для теплых напитков.", price: "2499 ₽", src: img(5), gallery: [gramine1, gramine2, gramine3, gramine4, gramine5, gramine6, gramine7] },
+   141→   141→   141→      { name: "МААГ", desc: "Когда твой вайб получает подсветку.", price: "2599 ₽", src: img(6), gallery: [maag1, maag2, maag3, maag4, maag5, maag6] },
+   142→   142→   142→      { name: "Коллинз", desc: "Ваш коктейль. Ваш стиль. Ваш стакан.", price: "2399 ₽", src: img(7), gallery: [collins1, collins2, collins3, collins4] },
+   143→   143→   143→    ],
+   144→   144→   144→  },
+   145→   145→   145→  clear: {
+   146→   146→   146→    title: "КЛИАР",
+   147→   147→   147→    accent: "#ff2bd6",
+   148→   148→   148→    products: [
+   149→   149→   149→      { name: "Гласс", desc: "Для тех, кто любит быть в центре внимания.", price: "2599 ₽", src: img(8), gallery: [glass1, glass2] },
+   150→   150→   150→      { name: "ФЛЮТЕ", desc: "Превращает каждый тост в событие.", price: "2399 ₽", src: img(9), gallery: [flute1, flute2] },
+   151→   151→   151→      { name: "ДРЕЗДЕН", desc: "Для хорошего пива и отличных историй.", price: "2999 ₽", src: img(10), gallery: [dresden1, dresden2] },
+   152→   152→   152→    ],
+   153→   153→   153→  },
+   154→   154→   154→};
+   155→   155→   155→
+   156→   156→   156→const orbits = [
+   157→   157→   157→  { key: "vision", label: "ВИЖН", color: "#29e3ff", corner: "tl", tilt: "-6deg", delay: "0s", dur: "9s", image: img(2) },
+   158→   158→   158→  { key: "clear", label: "КЛИАР", color: "#ff2bd6", corner: "tr", tilt: "5deg", delay: "1.2s", dur: "10s", image: img(3) },
+   159→   159→   159→] as const;
+   160→   160→   160→
+   161→   161→   161→// ===== Lightbox =====
+   162→   162→   162→function Lightbox({
+   163→   163→   163→  images, startIndex, accent, title, onClose,
+   164→   164→   164→}: { images: string[]; startIndex: number; accent: string; title: string; onClose: () => void }) {
+   165→   165→   165→  const [idx, setIdx] = useState(startIndex);
+   166→   166→   166→  const [zoom, setZoom] = useState(1);
+   167→   167→   167→  const [dragY, setDragY] = useState(0);
+   168→   168→   168→  const [pan, setPan] = useState({ x: 0, y: 0 });
+   169→   169→   169→  const containerRef = useRef<HTMLDivElement>(null);
+   170→   170→   170→  const touchStartX = useRef<number | null>(null);
+   171→   171→   171→  const touchStartY = useRef<number | null>(null);
+   172→   172→   172→  const swipeAxis = useRef<"x" | "y" | null>(null);
+   173→   173→   173→  const isPanning = useRef(false);
+   174→   174→   174→  const panStart = useRef({ x: 0, y: 0, panX: 0, panY: 0 });
+   175→   175→   175→
+   176→   176→   176→  const go = useCallback((delta: number) => {
+   177→   177→   177→    setZoom(1);
+   178→   178→   178→    setIdx((i) => (i + delta + images.length) % images.length);
+   179→   179→   179→  }, [images.length]);
+   180→   180→   180→
+   181→   181→   181→  useEffect(() => {
+   182→   182→   182→    const onKey = (e: KeyboardEvent) => {
+   183→   183→   183→      if (e.key === "Escape") { e.preventDefault(); onClose(); return; }
+   184→   184→   184→      if (e.key === "ArrowRight") { e.preventDefault(); go(1); return; }
+   185→   185→   185→      if (e.key === "ArrowLeft") { e.preventDefault(); go(-1); return; }
+   186→   186→   186→    };
+   187→   187→   187→    window.addEventListener("keydown", onKey);
+   188→   188→   188→    return () => window.removeEventListener("keydown", onKey);
+   189→   189→   189→  }, [go, onClose]);
+   190→   190→   190→
+   191→   191→   191→  const onTouchStart = (e: React.TouchEvent) => {
+   192→   192→   192→    touchStartX.current = e.touches[0].clientX;
+   193→   193→   193→    touchStartY.current = e.touches[0].clientY;
+   194→   194→   194→    swipeAxis.current = null;
+   195→   195→   195→    if (zoom > 1) {
+   196→   196→   196→      isPanning.current = true;
+   197→   197→   197→      panStart.current = { x: e.touches[0].clientX, y: e.touches[0].clientY, panX: pan.x, panY: pan.y };
+   198→   198→   198→    }
+   199→   199→   199→  };
+   200→   200→   200→  const onTouchMove = (e: React.TouchEvent) => {
+   201→   201→   201→    if (touchStartX.current == null || touchStartY.current == null) return;
+   202→   202→   202→    const dx = e.touches[0].clientX - touchStartX.current;
+   203→   203→   203→    const dy = e.touches[0].clientY - touchStartY.current;
+   204→   204→   204→    // Panning when zoomed
+   205→   205→   205→    if (zoom > 1 && isPanning.current) {
+   206→   206→   206→      setPan({
+   207→   207→   207→        x: panStart.current.panX + (e.touches[0].clientX - panStart.current.x),
+   208→   208→   208→        y: panStart.current.panY + (e.touches[0].clientY - panStart.current.y),
+   209→   209→   209→      });
+   210→   210→   210→      return;
+   211→   211→   211→    }
+   212→   212→   212→    if (zoom !== 1) return;
+   213→   213→   213→    if (swipeAxis.current == null && (Math.abs(dx) > 8 || Math.abs(dy) > 8)) {
+   214→   214→   214→      swipeAxis.current = Math.abs(dy) > Math.abs(dx) ? "y" : "x";
+   215→   215→   215→    }
+   216→   216→   216→    if (swipeAxis.current === "y" && dy > 0) setDragY(dy);
+   217→   217→   217→  };
+   218→   218→   218→  const onTouchEnd = (e: React.TouchEvent) => {
+   219→   219→   219→    if (zoom > 1 && isPanning.current) {
+   220→   220→   220→      isPanning.current = false;
+   221→   221→   221→      touchStartX.current = null; touchStartY.current = null; return;
+   222→   222→   222→    }
+   223→   223→   223→    if (touchStartX.current == null || touchStartY.current == null || zoom !== 1) {
+   224→   224→   224→      touchStartX.current = null; touchStartY.current = null; swipeAxis.current = null; setDragY(0); return;
+   225→   225→   225→    }
+   226→   226→   226→    const dy = e.changedTouches[0].clientY - touchStartY.current;
+   227→   227→   227→    const dx = e.changedTouches[0].clientX - touchStartX.current;
+   228→   228→   228→    if (swipeAxis.current === "y") {
+   229→   229→   229→      if (dy > 100) onClose();
+   230→   230→   230→      setDragY(0);
+   231→   231→   231→    } else if (swipeAxis.current === "x" && images.length > 1 && Math.abs(dx) > 40) {
+   232→   232→   232→      go(dx < 0 ? 1 : -1);
+   233→   233→   233→    }
+   234→   234→   234→    touchStartX.current = null; touchStartY.current = null; swipeAxis.current = null;
+   235→   235→   235→  };
+   236→   236→   236→
+   237→   237→   237→  // Mouse panning when zoomed
+   238→   238→   238→  const handleMouseDown = (e: React.MouseEvent) => {
+   239→   239→   239→    if (zoom <= 1) return;
+   240→   240→   240→    e.preventDefault();
+   241→   241→   241→    e.stopPropagation();
+   242→   242→   242→    isPanning.current = true;
+   243→   243→   243→    panStart.current = { x: e.clientX, y: e.clientY, panX: pan.x, panY: pan.y };
+   244→   244→   244→    const handleMove = (ev: MouseEvent) => {
+   245→   245→   245→      if (!isPanning.current) return;
+   246→   246→   246→      setPan({
+   247→   247→   247→        x: panStart.current.panX + (ev.clientX - panStart.current.x),
+   248→   248→   248→        y: panStart.current.panY + (ev.clientY - panStart.current.y),
+   249→   249→   249→      });
+   250→   250→   250→    };
+   251→   251→   251→    const handleUp = () => {
+   252→   252→   252→      isPanning.current = false;
+   253→   253→   253→      window.removeEventListener("mousemove", handleMove);
+   254→   254→   254→      window.removeEventListener("mouseup", handleUp);
+   255→   255→   255→    };
+   256→   256→   256→    window.addEventListener("mousemove", handleMove);
+   257→   257→   257→    window.addEventListener("mouseup", handleUp);
+   258→   258→   258→  };
+   259→   259→   259→
+   260→   260→   260→  // Reset pan when zoom changes to 1
+   261→   261→   261→  useEffect(() => {
+   262→   262→   262→    if (zoom <= 1) setPan({ x: 0, y: 0 });
+   263→   263→   263→  }, [zoom]);
+   264→   264→   264→
+   265→   265→   265→  // Reset pan when image changes
+   266→   266→   266→  useEffect(() => {
+   267→   267→   267→    setPan({ x: 0, y: 0 });
+   268→   268→   268→  }, [idx]);
+   269→   269→   269→
+   270→   270→   270→  const hasMany = images.length > 1;
+   271→   271→   271→
+   272→   272→   272→  return createPortal(
+   273→   273→   273→    <div
+   274→   274→   274→      ref={containerRef}
+   275→   275→   275→      role="dialog"
+   276→   276→   276→      aria-modal="true"
+   277→   277→   277→      aria-label={`Просмотр: ${title}`}
+   278→   278→   278→      tabIndex={-1}
+   279→   279→   279→      className="fixed inset-0 z-[80] flex flex-col animate-in fade-in duration-200 outline-none"
+   280→   280→   280→      onClick={(e) => { e.stopPropagation(); onClose(); }}
+   281→   281→   281→      style={{
+   282→   282→   282→        backgroundColor: `rgba(0,0,0,${Math.max(0.4, 0.95 - dragY / 600)})`,
+   283→   283→   283→        backdropFilter: "blur(16px)",
+   284→   284→   284→        WebkitBackdropFilter: "blur(16px)",
+   285→   285→   285→      }}
+   286→   286→   286→    >
+   287→   287→   287→      <div className="absolute top-0 left-0 right-0 z-10 flex justify-center pointer-events-none" onClick={(e) => e.stopPropagation()}>
+   288→   288→   288→        <div className="pointer-events-auto mt-3 md:mt-4 flex items-center gap-2 md:gap-3 pl-4 md:pl-5 pr-1.5 md:pr-2 py-1.5 md:py-2 rounded-xl"
+   289→   289→   289→          style={{ background: "linear-gradient(135deg, rgba(0,0,0,0.72) 0%, rgba(10,4,24,0.82) 100%)", backdropFilter: "blur(24px) saturate(1.6)", border: "1px solid rgba(255,255,255,0.10)", boxShadow: "0 8px 40px -4px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.08)" }}>
+   290→   290→   290→          <div className="flex items-baseline gap-2 min-w-0">
+   291→   291→   291→            <span className="font-display text-sm md:text-base text-white truncate max-w-[46vw] md:max-w-[280px] leading-tight">{title}</span>
+   292→   292→   292→            {hasMany && <span className="font-tech text-[11px] md:text-xs tracking-[.16em] text-sky-300/80 shrink-0">{idx + 1}<span className="mx-1 text-white/20">/</span>{images.length}</span>}
+   293→   293→   293→          </div>
+   294→   294→   294→          <div className="w-px h-6 bg-white/10 mx-0.5" />
+   295→   295→   295→          <div className="flex items-center gap-1 md:gap-1.5">
+   296→   296→   296→            <button type="button" aria-label="Уменьшить" onClick={(e) => { e.stopPropagation(); setZoom((z) => Math.max(1, z - 0.5)); }}
+   297→   297→   297→              className="w-8 h-8 md:w-9 md:h-9 flex items-center justify-center rounded-lg text-white/80 hover:text-white transition-all text-lg md:text-xl font-light"
+   298→   298→   298→              style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.08)" }}>-</button>
+   299→   299→   299→            <button type="button" aria-label="Увеличить" onClick={(e) => { e.stopPropagation(); setZoom((z) => Math.min(4, z + 0.5)); }}
+   300→   300→   300→              className="w-8 h-8 md:w-9 md:h-9 flex items-center justify-center rounded-lg text-white/80 hover:text-white transition-all text-lg md:text-xl font-light"
+   301→   301→   301→              style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.08)" }}>+</button>
+   302→   302→   302→            <div className="w-px h-5 bg-white/10 mx-0.5" />
+   303→   303→   303→            <button type="button" aria-label="Закрыть" onClick={(e) => { e.stopPropagation(); onClose(); }}
+   304→   304→   304→              className="w-8 h-8 md:w-9 md:h-9 flex items-center justify-center rounded-lg text-white/60 hover:text-white transition-all text-lg md:text-xl"
+   305→   305→   305→              style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.06)" }}>&times;</button>
+   306→   306→   306→          </div>
+   307→   307→   307→        </div>
+   308→   308→   308→      </div>
+   309→   309→   309→
+   310→   310→   310→      <div className="relative flex-1 min-h-0 overflow-hidden pt-14 md:pt-16"
+   311→   311→   311→        onClick={(e) => e.stopPropagation()}
+   312→   312→   312→        onTouchStart={onTouchStart} onTouchMove={onTouchMove} onTouchEnd={onTouchEnd}
+   313→   313→   313→        style={{ transform: `translateY(${dragY}px)`, transition: dragY === 0 ? "transform 250ms ease-out" : "none", opacity: Math.max(0.3, 1 - dragY / 500) }}>
+   314→   314→   314→        {images.map((src, i) => {
+   315→   315→   315→          const active = i === idx;
+   316→   316→   316→          return (
+   317→   317→   317→            <div key={i} className="absolute inset-0 flex items-center justify-center transition-opacity duration-500 ease-in-out overflow-hidden"
+   318→   318→   318→              style={{ opacity: active ? 1 : 0, pointerEvents: active ? "auto" : "none" }}>
+   319→   319→   319→              <img src={src} alt={`${title} ${i + 1}`} className="max-w-full max-h-full object-contain select-none"
+   320→   320→   320→                onClick={(e) => { e.stopPropagation(); if (zoom <= 1) setZoom((z) => (z === 1 ? 2 : 1)); }}
+   321→   321→   321→                onMouseDown={handleMouseDown}
+   322→   322→   322→                style={{ transform: `scale(${active ? zoom : 1}) translate(${active && zoom > 1 ? `${pan.x / zoom}px` : "0px"}, ${active && zoom > 1 ? `${pan.y / zoom}px` : "0px"})`, transition: isPanning.current ? "none" : "transform 300ms ease", cursor: zoom > 1 ? (isPanning.current ? "grabbing" : "grab") : "zoom-in" }}
+   323→   323→   323→                draggable={false} />
+   324→   324→   324→            </div>
+   325→   325→   325→          );
+   326→   326→   326→        })}
+   327→   327→   327→        {/* Side navigation arrows */}
+   328→   328→   328→        {hasMany && zoom === 1 && (
+   329→   329→   329→          <>
+   330→   330→   330→            <button
+   331→   331→   331→              type="button"
+   332→   332→   332→              aria-label="Предыдущее фото"
+   333→   333→   333→              onClick={(e) => { e.stopPropagation(); go(-1); }}
+   334→   334→   334→              className="absolute left-3 md:left-6 top-1/2 -translate-y-1/2 z-20 w-10 h-10 md:w-12 md:h-12 flex items-center justify-center rounded-full transition-all duration-300 hover:scale-110"
+   335→   335→   335→              style={{
+   336→   336→   336→                background: "rgba(255,255,255,0.06)",
+   337→   337→   337→                border: "1px solid rgba(255,255,255,0.15)",
+   338→   338→   338→                boxShadow: "0 0 16px rgba(255,255,255,0.05)",
+   339→   339→   339→              }}
+   340→   340→   340→            >
+   341→   341→   341→              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.7)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+   342→   342→   342→                <polyline points="15 18 9 12 15 6" />
+   343→   343→   343→              </svg>
+   344→   344→   344→            </button>
+   345→   345→   345→            <button
+   346→   346→   346→              type="button"
+   347→   347→   347→              aria-label="Следующее фото"
+   348→   348→   348→              onClick={(e) => { e.stopPropagation(); go(1); }}
+   349→   349→   349→              className="absolute right-3 md:right-6 top-1/2 -translate-y-1/2 z-20 w-10 h-10 md:w-12 md:h-12 flex items-center justify-center rounded-full transition-all duration-300 hover:scale-110"
+   350→   350→   350→              style={{
+   351→   351→   351→                background: "rgba(255,255,255,0.06)",
+   352→   352→   352→                border: "1px solid rgba(255,255,255,0.15)",
+   353→   353→   353→                boxShadow: "0 0 16px rgba(255,255,255,0.05)",
+   354→   354→   354→              }}
+   355→   355→   355→            >
+   356→   356→   356→              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.7)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+   357→   357→   357→                <polyline points="9 18 15 12 9 6" />
+   358→   358→   358→              </svg>
+   359→   359→   359→            </button>
+   360→   360→   360→          </>
+   361→   361→   361→        )}
+   362→   362→   362→        <div className="absolute bottom-2 left-0 right-0 text-center pointer-events-none">
+   363→   363→   363→          <span className="font-tech text-[10px] md:text-xs tracking-[.12em] text-white/25">Каждое изделие уникально, поэтому может слегка отличаться от фото</span>
+   364→   364→   364→        </div>
+   365→   365→   365→      </div>
+   366→   366→   366→    </div>,
+   367→   367→   367→    document.body
+   368→   368→   368→  );
+   369→   369→   369→}
+   370→   370→   370→
+   371→   371→   371→// ===== CategoryOverlay =====
+   372→   372→   372→function CategoryOverlay({
+   373→   373→   373→  open, onClose, title, products, accent, onOrder,
+   374→   374→   374→}: { open: boolean; onClose: () => void; title: string; products: Product[]; accent: string; onOrder?: () => void }) {
+   375→   375→   375→  const [lightbox, setLightbox] = useState<{ images: string[]; index: number; title: string } | null>(null);
+   376→   376→   376→  const lightboxRef = useRef<{ images: string[]; index: number; title: string } | null>(null);
+   377→   377→   377→
+   378→   378→   378→  useEffect(() => {
+   379→   379→   379→    lightboxRef.current = lightbox;
+   380→   380→   380→  }, [lightbox]);
+   381→   381→   381→
+   382→   382→   382→  useEffect(() => {
+   383→   383→   383→    if (!open) return;
+   384→   384→   384→    const prev = document.body.style.overflow;
+   385→   385→   385→    document.body.style.overflow = "hidden";
+   386→   386→   386→    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape" && !lightboxRef.current) onClose(); };
+   387→   387→   387→    window.addEventListener("keydown", onKey);
+   388→   388→   388→    return () => { document.body.style.overflow = prev; window.removeEventListener("keydown", onKey); };
+   389→   389→   389→  }, [open, onClose]);
+   390→   390→   390→
+   391→   391→   391→  if (!open || typeof document === "undefined") return null;
+   392→   392→   392→
+   393→   393→   393→  const gridCols = products.length === 3 ? "grid-cols-1 md:grid-cols-3" : "grid-cols-1 md:grid-cols-2";
+   394→   394→   394→
+   395→   395→   395→  return createPortal(
+   396→   396→   396→    <div className="fixed inset-0 z-[60] bg-background/85 backdrop-blur-xl animate-in fade-in duration-300 flex flex-col p-6 md:p-12 overflow-y-auto"
+   397→   397→   397→      onClick={onClose}>
+   398→   398→   398→      <div className="flex items-center justify-between mb-6 md:mb-10" onClick={(e) => e.stopPropagation()}>
+   399→   399→   399→        <h2 className="font-display text-3xl md:text-5xl text-foreground">{title}</h2>
+   400→   400→   400→        <button onClick={(e) => { e.stopPropagation(); onClose(); }}
+   401→   401→   401→          className="font-tech uppercase tracking-[.18em] text-xs px-4 py-2 rounded-full glass hover:scale-105 transition">
+   402→   402→   402→          Закрыть &times;
+   403→   403→   403→        </button>
+   404→   404→   404→      </div>
+   405→   405→   405→      <div className={`flex-1 grid gap-6 md:gap-10 ${gridCols}`} onClick={(e) => e.stopPropagation()}>
+   406→   406→   406→        {products.map((p, idx) => {
+   407→   407→   407→          const images = [p.src, ...(p.gallery ?? [])].filter(Boolean) as string[];
+   408→   408→   408→          return (
+   409→   409→   409→            <div key={idx}
+   410→   410→   410→              className="relative rounded-2xl overflow-hidden glass text-left flex flex-col animate-in fade-in zoom-in-75 slide-in-from-bottom-8 min-h-[60vh]"
+   411→   411→   411→              style={{ boxShadow: `0 20px 80px -10px ${accent}cc, 0 0 0 1px ${accent}55`, animationDelay: `${idx * 90}ms`, animationDuration: "600ms", animationFillMode: "both" }}>
+   412→   412→   412→              <button type="button"
+   413→   413→   413→                onClick={(e) => { e.stopPropagation(); setLightbox({ images, index: 0, title: p.name ?? "" }); }}
+   414→   414→   414→                className="relative flex-1 min-h-0 bg-transparent border-0 p-0 cursor-zoom-in text-left"
+   415→   415→   415→                aria-label={`Открыть ${p.name}`}>
+   416→   416→   416→                <img src={p.src} alt={`Гравировка на стекле — ${p.name}, ${p.desc}`}
+   417→   417→   417→                  className="absolute inset-0 w-full h-full object-cover" />
+   418→   418→   418→              </button>
+   419→   419→   419→              <div className="px-6 py-5 bg-black/80 backdrop-blur-sm">
+   420→   420→   420→                <div className="text-base md:text-lg font-tech uppercase tracking-[.14em] text-sky-200">{p.name}</div>
+   421→   421→   421→                <div className="text-base text-foreground/70 leading-snug mt-1">{p.desc}</div>
+   422→   422→   422→                <div className="flex items-center justify-between gap-3 mt-2">
+   423→   423→   423→                  <div className="text-xl md:text-2xl font-display text-foreground">{p.price}</div>
+   424→   424→   424→                  {onOrder && (
+   425→   425→   425→                    <button type="button" onClick={(e) => { e.stopPropagation(); onOrder(); }} aria-label="Заказать"
+   426→   426→   426→                      className="shrink-0 bg-transparent border-0 p-0 cursor-pointer transition-transform duration-300 hover:scale-110 focus:outline-none rounded-xl">
+   427→   427→   427→                      <img src="/assets/cart-button.webp" alt="Заказать" className="w-14 h-14 md:w-16 md:h-16 select-none"
+   428→   428→   428→                        style={{ filter: "drop-shadow(0 0 12px rgba(139,92,246,.55)) drop-shadow(0 0 20px rgba(41,227,255,.35))" }}
+   429→   429→   429→                        draggable={false} />
+   430→   430→   430→                    </button>
+   431→   431→   431→                  )}
+   432→   432→   432→                </div>
+   433→   433→   433→              </div>
+   434→   434→   434→            </div>
+   435→   435→   435→          );
+   436→   436→   436→        })}
+   437→   437→   437→      </div>
+   438→   438→   438→      {lightbox && (
+   439→   439→   439→        <Lightbox images={lightbox.images} startIndex={lightbox.index} accent={accent} title={lightbox.title} onClose={() => setLightbox(null)} />
+   440→   440→   440→      )}
+   441→   441→   441→    </div>,
+   442→   442→   442→    document.body
+   443→   443→   443→  );
+   444→   444→   444→}
+   445→   445→   445→
+   446→   446→   446→// ===== Gallery =====
+   447→   447→   447→export function Gallery({ onOrder, canPlay }: { onOrder: () => void; canPlay?: boolean }) {
+   448→   448→   448→  const [open, setOpen] = useState<string | null>(null);
+   449→   449→   449→  const videoRef = useRef<HTMLVideoElement>(null);
+   450→   450→   450→  const modeRef = useRef<VideoMode>("hero");
+   451→   451→   451→  const [showPoster, setShowPoster] = useState(false);
+   452→   452→   452→
+   453→   453→   453→  const waitForReady = (v: HTMLVideoElement, timeoutMs = 4000): Promise<void> => {
+   454→   454→   454→    return new Promise((resolve) => {
+   455→   455→   455→      if (v.readyState >= 3) { resolve(); return; }
+   456→   456→   456→      let settled = false;
+   457→   457→   457→      const finish = () => {
+   458→   458→   458→        if (settled) return;
+   459→   459→   459→        settled = true;
+   460→   460→   460→        v.removeEventListener("canplay", finish);
+   461→   461→   461→        v.removeEventListener("canplaythrough", finish);
+   462→   462→   462→        v.removeEventListener("loadeddata", finish);
+   463→   463→   463→        resolve();
+   464→   464→   464→      };
+   465→   465→   465→      v.addEventListener("canplay", finish);
+   466→   466→   466→      v.addEventListener("canplaythrough", finish);
+   467→   467→   467→      v.addEventListener("loadeddata", finish);
+   468→   468→   468→      window.setTimeout(finish, timeoutMs);
+   469→   469→   469→    });
+   470→   470→   470→  };
+   471→   471→   471→
+   472→   472→   472→  const playMode = async (mode: VideoMode) => {
+   473→   473→   473→    const v = videoRef.current;
+   474→   474→   474→    if (!v) return;
+   475→   475→   475→    modeRef.current = mode;
+   476→   476→   476→    setShowPoster(false);
+   477→   477→   477→
+   478→   478→   478→    const playbackUrl = mode === "hero" ? getHeroVideoUrl() : getClickVideoUrl();
+   479→   479→   479→
+   480→   480→   480→    if (v.currentSrc !== playbackUrl && v.src !== playbackUrl) {
+   481→   481→   481→      v.src = playbackUrl;
+   482→   482→   482→      v.load();
+   483→   483→   483→    }
+   484→   484→   484→
+   485→   485→   485→    await waitForReady(v);
+   486→   486→   486→    try { await v.play(); } catch { /* autoplay may be blocked */ }
+   487→   487→   487→  };
+   488→   488→   488→
+   489→   489→   489→  const handleCapsuleClick = () => {
+   490→   490→   490→    const mode = modeRef.current;
+   491→   491→   491→    if (mode === "hero" || mode === "poster") {
+   492→   492→   492→      playMode("click");
+   493→   493→   493→    } else if (mode === "click") {
+   494→   494→   494→      playMode("click");
+   495→   495→   495→    }
+   496→   496→   496→  };
+   497→   497→   497→
+   498→   498→   498→  const handleVideoEnded = () => {
+   499→   499→   499→    if (modeRef.current === "click") {
+   500→   500→   500→      modeRef.current = "poster";
+   501→   501→   501→      setShowPoster(true);
+   502→   502→   502→    } else if (modeRef.current === "hero") {
+   503→   503→   503→      // Hero plays once, then fade to poster
+   504→   504→   504→      modeRef.current = "poster";
+   505→   505→   505→      setShowPoster(true);
+   506→   506→   506→    }
+   507→   507→   507→  };
+   508→   508→   508→
+   509→   509→   509→  const handleVideoError = () => {
+   510→   510→   510→    const v = videoRef.current;
+   511→   511→   511→    if (!v) return;
+   512→   512→   512→    // Fallback: try alternate format
+   513→   513→   513→    const fmt = v.src.includes(".webm") ? "mp4" : "webm";
+   514→   514→   514→    const fallbackUrl = modeRef.current === "click"
+   515→   515→   515→      ? `/assets/click.${fmt}`
+   516→   516→   516→      : `/assets/hero.${fmt}`;
+   517→   517→   517→    v.src = fallbackUrl;
+   518→   518→   518→    v.load();
+   519→   519→   519→    waitForReady(v).then(() => v.play().catch(() => {}));
+   520→   520→   520→  };
+   521→   521→   521→
+   522→   522→   522→  // Start video only after preloader completes (canPlay becomes true)
+   523→   523→   523→  useEffect(() => {
+   524→   524→   524→    if (!canPlay) return;
+   525→   525→   525→    const v = videoRef.current;
+   526→   526→   526→    if (!v) return;
+   527→   527→   527→
+   528→   528→   528→    let isVisible = true;
+   529→   529→   529→
+   530→   530→   530→    // Initial play after preloader
+   531→   531→   531→    const timer = setTimeout(() => playMode("hero"), 0);
+   532→   532→   532→
+   533→   533→   533→    const io = new IntersectionObserver(
+   534→   534→   534→      (entries) => {
+   535→   535→   535→        for (const entry of entries) {
+   536→   536→   536→          if (entry.isIntersecting) {
+   537→   537→   537→            if (!isVisible) {
+   538→   538→   538→              // Re-entering viewport: restart hero from the beginning
+   539→   539→   539→              isVisible = true;
+   540→   540→   540→              playMode("hero");
+   541→   541→   541→            }
+   542→   542→   542→          } else {
+   543→   543→   543→            // Leaving viewport: pause video
+   544→   544→   544→            isVisible = false;
+   545→   545→   545→            v.pause();
+   546→   546→   546→          }
+   547→   547→   547→        }
+   548→   548→   548→      },
+   549→   549→   549→      { threshold: 0.25 },
+   550→   550→   550→    );
+   551→   551→   551→    io.observe(v);
+   552→   552→   552→    return () => { clearTimeout(timer); io.disconnect(); };
+   553→   553→   553→  }, [canPlay]);
+   554→   554→   554→
+   555→   555→   555→  // Block pinch-zoom
+   556→   556→   556→  useEffect(() => {
+   557→   557→   557→    if (typeof window === "undefined") return;
+   558→   558→   558→    const prevent = (e: Event) => e.preventDefault();
+   559→   559→   559→    document.addEventListener("gesturestart", prevent as any, { passive: false });
+   560→   560→   560→    document.addEventListener("gesturechange", prevent as any, { passive: false });
+   561→   561→   561→    document.addEventListener("gestureend", prevent as any, { passive: false });
+   562→   562→   562→    const onWheel = (e: WheelEvent) => { if (e.ctrlKey) e.preventDefault(); };
+   563→   563→   563→    document.addEventListener("wheel", onWheel, { passive: false });
+   564→   564→   564→    return () => {
+   565→   565→   565→      document.removeEventListener("gesturestart", prevent as any);
+   566→   566→   566→      document.removeEventListener("gesturechange", prevent as any);
+   567→   567→   567→      document.removeEventListener("gestureend", prevent as any);
+   568→   568→   568→      document.removeEventListener("wheel", onWheel);
+   569→   569→   569→    };
+   570→   570→   570→  }, []);
+   571→   571→   571→
+   572→   572→   572→  return (
+   573→   573→   573→    <>
+   574→   574→   574→      <section className="relative py-10 px-4 overflow-hidden" aria-label="Каталог гравировки">
+   575→   575→   575→        <h2 className="sr-only">Каталог коллекций</h2>
+   576→   576→   576→        <div className="relative mx-auto" style={{ width: "min(820px, 100%)", aspectRatio: "1 / 1" }}>
+   577→   577→   577→          {/* glow */}
+   578→   578→   578→          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[720px] h-[720px] max-w-[120vw] max-h-[120vw] rounded-full animate-pulse-glow pointer-events-none"
+   579→   579→   579→            style={{ background: "radial-gradient(circle, rgba(139,92,246,.4), rgba(255,43,214,.3) 40%, transparent 70%)" }} />
+   580→   580→   580→
+   581→   581→   581→          {orbits.map((o) => (
+   582→   582→   582→            <OrbCard key={o.key} o={o} onClick={() => setOpen(o.key)} />
+   583→   583→   583→          ))}
+   584→   584→   584→
+   585→   585→   585→          {/* central window wrapper */}
+   586→   586→   586→          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[92%] h-[92%] md:w-[58%] md:h-[58%] aspect-square" style={{ zIndex: 20 }}>
+   587→   587→   587→            <div className="relative w-full h-full animate-float-slow">
+   588→   588→   588→              <div className="hero-sonar" aria-hidden="true">
+   589→   589→   589→                <span /><span /><span />
+   590→   590→   590→              </div>
+   591→   591→   591→              <div className="absolute overflow-hidden glass cursor-pointer"
+   592→   592→   592→                onClick={handleCapsuleClick}
+   593→   593→   593→                style={{
+   594→   594→   594→                  inset: "1px",
+   595→   595→   595→                  zIndex: 2,
+   596→   596→   596→                  borderRadius: 0,
+   597→   597→   597→                  boxShadow: "inset 0 0 40px rgba(41,227,255,.12), inset 0 0 60px rgba(139,92,246,.08), 0 0 40px rgba(41,227,255,.15), 0 0 80px rgba(255,43,214,.1)",
+   598→   598→   598→                }}>
+   599→   599→   599→                <video
+   600→   600→   600→                  ref={videoRef}
+   601→   601→   601→                  muted
+   602→   602→   602→                  playsInline
+   603→   603→   603→                  preload="none"
+   604→   604→   604→                  poster="/assets/gravikot-poster.webp"
+   605→   605→   605→                  disablePictureInPicture
+   606→   606→   606→                  disableRemotePlayback
+   607→   607→   607→                  controlsList="nodownload"
+   608→   608→   608→                  aria-hidden="true"
+   609→   609→   609→                  className="absolute inset-0 w-full h-full object-cover"
+   610→   610→   610→                  onEnded={handleVideoEnded}
+   611→   611→   611→                  onError={handleVideoError}
+   612→   612→   612→                />
+   613→   613→   613→                <img
+   614→   614→   614→                  src="/assets/gravikot-poster.webp"
+   615→   615→   615→                  alt="Логотип мастерской ГРАВИКОТ"
+   616→   616→   616→                  aria-hidden={!showPoster}
+   617→   617→   617→                  fetchPriority="high"
+   618→   618→   618→                  decoding="async"
+   619→   619→   619→                  className="absolute inset-0 w-full h-full object-cover bg-black pointer-events-none"
+   620→   620→   620→                  style={{ opacity: showPoster ? 1 : 0, transition: "opacity 1.5s ease-in-out" }}
+   621→   621→   621→                />
+   622→   622→   622→              </div>
+   623→   623→   623→            </div>
+   624→   624→   624→          </div>
+   625→   625→   625→        </div>
+   626→   626→   626→      </section>
+   627→   627→   627→
+   628→   628→   628→      {/* mobile: gift button */}
+   629→   629→   629→      <section className="md:hidden px-4 py-0 flex justify-center">
+   630→   630→   630→        <GiftMaketButton onClick={onOrder} />
+   631→   631→   631→      </section>
+   632→   632→   632→
+   633→   633→   633→      {/* mobile: vertical stack of category cards */}
+   634→   634→   634→      <section className="md:hidden px-4 pb-6 -mt-2">
+   635→   635→   635→        <div className="flex flex-col gap-4 max-w-md mx-auto">
+   636→   636→   636→          {orbits.map((o) => (
+   637→   637→   637→            <button
+   638→   638→   638→              key={o.key}
+   639→   639→   639→              onClick={() => setOpen(o.key)}
+   640→   640→   640→              className="relative block w-full rounded-2xl glass conic-border text-left aspect-[4/3]"
+   641→   641→   641→              style={{ boxShadow: `0 12px 60px -20px ${o.color}` }}>
+   642→   642→   642→              <span className="absolute inset-0 block rounded-2xl overflow-hidden">
+   643→   643→   643→                {o.image && (
+   644→   644→   644→                  <img src={o.image} alt={`Коллекция ${o.label}`} className="absolute inset-0 w-full h-full object-cover" />
+   645→   645→   645→                )}
+   646→   646→   646→                <div className="absolute inset-0 pointer-events-none"
+   647→   647→   647→                  style={{ background: `radial-gradient(circle, ${o.color}33, transparent 70%)` }} />
+   648→   648→   648→              </span>
+   649→   649→   649→              {(o.key === "vision" || o.key === "clear") && (
+   650→   650→   650→                <span aria-hidden="true" className={`sparkle-trace ${o.key === "clear" ? "reverse" : ""}`} />
+   651→   651→   651→              )}
+   652→   652→   652→            </button>
+   653→   653→   653→          ))}
+   654→   654→   654→        </div>
+   655→   655→   655→      </section>
+   656→   656→   656→
+   657→   657→   657→      {Object.entries(categories).map(([key, c]) => (
+   658→   658→   658→        <CategoryOverlay
+   659→   659→   659→          key={key}
+   660→   660→   660→          open={open === key}
+   661→   661→   661→          onClose={() => setOpen(null)}
+   662→   662→   662→          title={c.title}
+   663→   663→   663→          products={c.products}
+   664→   664→   664→          accent={c.accent}
+   665→   665→   665→          onOrder={onOrder}
+   666→   666→   666→        />
+   667→   667→   667→      ))}
+   668→   668→   668→    </>
+   669→   669→   669→  );
+   670→   670→   670→}
+   671→   671→   671→
