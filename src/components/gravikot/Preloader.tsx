@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface PreloaderProps {
   onComplete: () => void;
@@ -9,9 +9,8 @@ interface PreloaderProps {
 }
 
 /**
- * Luxury preloader — cinematic WOW effect from the first second.
- * Gold/platinum aesthetics with animated particles, shimmer typography,
- * and a brief welcome flash only after loading completes.
+ * Luxury preloader — «Добро пожаловать» is always visible.
+ * Layout: ГРАВИКОТ → Добро пожаловать → spinner % → progress → Лазерное ателье
  */
 export function Preloader({
   onComplete,
@@ -19,10 +18,9 @@ export function Preloader({
   targetRatio = 0.5,
 }: PreloaderProps) {
   const [progress, setProgress] = useState(0);
-  const [phase, setPhase] = useState<"loading" | "welcome" | "exiting">("loading");
+  const [exiting, setExiting] = useState(false);
   const [criticalReady, setCriticalReady] = useState(false);
   const doneRef = useRef(false);
-  const totalAssetsRef = useRef(0);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animFrameRef = useRef<number>(0);
 
@@ -53,7 +51,6 @@ export function Preloader({
     };
     window.addEventListener("resize", handleResize);
 
-    // Particles — gold, cyan, magenta dots
     interface Particle {
       x: number; y: number;
       vx: number; vy: number;
@@ -63,11 +60,11 @@ export function Preloader({
     }
 
     const colors = [
-      "rgba(245,230,200,", // gold/warm
-      "rgba(41,227,255,",  // cyan
-      "rgba(139,92,246,",  // violet
-      "rgba(255,43,214,",  // magenta
-      "rgba(255,255,255,", // white
+      "rgba(245,230,200,",
+      "rgba(41,227,255,",
+      "rgba(139,92,246,",
+      "rgba(255,43,214,",
+      "rgba(255,255,255,",
     ];
 
     const particles: Particle[] = [];
@@ -86,7 +83,6 @@ export function Preloader({
       });
     }
 
-    // Floating golden dust lines
     interface DustLine {
       x: number; y: number;
       length: number; angle: number;
@@ -111,7 +107,6 @@ export function Preloader({
       ctx.clearRect(0, 0, w, h);
       time += 1;
 
-      // Draw subtle radial ambience
       const grd = ctx.createRadialGradient(w / 2, h / 2, 0, w / 2, h / 2, Math.max(w, h) * 0.6);
       grd.addColorStop(0, "rgba(20,10,40,0.3)");
       grd.addColorStop(0.5, "rgba(10,5,20,0.1)");
@@ -119,7 +114,6 @@ export function Preloader({
       ctx.fillStyle = grd;
       ctx.fillRect(0, 0, w, h);
 
-      // Moving aurora blobs
       const blobX1 = w * 0.3 + Math.sin(time * 0.005) * w * 0.15;
       const blobY1 = h * 0.4 + Math.cos(time * 0.007) * h * 0.1;
       const grd2 = ctx.createRadialGradient(blobX1, blobY1, 0, blobX1, blobY1, 200);
@@ -138,7 +132,6 @@ export function Preloader({
       ctx.fillStyle = grd3;
       ctx.fillRect(0, 0, w, h);
 
-      // Draw dust lines
       for (const dl of dustLines) {
         dl.x += dl.speed;
         dl.y -= dl.speed * 0.3;
@@ -162,20 +155,15 @@ export function Preloader({
         ctx.restore();
       }
 
-      // Draw particles
       for (const p of particles) {
         p.x += p.vx;
         p.y += p.vy;
         p.pulse += p.pulseSpeed;
-
-        // Wrap around
         if (p.y < -10) { p.y = h + 10; p.x = Math.random() * w; }
         if (p.x < -10) p.x = w + 10;
         if (p.x > w + 10) p.x = -10;
-
         const pulseFactor = 0.5 + Math.sin(p.pulse) * 0.5;
         const alpha = p.opacity * (0.4 + pulseFactor * 0.6);
-
         ctx.save();
         ctx.globalAlpha = alpha;
         ctx.fillStyle = p.color + "1)";
@@ -207,7 +195,6 @@ export function Preloader({
     let criticalTotal = 0;
 
     const assets = getAssetsList();
-    totalAssetsRef.current = assets.length;
     criticalTotal = assets.filter((a) => a.critical).length;
 
     const tick = () => {
@@ -225,16 +212,14 @@ export function Preloader({
       setCriticalReady(true);
       setProgress(1);
 
-      // Brief welcome flash, then exit
-      setPhase("welcome");
-
+      // Brief pause, then exit
       window.setTimeout(() => {
         if (cancelled) return;
-        setPhase("exiting");
+        setExiting(true);
         window.setTimeout(() => {
           if (!cancelled) onComplete();
         }, 1000);
-      }, 1200);
+      }, 800);
     };
 
     const safety = window.setTimeout(() => {
@@ -276,15 +261,12 @@ export function Preloader({
   }, [criticalReady]);
 
   const pct = Math.round(progress * 100);
-  const isLoading = phase === "loading";
-  const isWelcome = phase === "welcome";
-  const isExiting = phase === "exiting";
 
   return (
     <div
-      aria-hidden={isExiting}
+      aria-hidden={exiting}
       suppressHydrationWarning
-      className={`preloader-root ${isExiting ? "preloader-exit" : ""}`}
+      className={`preloader-root ${exiting ? "preloader-exit" : ""}`}
       style={{
         position: "fixed",
         inset: 0,
@@ -296,8 +278,8 @@ export function Preloader({
         background: "#050510",
         color: "#eaf2ff",
         transition: "opacity 1000ms cubic-bezier(0.4, 0, 0.2, 1), visibility 1000ms cubic-bezier(0.4, 0, 0.2, 1)",
-        opacity: isExiting ? 0 : 1,
-        visibility: isExiting ? "hidden" : "visible",
+        opacity: exiting ? 0 : 1,
+        visibility: exiting ? "hidden" : "visible",
       }}
     >
       {/* Particle canvas */}
@@ -314,37 +296,13 @@ export function Preloader({
 
       {/* Luxury corner accents */}
       <div style={{ position: "absolute", inset: 0, pointerEvents: "none", overflow: "hidden" }}>
-        {/* Top-left corner line */}
-        <div style={{
-          position: "absolute", top: 24, left: 24,
-          width: 80, height: 80,
-          borderTop: "1px solid rgba(245,230,200,0.15)",
-          borderLeft: "1px solid rgba(245,230,200,0.15)",
-        }} />
-        {/* Top-right corner line */}
-        <div style={{
-          position: "absolute", top: 24, right: 24,
-          width: 80, height: 80,
-          borderTop: "1px solid rgba(245,230,200,0.15)",
-          borderRight: "1px solid rgba(245,230,200,0.15)",
-        }} />
-        {/* Bottom-left corner line */}
-        <div style={{
-          position: "absolute", bottom: 24, left: 24,
-          width: 80, height: 80,
-          borderBottom: "1px solid rgba(245,230,200,0.15)",
-          borderLeft: "1px solid rgba(245,230,200,0.15)",
-        }} />
-        {/* Bottom-right corner line */}
-        <div style={{
-          position: "absolute", bottom: 24, right: 24,
-          width: 80, height: 80,
-          borderBottom: "1px solid rgba(245,230,200,0.15)",
-          borderRight: "1px solid rgba(245,230,200,0.15)",
-        }} />
+        <div style={{ position: "absolute", top: 24, left: 24, width: 80, height: 80, borderTop: "1px solid rgba(245,230,200,0.15)", borderLeft: "1px solid rgba(245,230,200,0.15)" }} />
+        <div style={{ position: "absolute", top: 24, right: 24, width: 80, height: 80, borderTop: "1px solid rgba(245,230,200,0.15)", borderRight: "1px solid rgba(245,230,200,0.15)" }} />
+        <div style={{ position: "absolute", bottom: 24, left: 24, width: 80, height: 80, borderBottom: "1px solid rgba(245,230,200,0.15)", borderLeft: "1px solid rgba(245,230,200,0.15)" }} />
+        <div style={{ position: "absolute", bottom: 24, right: 24, width: 80, height: 80, borderBottom: "1px solid rgba(245,230,200,0.15)", borderRight: "1px solid rgba(245,230,200,0.15)" }} />
       </div>
 
-      {/* Main content */}
+      {/* Main content — always visible, elegant vertical flow */}
       <div style={{
         position: "relative",
         zIndex: 2,
@@ -352,85 +310,70 @@ export function Preloader({
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-        gap: 0,
-        transition: "opacity 600ms ease, transform 600ms ease",
-        opacity: isWelcome ? 0 : 1,
-        transform: isWelcome ? "scale(0.95)" : "scale(1)",
       }}>
-        {/* Small top label */}
+        {/* 1. Brand name — ГРАВИКОТ */}
         <div style={{
-          fontFamily: '"Exo 2", sans-serif',
-          fontWeight: 600,
-          fontSize: "clamp(9px, 1.2vw, 11px)",
-          letterSpacing: "0.45em",
+          fontFamily: '"Unbounded", sans-serif',
+          fontWeight: 800,
+          fontSize: "clamp(1.4rem, 4vw, 2.2rem)",
+          letterSpacing: "0.35em",
           textTransform: "uppercase",
-          color: "rgba(245,230,200,0.5)",
-          marginBottom: 16,
+          background: "linear-gradient(90deg, #f5e6c8, #fff, #f5e6c8)",
+          backgroundSize: "200% auto",
+          WebkitBackgroundClip: "text",
+          backgroundClip: "text",
+          color: "transparent",
+          animation: "shimmer 4s linear infinite",
+          filter: "drop-shadow(0 0 24px rgba(245,230,200,0.25))",
+          marginBottom: 8,
         }}>
-          Лазерное ателье
+          ГРАВИКОТ
         </div>
 
-        {/* Spinner ring with percentage */}
-        <div style={{ position: "relative", width: 140, height: 140, marginBottom: 28 }}>
+        {/* 2. Welcome — always visible */}
+        <div style={{
+          fontFamily: '"Unbounded", sans-serif',
+          fontWeight: 800,
+          fontSize: "clamp(1rem, 2.8vw, 1.6rem)",
+          letterSpacing: "0.2em",
+          textTransform: "uppercase",
+          background: "linear-gradient(90deg, #f5e6c8, #fff, #29e3ff, #c9a8ff, #ff8be0, #f5e6c8)",
+          backgroundSize: "200% auto",
+          WebkitBackgroundClip: "text",
+          backgroundClip: "text",
+          color: "transparent",
+          animation: "shimmer 3s linear infinite",
+          filter: "drop-shadow(0 0 20px rgba(245,230,200,0.4)) drop-shadow(0 0 40px rgba(41,227,255,0.2))",
+          marginBottom: 32,
+        }}>
+          Добро пожаловать
+        </div>
+
+        {/* 3. Spinner ring with percentage */}
+        <div style={{ position: "relative", width: 120, height: 120, marginBottom: 24 }}>
           {/* Outer glow ring */}
           <div style={{
-            position: "absolute",
-            inset: -16,
-            borderRadius: "50%",
+            position: "absolute", inset: -14, borderRadius: "50%",
             border: "1px solid rgba(245,230,200,0.08)",
             boxShadow: "0 0 40px rgba(245,230,200,0.06), inset 0 0 40px rgba(245,230,200,0.03)",
           }} />
 
           {/* Expanding pulse rings */}
-          <div style={{
-            position: "absolute", inset: -20, borderRadius: "50%",
-            border: "1px solid rgba(245,230,200,0.1)",
-            animation: "preloader-ring-expand 2.5s ease-out infinite",
-            pointerEvents: "none",
-          }} />
-          <div style={{
-            position: "absolute", inset: -20, borderRadius: "50%",
-            border: "1px solid rgba(41,227,255,0.08)",
-            animation: "preloader-ring-expand 2.5s ease-out 0.8s infinite",
-            pointerEvents: "none",
-          }} />
-          <div style={{
-            position: "absolute", inset: -20, borderRadius: "50%",
-            border: "1px solid rgba(139,92,246,0.06)",
-            animation: "preloader-ring-expand 2.5s ease-out 1.6s infinite",
-            pointerEvents: "none",
-          }} />
+          <div style={{ position: "absolute", inset: -18, borderRadius: "50%", border: "1px solid rgba(245,230,200,0.1)", animation: "preloader-ring-expand 2.5s ease-out infinite", pointerEvents: "none" }} />
+          <div style={{ position: "absolute", inset: -18, borderRadius: "50%", border: "1px solid rgba(41,227,255,0.08)", animation: "preloader-ring-expand 2.5s ease-out 0.8s infinite", pointerEvents: "none" }} />
+          <div style={{ position: "absolute", inset: -18, borderRadius: "50%", border: "1px solid rgba(139,92,246,0.06)", animation: "preloader-ring-expand 2.5s ease-out 1.6s infinite", pointerEvents: "none" }} />
 
           {/* Static background ring */}
-          <div style={{
-            position: "absolute", inset: 0, borderRadius: "50%",
-            border: "1px solid rgba(245,230,200,0.06)",
-          }} />
+          <div style={{ position: "absolute", inset: 0, borderRadius: "50%", border: "1px solid rgba(245,230,200,0.06)" }} />
 
           {/* Animated progress arc (SVG) */}
-          <svg
-            viewBox="0 0 140 140"
-            style={{
-              position: "absolute", inset: 0,
-              transform: "rotate(-90deg)",
-            }}
-          >
-            {/* Background track */}
+          <svg viewBox="0 0 120 120" style={{ position: "absolute", inset: 0, transform: "rotate(-90deg)" }}>
+            <circle cx="60" cy="60" r="54" fill="none" stroke="rgba(245,230,200,0.04)" strokeWidth="2" />
             <circle
-              cx="70" cy="70" r="64"
-              fill="none"
-              stroke="rgba(245,230,200,0.04)"
-              strokeWidth="2"
-            />
-            {/* Progress arc */}
-            <circle
-              cx="70" cy="70" r="64"
-              fill="none"
-              stroke="url(#preloaderGrad)"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeDasharray={`${2 * Math.PI * 64}`}
-              strokeDashoffset={`${2 * Math.PI * 64 * (1 - progress)}`}
+              cx="60" cy="60" r="54" fill="none"
+              stroke="url(#preloaderGrad)" strokeWidth="2" strokeLinecap="round"
+              strokeDasharray={`${2 * Math.PI * 54}`}
+              strokeDashoffset={`${2 * Math.PI * 54 * (1 - progress)}`}
               style={{ transition: "stroke-dashoffset 200ms linear" }}
             />
             <defs>
@@ -458,7 +401,7 @@ export function Preloader({
             display: "flex", alignItems: "center", justifyContent: "center",
             fontFamily: '"Unbounded", sans-serif',
             fontWeight: 800,
-            fontSize: "1.6rem",
+            fontSize: "1.4rem",
             letterSpacing: "0.05em",
             background: "linear-gradient(135deg, #f5e6c8, #fff, #29e3ff)",
             WebkitBackgroundClip: "text",
@@ -470,32 +413,14 @@ export function Preloader({
           </div>
         </div>
 
-        {/* Brand name — ГРАВИКОТ */}
+        {/* 4. Elegant progress bar */}
         <div style={{
-          fontFamily: '"Unbounded", sans-serif',
-          fontWeight: 800,
-          fontSize: "clamp(1.4rem, 4vw, 2.2rem)",
-          letterSpacing: "0.35em",
-          textTransform: "uppercase",
-          background: "linear-gradient(90deg, #f5e6c8, #fff, #f5e6c8)",
-          backgroundSize: "200% auto",
-          WebkitBackgroundClip: "text",
-          backgroundClip: "text",
-          color: "transparent",
-          animation: "shimmer 4s linear infinite",
-          filter: "drop-shadow(0 0 24px rgba(245,230,200,0.25))",
-          marginBottom: 20,
-        }}>
-          ГРАВИКОТ
-        </div>
-
-        {/* Elegant progress bar */}
-        <div style={{
-          width: "min(240px, 60vw)",
+          width: "min(200px, 50vw)",
           height: 1,
           background: "rgba(245,230,200,0.08)",
           overflow: "hidden",
           position: "relative",
+          marginBottom: 20,
         }}>
           <div style={{
             width: `${pct}%`,
@@ -506,73 +431,18 @@ export function Preloader({
           }} />
         </div>
 
-        {/* Subtle loading text */}
+        {/* 5. Subtle bottom label */}
         <div style={{
-          marginTop: 16,
           fontFamily: '"Exo 2", sans-serif',
-          fontWeight: 400,
-          fontSize: "clamp(9px, 1.1vw, 11px)",
-          letterSpacing: "0.3em",
+          fontWeight: 600,
+          fontSize: "clamp(8px, 1vw, 10px)",
+          letterSpacing: "0.5em",
           textTransform: "uppercase",
-          color: "rgba(245,230,200,0.25)",
+          color: "rgba(245,230,200,0.3)",
         }}>
-          Загрузка
+          Лазерное ателье
         </div>
       </div>
-
-      {/* Welcome message — ONLY appears briefly after loading completes */}
-      {isWelcome && (
-        <div style={{
-          position: "absolute",
-          inset: 0,
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          zIndex: 10,
-          animation: "preloader-welcome-appear 0.8s cubic-bezier(0.22, 0.61, 0.36, 1) forwards",
-        }}>
-          {/* Welcome diamond accent */}
-          <div style={{
-            width: 40, height: 40,
-            border: "1px solid rgba(245,230,200,0.2)",
-            transform: "rotate(45deg)",
-            marginBottom: 28,
-            boxShadow: "0 0 30px rgba(245,230,200,0.1), inset 0 0 30px rgba(245,230,200,0.05)",
-          }} />
-
-          {/* Brand name small */}
-          <div style={{
-            fontFamily: '"Exo 2", sans-serif',
-            fontWeight: 600,
-            fontSize: "clamp(9px, 1.2vw, 11px)",
-            letterSpacing: "0.5em",
-            textTransform: "uppercase",
-            color: "rgba(245,230,200,0.4)",
-            marginBottom: 20,
-          }}>
-            Гравикот
-          </div>
-
-          {/* Welcome text */}
-          <div style={{
-            fontFamily: '"Unbounded", sans-serif',
-            fontWeight: 800,
-            fontSize: "clamp(1.1rem, 3vw, 1.8rem)",
-            letterSpacing: "0.25em",
-            textTransform: "uppercase",
-            background: "linear-gradient(90deg, #f5e6c8, #fff, #29e3ff, #c9a8ff, #ff8be0, #f5e6c8)",
-            backgroundSize: "200% auto",
-            WebkitBackgroundClip: "text",
-            backgroundClip: "text",
-            color: "transparent",
-            animation: "shimmer 3s linear infinite",
-            filter: "drop-shadow(0 0 24px rgba(245,230,200,0.5)) drop-shadow(0 0 48px rgba(41,227,255,0.3))",
-          }}>
-            Добро пожаловать
-          </div>
-        </div>
-      )}
     </div>
   );
 }
@@ -658,7 +528,6 @@ function detectPreferredVideoFormat(): "webm" | "mp4" {
   }
 }
 
-// Video Blob URL registry
 const videoBlobUrls = new Map<string, string>();
 
 export function resolveVideoUrl(originalUrl: string): string {
