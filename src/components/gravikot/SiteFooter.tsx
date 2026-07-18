@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { PawPrint } from "lucide-react";
 
 export function SiteFooter() {
@@ -12,7 +13,7 @@ export function SiteFooter() {
             <PawPrint className="w-6 h-6 mx-0.5" style={{ color: "#ff2bd6", filter: "drop-shadow(0 0 8px #ff2bd6)" }} aria-hidden="true" />
             <span className="shimmer-text">Т</span>
           </div>
-          <p className="text-sky-100/90 text-sm mt-3 font-tech">Мастерская премиальной лазерной гравировки на стекле</p>
+          <p className="text-sky-100/90 text-sm mt-3 font-tech">Мастерская премиальной лазерной гравировки</p>
         </div>
         <nav aria-label="Контакты">
           <div className="font-display font-semibold mb-2">Контакты:</div>
@@ -26,8 +27,8 @@ export function SiteFooter() {
         <nav aria-label="Документы">
           <div className="font-display font-semibold mb-2">Документы:</div>
           <div className="space-y-2">
-            <span className="block text-sky-100/90 text-sm">Политика конфиденциальности</span>
-            <span className="block text-sky-100/90 text-sm">Пользовательское соглашение</span>
+            <Link href="/privacy" className="block text-sky-300 hover:text-white transition text-sm">Политика конфиденциальности</Link>
+            <Link href="/terms" className="block text-sky-300 hover:text-white transition text-sm">Пользовательское соглашение</Link>
           </div>
         </nav>
         <div className="text-sky-100/85 text-sm whitespace-pre-line">
