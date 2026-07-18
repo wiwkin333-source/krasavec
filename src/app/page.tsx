@@ -89,7 +89,7 @@ export default function Home() {
           </div>
         </section>
 
-        <Gallery onOrder={() => setOrderOpen(true)} />
+        <Gallery onOrder={() => setOrderOpen(true)} canPlay={siteVisible} />
         <section className="hidden md:flex justify-center px-4 py-0">
           <GiftMaketButton onClick={() => setOrderOpen(true)} />
         </section>

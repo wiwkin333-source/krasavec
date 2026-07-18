@@ -361,7 +361,7 @@ function CategoryOverlay({
 }
 
 // ===== Gallery =====
-export function Gallery({ onOrder }: { onOrder: () => void }) {
+export function Gallery({ onOrder, canPlay }: { onOrder: () => void; canPlay?: boolean }) {
   const [open, setOpen] = useState<string | null>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const modeRef = useRef<VideoMode>("hero");
@@ -439,7 +439,9 @@ export function Gallery({ onOrder }: { onOrder: () => void }) {
     waitForReady(v).then(() => v.play().catch(() => {}));
   };
 
+  // Start video only after preloader completes (canPlay becomes true)
   useEffect(() => {
+    if (!canPlay) return;
     const v = videoRef.current;
     if (!v) return;
     // Defer playMode to avoid synchronous setState in effect
@@ -455,7 +457,7 @@ export function Gallery({ onOrder }: { onOrder: () => void }) {
     );
     io.observe(v);
     return () => { clearTimeout(timer); io.disconnect(); };
-  }, []);
+  }, [canPlay]);
 
   // Block pinch-zoom
   useEffect(() => {
@@ -505,7 +507,7 @@ export function Gallery({ onOrder }: { onOrder: () => void }) {
                   ref={videoRef}
                   muted
                   playsInline
-                  preload="auto"
+                  preload="none"
                   poster="/assets/gravikot-poster.webp"
                   disablePictureInPicture
                   disableRemotePlayback
