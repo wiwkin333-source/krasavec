@@ -17,30 +17,44 @@ COPY . .
 
 ENV NEXT_TELEMETRY_DISABLED=1
 RUN npm install -g bun && bun run build
+RUN npx prisma generate
 
 # --- Production ---
-FROM base AS runner
+FROM node:20-alpine AS runner
 WORKDIR /app
+
+# Install Caddy
+RUN apk add --no-cache caddy
 
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
-
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nextjs
+ENV PORT=3000
+ENV HOSTNAME=0.0.0.0
+ENV DATABASE_URL=file:/app/db/custom.db
 
 # Copy standalone Next.js server
-COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
-COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
-COPY --from=builder --chown=nextjs:nodejs /app/public ./public
+COPY --from=builder /app/.next/standalone ./next-service-dist/
+COPY --from=builder /app/.next/static ./next-service-dist/.next/static
+COPY --from=builder /app/public ./next-service-dist/public
 
-# Copy database if exists
-COPY --from=builder --chown=nextjs:nodejs /app/db ./db
+# Copy database
+COPY --from=builder /app/db ./db
 
-USER nextjs
+# Copy Caddy config
+COPY --from=builder /app/Caddyfile ./Caddyfile
 
-EXPOSE 3000
+# Create startup script
+RUN echo '#!/bin/sh' > /app/entrypoint.sh && \
+    echo 'set -e' >> /app/entrypoint.sh && \
+    echo 'echo "Starting Next.js server..."' >> /app/entrypoint.sh && \
+    echo 'cd /app/next-service-dist' >> /app/entrypoint.sh && \
+    echo 'node server.js &' >> /app/entrypoint.sh && \
+    echo 'sleep 2' >> /app/entrypoint.sh && \
+    echo 'echo "Starting Caddy..."' >> /app/entrypoint.sh && \
+    echo 'cd /app' >> /app/entrypoint.sh && \
+    echo 'exec caddy run --config /app/Caddyfile --adapter caddyfile' >> /app/entrypoint.sh && \
+    chmod +x /app/entrypoint.sh
 
-ENV PORT=3000
-ENV HOSTNAME="0.0.0.0"
+EXPOSE 81
 
-CMD ["node", "server.js"]
+CMD ["sh", "/app/entrypoint.sh"]
