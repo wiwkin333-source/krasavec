@@ -16,7 +16,7 @@ export function Advantages({ onOrder }: { onOrder: () => void }) {
     <section className="relative pt-14 pb-2 px-4" aria-label="Преимущества ГРАВИКОТ">
       <div className="max-w-6xl mx-auto text-center">
         <Reveal>
-          <h2 className="luxe-title uppercase">Почему выбирают нас?</h2>
+          <h2 className="luxe-title uppercase">Почему выбирают нас</h2>
           <p className="mt-4 text-sky-100/90 max-w-2xl mx-auto font-tech">
             Создаем персональную гравировку, которая превращает вещи в историю.
           </p>
