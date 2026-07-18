@@ -15,8 +15,8 @@ interface PreloaderProps {
  */
 export function Preloader({
   onComplete,
-  maxWaitMs = 30_000,
-  targetRatio = 0.85,
+  maxWaitMs = 12_000,
+  targetRatio = 0.5,
 }: PreloaderProps) {
   const [progress, setProgress] = useState(0);
   const [exiting, setExiting] = useState(false);
@@ -62,8 +62,8 @@ export function Preloader({
         // Wait for the fade-out to complete, then reveal the site
         window.setTimeout(() => {
           if (!cancelled) onComplete();
-        }, 1200);
-      }, 1400);
+        }, 800);
+      }, 800);
     };
 
     // Safety timeout
@@ -99,7 +99,7 @@ export function Preloader({
       setProgress((prev) => {
         if (prev >= 0.99) return prev;
         const ceiling = criticalReady ? 0.99 : 0.97;
-        const next = Math.min(ceiling, prev + 0.004);
+        const next = Math.min(ceiling, prev + 0.008);
         return next;
       });
     }, 100);
@@ -123,7 +123,7 @@ export function Preloader({
         justifyContent: "center",
         background: "#050510",
         color: "#eaf2ff",
-        transition: "opacity 1200ms cubic-bezier(0.4, 0, 0.2, 1), visibility 1200ms cubic-bezier(0.4, 0, 0.2, 1)",
+        transition: "opacity 800ms cubic-bezier(0.4, 0, 0.2, 1), visibility 800ms cubic-bezier(0.4, 0, 0.2, 1)",
         opacity: exiting ? 0 : 1,
         visibility: exiting ? "hidden" : "visible",
       }}

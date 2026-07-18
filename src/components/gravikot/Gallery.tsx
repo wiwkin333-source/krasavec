@@ -279,14 +279,12 @@ function Lightbox({
               onClick={(e) => { e.stopPropagation(); go(-1); }}
               className="absolute left-3 md:left-6 top-1/2 -translate-y-1/2 z-20 w-10 h-10 md:w-12 md:h-12 flex items-center justify-center rounded-full transition-all duration-300 hover:scale-110"
               style={{
-                background: "linear-gradient(135deg, rgba(41,227,255,0.12), rgba(139,92,246,0.12))",
-                border: "1px solid rgba(41,227,255,0.25)",
-                boxShadow: "0 0 20px rgba(41,227,255,0.15), inset 0 0 12px rgba(139,92,246,0.08)",
-                backdropFilter: "blur(12px)",
+                background: "rgba(255,255,255,0.06)",
+                border: "1px solid rgba(255,255,255,0.15)",
+                boxShadow: "0 0 16px rgba(255,255,255,0.05)",
               }}
             >
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="url(#arrow-grad)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <defs><linearGradient id="arrow-grad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stopColor="#29e3ff" /><stop offset="50%" stopColor="#8b5cf6" /><stop offset="100%" stopColor="#ff2bd6" /></linearGradient></defs>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.7)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <polyline points="15 18 9 12 15 6" />
               </svg>
             </button>
@@ -296,14 +294,12 @@ function Lightbox({
               onClick={(e) => { e.stopPropagation(); go(1); }}
               className="absolute right-3 md:right-6 top-1/2 -translate-y-1/2 z-20 w-10 h-10 md:w-12 md:h-12 flex items-center justify-center rounded-full transition-all duration-300 hover:scale-110"
               style={{
-                background: "linear-gradient(135deg, rgba(139,92,246,0.12), rgba(255,43,214,0.12))",
-                border: "1px solid rgba(255,43,214,0.25)",
-                boxShadow: "0 0 20px rgba(255,43,214,0.15), inset 0 0 12px rgba(139,92,246,0.08)",
-                backdropFilter: "blur(12px)",
+                background: "rgba(255,255,255,0.06)",
+                border: "1px solid rgba(255,255,255,0.15)",
+                boxShadow: "0 0 16px rgba(255,255,255,0.05)",
               }}
             >
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="url(#arrow-grad-r)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <defs><linearGradient id="arrow-grad-r" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stopColor="#ff2bd6" /><stop offset="50%" stopColor="#8b5cf6" /><stop offset="100%" stopColor="#29e3ff" /></linearGradient></defs>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.7)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <polyline points="9 18 15 12 9 6" />
               </svg>
             </button>
