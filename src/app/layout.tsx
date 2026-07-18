@@ -44,6 +44,8 @@ export default function RootLayout({
       <body className="antialiased bg-background text-foreground" style={{ fontFamily: 'var(--font-sans)' }}>
         {children}
         <Toaster />
+        {/* Disable right-click on images/videos */}
+        <script dangerouslySetInnerHTML={{ __html: `document.addEventListener('contextmenu',function(e){if(e.target.tagName==='IMG'||e.target.tagName==='VIDEO'||e.target.closest('img')||e.target.closest('video'))e.preventDefault()});` }} />
       </body>
     </html>
   );

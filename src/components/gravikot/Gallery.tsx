@@ -277,7 +277,7 @@ function Lightbox({
       aria-label={`Просмотр: ${title}`}
       tabIndex={-1}
       className="fixed inset-0 z-[80] flex flex-col animate-in fade-in duration-200 outline-none"
-      onClick={(e) => { e.stopPropagation(); onClose(); }}
+      onClick={(e) => { e.stopPropagation(); if (zoom > 1) { setZoom(1); } else { onClose(); } }}
       style={{
         backgroundColor: `rgba(0,0,0,${Math.max(0.4, 0.95 - dragY / 600)})`,
         backdropFilter: "blur(16px)",
@@ -308,7 +308,7 @@ function Lightbox({
       </div>
 
       <div className="relative flex-1 min-h-0 overflow-hidden pt-14 md:pt-16"
-        onClick={(e) => e.stopPropagation()}
+        onClick={(e) => { e.stopPropagation(); if (zoom > 1) setZoom(1); }}
         onTouchStart={onTouchStart} onTouchMove={onTouchMove} onTouchEnd={onTouchEnd}
         style={{ transform: `translateY(${dragY}px)`, transition: dragY === 0 ? "transform 250ms ease-out" : "none", opacity: Math.max(0.3, 1 - dragY / 500) }}>
         {images.map((src, i) => {
@@ -317,7 +317,7 @@ function Lightbox({
             <div key={i} className="absolute inset-0 flex items-center justify-center transition-opacity duration-500 ease-in-out overflow-hidden"
               style={{ opacity: active ? 1 : 0, pointerEvents: active ? "auto" : "none" }}>
               <img src={src} alt={`${title} ${i + 1}`} className="max-w-full max-h-full object-contain select-none"
-                onClick={(e) => { e.stopPropagation(); if (zoom <= 1) setZoom((z) => (z === 1 ? 2 : 1)); }}
+                onClick={(e) => { e.stopPropagation(); if (zoom > 1) setZoom(1); else setZoom((z) => (z === 1 ? 2 : 1)); }}
                 onMouseDown={handleMouseDown}
                 style={{ transform: `scale(${active ? zoom : 1}) translate(${active && zoom > 1 ? `${pan.x / zoom}px` : "0px"}, ${active && zoom > 1 ? `${pan.y / zoom}px` : "0px"})`, transition: isPanning.current ? "none" : "transform 300ms ease", cursor: zoom > 1 ? (isPanning.current ? "grabbing" : "grab") : "zoom-in" }}
                 draggable={false} />

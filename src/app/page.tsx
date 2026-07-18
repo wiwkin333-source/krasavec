@@ -76,11 +76,11 @@ export default function Home() {
         <section className="relative flex items-center justify-center overflow-hidden pt-8 pb-2 px-4">
           <HeroBackground />
           <HeartBurst />
-          <div className="relative z-10 max-w-4xl text-center mx-auto">
+          <div className="relative z-10 w-full text-center mx-auto">
             <div className="font-tech uppercase tracking-[.4em] text-sky-300/80 text-[10px] md:text-xs leading-none">
               ГРАВИКОТ — ЛАЗЕРНОЕ АТЕЛЬЕ
             </div>
-            <h1 className="luxe-title mt-1 uppercase leading-tight whitespace-nowrap text-[clamp(1.1rem,4.5vw,2.25rem)]">Глоу-арт гравировка</h1>
+            <h1 className="luxe-title mt-1 uppercase leading-tight text-[clamp(1rem,3.8vw,2.25rem)]">Глоу-арт гравировка</h1>
             <p className="text-sky-200 text-luxury-glow mt-1 max-w-2xl mx-auto font-tech text-sm md:text-base leading-snug">
               Создаём стильные светящиеся сувениры и подарки по вашим фото и любимым изображениям — для близких людей, брендов и особых событий.
             </p>
