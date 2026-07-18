@@ -279,6 +279,9 @@ function Lightbox({
             ))}
           </div>
         )}
+        <div className="absolute bottom-2 left-0 right-0 text-center pointer-events-none">
+          <span className="font-tech text-[10px] md:text-xs tracking-[.12em] text-white/25">Каждое изделие уникально, поэтому может слегка отличаться от фото</span>
+        </div>
       </div>
     </div>,
     document.body
