@@ -62,7 +62,7 @@ export function Preloader({
         // Wait for the fade-out to complete, then reveal the site
         window.setTimeout(() => {
           if (!cancelled) onComplete();
-        }, 900);
+        }, 1200);
       }, 1400);
     };
 
@@ -123,7 +123,7 @@ export function Preloader({
         justifyContent: "center",
         background: "#050510",
         color: "#eaf2ff",
-        transition: "opacity 900ms cubic-bezier(0.4, 0, 0.2, 1), visibility 900ms cubic-bezier(0.4, 0, 0.2, 1)",
+        transition: "opacity 1200ms cubic-bezier(0.4, 0, 0.2, 1), visibility 1200ms cubic-bezier(0.4, 0, 0.2, 1)",
         opacity: exiting ? 0 : 1,
         visibility: exiting ? "hidden" : "visible",
       }}

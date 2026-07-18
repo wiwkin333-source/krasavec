@@ -70,8 +70,7 @@ export default function Home() {
         style={{
           background: "transparent",
           opacity: siteVisible ? 1 : 0,
-          transform: siteVisible ? "translateY(0)" : "translateY(8px)",
-          transition: "opacity 800ms cubic-bezier(0.4, 0, 0.2, 1), transform 800ms cubic-bezier(0.4, 0, 0.2, 1)",
+          transition: "opacity 1200ms cubic-bezier(0.4, 0, 0.2, 1)",
         }}
       >
         <section className="relative flex items-center justify-center overflow-hidden pt-8 pb-2 px-4">
@@ -81,7 +80,7 @@ export default function Home() {
             <div className="font-tech uppercase tracking-[.4em] text-sky-300/80 text-[10px] md:text-xs leading-none">
               ГРАВИКОТ — ЛАЗЕРНОЕ АТЕЛЬЕ
             </div>
-            <h1 className="luxe-title mt-1 uppercase text-2xl md:text-4xl leading-tight">Глоу-арт гравировка</h1>
+            <h1 className="luxe-title mt-1 uppercase text-2xl md:text-4xl leading-tight whitespace-nowrap">Глоу-арт гравировка</h1>
             <p className="text-sky-200 text-luxury-glow mt-1 max-w-2xl mx-auto font-tech text-sm md:text-base leading-snug">
               Создаём стильные светящиеся сувениры и подарки по вашим фото и любимым изображениям — для близких людей, брендов и особых событий.
             </p>
