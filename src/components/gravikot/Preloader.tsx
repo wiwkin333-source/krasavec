@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 
 interface PreloaderProps {
   onComplete: () => void;
@@ -9,9 +9,9 @@ interface PreloaderProps {
 }
 
 /**
- * Luxury preloader — no skip button, no video text.
- * Shows a beautiful loading animation with a bright welcome message,
- * then fades out smoothly to reveal the site.
+ * Luxury preloader — cinematic WOW effect from the first second.
+ * Gold/platinum aesthetics with animated particles, shimmer typography,
+ * and a brief welcome flash only after loading completes.
  */
 export function Preloader({
   onComplete,
@@ -19,12 +19,186 @@ export function Preloader({
   targetRatio = 0.5,
 }: PreloaderProps) {
   const [progress, setProgress] = useState(0);
-  const [exiting, setExiting] = useState(false);
-  const [welcomeShown, setWelcomeShown] = useState(false);
+  const [phase, setPhase] = useState<"loading" | "welcome" | "exiting">("loading");
   const [criticalReady, setCriticalReady] = useState(false);
   const doneRef = useRef(false);
   const totalAssetsRef = useRef(0);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const animFrameRef = useRef<number>(0);
 
+  // ===== Particle system for luxury background =====
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    let w = window.innerWidth;
+    let h = window.innerHeight;
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    canvas.width = w * dpr;
+    canvas.height = h * dpr;
+    canvas.style.width = w + "px";
+    canvas.style.height = h + "px";
+    ctx.scale(dpr, dpr);
+
+    const handleResize = () => {
+      w = window.innerWidth;
+      h = window.innerHeight;
+      canvas.width = w * dpr;
+      canvas.height = h * dpr;
+      canvas.style.width = w + "px";
+      canvas.style.height = h + "px";
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    };
+    window.addEventListener("resize", handleResize);
+
+    // Particles — gold, cyan, magenta dots
+    interface Particle {
+      x: number; y: number;
+      vx: number; vy: number;
+      size: number; opacity: number;
+      color: string;
+      pulse: number; pulseSpeed: number;
+    }
+
+    const colors = [
+      "rgba(245,230,200,", // gold/warm
+      "rgba(41,227,255,",  // cyan
+      "rgba(139,92,246,",  // violet
+      "rgba(255,43,214,",  // magenta
+      "rgba(255,255,255,", // white
+    ];
+
+    const particles: Particle[] = [];
+    const count = Math.min(80, Math.floor((w * h) / 12000));
+    for (let i = 0; i < count; i++) {
+      particles.push({
+        x: Math.random() * w,
+        y: Math.random() * h,
+        vx: (Math.random() - 0.5) * 0.3,
+        vy: -Math.random() * 0.5 - 0.1,
+        size: Math.random() * 2.5 + 0.5,
+        opacity: Math.random() * 0.6 + 0.1,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        pulse: Math.random() * Math.PI * 2,
+        pulseSpeed: Math.random() * 0.02 + 0.01,
+      });
+    }
+
+    // Floating golden dust lines
+    interface DustLine {
+      x: number; y: number;
+      length: number; angle: number;
+      opacity: number; speed: number;
+      color: string;
+    }
+    const dustLines: DustLine[] = [];
+    for (let i = 0; i < 12; i++) {
+      dustLines.push({
+        x: Math.random() * w,
+        y: Math.random() * h,
+        length: Math.random() * 60 + 20,
+        angle: Math.random() * Math.PI,
+        opacity: Math.random() * 0.15 + 0.03,
+        speed: Math.random() * 0.3 + 0.1,
+        color: Math.random() > 0.5 ? "rgba(245,230,200," : "rgba(41,227,255,",
+      });
+    }
+
+    let time = 0;
+    const animate = () => {
+      ctx.clearRect(0, 0, w, h);
+      time += 1;
+
+      // Draw subtle radial ambience
+      const grd = ctx.createRadialGradient(w / 2, h / 2, 0, w / 2, h / 2, Math.max(w, h) * 0.6);
+      grd.addColorStop(0, "rgba(20,10,40,0.3)");
+      grd.addColorStop(0.5, "rgba(10,5,20,0.1)");
+      grd.addColorStop(1, "rgba(5,5,16,0)");
+      ctx.fillStyle = grd;
+      ctx.fillRect(0, 0, w, h);
+
+      // Moving aurora blobs
+      const blobX1 = w * 0.3 + Math.sin(time * 0.005) * w * 0.15;
+      const blobY1 = h * 0.4 + Math.cos(time * 0.007) * h * 0.1;
+      const grd2 = ctx.createRadialGradient(blobX1, blobY1, 0, blobX1, blobY1, 200);
+      grd2.addColorStop(0, "rgba(139,92,246,0.12)");
+      grd2.addColorStop(0.5, "rgba(255,43,214,0.06)");
+      grd2.addColorStop(1, "rgba(0,0,0,0)");
+      ctx.fillStyle = grd2;
+      ctx.fillRect(0, 0, w, h);
+
+      const blobX2 = w * 0.7 + Math.cos(time * 0.006) * w * 0.12;
+      const blobY2 = h * 0.6 + Math.sin(time * 0.008) * h * 0.08;
+      const grd3 = ctx.createRadialGradient(blobX2, blobY2, 0, blobX2, blobY2, 180);
+      grd3.addColorStop(0, "rgba(41,227,255,0.08)");
+      grd3.addColorStop(0.5, "rgba(139,92,246,0.04)");
+      grd3.addColorStop(1, "rgba(0,0,0,0)");
+      ctx.fillStyle = grd3;
+      ctx.fillRect(0, 0, w, h);
+
+      // Draw dust lines
+      for (const dl of dustLines) {
+        dl.x += dl.speed;
+        dl.y -= dl.speed * 0.3;
+        if (dl.x > w + 80) { dl.x = -80; dl.y = Math.random() * h; }
+        if (dl.y < -80) { dl.y = h + 80; }
+        const pulse = Math.sin(time * 0.015 + dl.angle) * 0.5 + 0.5;
+        ctx.save();
+        ctx.globalAlpha = dl.opacity * (0.5 + pulse * 0.5);
+        ctx.translate(dl.x, dl.y);
+        ctx.rotate(dl.angle);
+        const lineGrd = ctx.createLinearGradient(-dl.length / 2, 0, dl.length / 2, 0);
+        lineGrd.addColorStop(0, dl.color + "0)");
+        lineGrd.addColorStop(0.5, dl.color + "0.8)");
+        lineGrd.addColorStop(1, dl.color + "0)");
+        ctx.strokeStyle = lineGrd;
+        ctx.lineWidth = 0.5;
+        ctx.beginPath();
+        ctx.moveTo(-dl.length / 2, 0);
+        ctx.lineTo(dl.length / 2, 0);
+        ctx.stroke();
+        ctx.restore();
+      }
+
+      // Draw particles
+      for (const p of particles) {
+        p.x += p.vx;
+        p.y += p.vy;
+        p.pulse += p.pulseSpeed;
+
+        // Wrap around
+        if (p.y < -10) { p.y = h + 10; p.x = Math.random() * w; }
+        if (p.x < -10) p.x = w + 10;
+        if (p.x > w + 10) p.x = -10;
+
+        const pulseFactor = 0.5 + Math.sin(p.pulse) * 0.5;
+        const alpha = p.opacity * (0.4 + pulseFactor * 0.6);
+
+        ctx.save();
+        ctx.globalAlpha = alpha;
+        ctx.fillStyle = p.color + "1)";
+        ctx.shadowColor = p.color + "0.6)";
+        ctx.shadowBlur = p.size * 4;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size * (0.8 + pulseFactor * 0.4), 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+
+      animFrameRef.current = requestAnimationFrame(animate);
+    };
+
+    animFrameRef.current = requestAnimationFrame(animate);
+
+    return () => {
+      cancelAnimationFrame(animFrameRef.current);
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
+  // ===== Asset preloading logic =====
   useEffect(() => {
     if (typeof window === "undefined") return;
     let cancelled = false;
@@ -32,7 +206,6 @@ export function Preloader({
     let criticalLoaded = 0;
     let criticalTotal = 0;
 
-    // Asset list for preloading
     const assets = getAssetsList();
     totalAssetsRef.current = assets.length;
     criticalTotal = assets.filter((a) => a.critical).length;
@@ -52,26 +225,22 @@ export function Preloader({
       setCriticalReady(true);
       setProgress(1);
 
-      // Show welcome message for a moment
-      setWelcomeShown(true);
+      // Brief welcome flash, then exit
+      setPhase("welcome");
 
-      // After welcome display, start the exit transition
       window.setTimeout(() => {
         if (cancelled) return;
-        setExiting(true);
-        // Wait for the fade-out to complete, then reveal the site
+        setPhase("exiting");
         window.setTimeout(() => {
           if (!cancelled) onComplete();
-        }, 800);
-      }, 800);
+        }, 1000);
+      }, 1200);
     };
 
-    // Safety timeout
     const safety = window.setTimeout(() => {
       if (!doneRef.current) finish();
     }, maxWaitMs);
 
-    // Launch all preloaders in parallel
     const tasks = assets.map((asset) =>
       preloadSingleAsset(asset).then(() => {
         loaded += 1;
@@ -93,7 +262,7 @@ export function Preloader({
     };
   }, []);
 
-  // Smooth progress creep between discrete asset completions
+  // Smooth progress creep
   useEffect(() => {
     const id = window.setInterval(() => {
       setProgress((prev) => {
@@ -107,12 +276,15 @@ export function Preloader({
   }, [criticalReady]);
 
   const pct = Math.round(progress * 100);
+  const isLoading = phase === "loading";
+  const isWelcome = phase === "welcome";
+  const isExiting = phase === "exiting";
 
   return (
     <div
-      aria-hidden={exiting}
+      aria-hidden={isExiting}
       suppressHydrationWarning
-      className={`preloader-root ${exiting ? "preloader-exit" : ""}`}
+      className={`preloader-root ${isExiting ? "preloader-exit" : ""}`}
       style={{
         position: "fixed",
         inset: 0,
@@ -123,182 +295,280 @@ export function Preloader({
         justifyContent: "center",
         background: "#050510",
         color: "#eaf2ff",
-        transition: "opacity 800ms cubic-bezier(0.4, 0, 0.2, 1), visibility 800ms cubic-bezier(0.4, 0, 0.2, 1)",
-        opacity: exiting ? 0 : 1,
-        visibility: exiting ? "hidden" : "visible",
+        transition: "opacity 1000ms cubic-bezier(0.4, 0, 0.2, 1), visibility 1000ms cubic-bezier(0.4, 0, 0.2, 1)",
+        opacity: isExiting ? 0 : 1,
+        visibility: isExiting ? "hidden" : "visible",
       }}
     >
-      {/* Ambient glow */}
-      <div
+      {/* Particle canvas */}
+      <canvas
+        ref={canvasRef}
         style={{
           position: "absolute",
-          width: 720,
-          height: 720,
-          maxWidth: "120vw",
-          maxHeight: "120vw",
-          borderRadius: "50%",
-          background:
-            "radial-gradient(circle, rgba(139,92,246,.4), rgba(255,43,214,.3) 40%, transparent 70%)",
-          filter: "blur(40px)",
-          opacity: 0.6,
-          animation: "preloader-pulse 3s ease-in-out infinite",
+          inset: 0,
+          width: "100%",
+          height: "100%",
           pointerEvents: "none",
         }}
       />
 
-      {/* Outer glowing ring */}
-      <div
-        style={{
-          position: "relative",
-          width: 160,
-          height: 160,
-          marginBottom: 40,
-        }}
-      >
-        {/* Expanding ring pulse */}
-        <div
-          style={{
-            position: "absolute",
-            inset: -20,
-            borderRadius: "50%",
-            border: "1px solid rgba(41,227,255,0.15)",
-            animation: "preloader-ring-expand 2s ease-out infinite",
-            pointerEvents: "none",
-          }}
-        />
-        <div
-          style={{
-            position: "absolute",
-            inset: -20,
-            borderRadius: "50%",
-            border: "1px solid rgba(255,43,214,0.12)",
-            animation: "preloader-ring-expand 2s ease-out 0.7s infinite",
-            pointerEvents: "none",
-          }}
-        />
-        <div
-          style={{
-            position: "absolute",
-            inset: -20,
-            borderRadius: "50%",
-            border: "1px solid rgba(139,92,246,0.1)",
-            animation: "preloader-ring-expand 2s ease-out 1.4s infinite",
-            pointerEvents: "none",
-          }}
-        />
+      {/* Luxury corner accents */}
+      <div style={{ position: "absolute", inset: 0, pointerEvents: "none", overflow: "hidden" }}>
+        {/* Top-left corner line */}
+        <div style={{
+          position: "absolute", top: 24, left: 24,
+          width: 80, height: 80,
+          borderTop: "1px solid rgba(245,230,200,0.15)",
+          borderLeft: "1px solid rgba(245,230,200,0.15)",
+        }} />
+        {/* Top-right corner line */}
+        <div style={{
+          position: "absolute", top: 24, right: 24,
+          width: 80, height: 80,
+          borderTop: "1px solid rgba(245,230,200,0.15)",
+          borderRight: "1px solid rgba(245,230,200,0.15)",
+        }} />
+        {/* Bottom-left corner line */}
+        <div style={{
+          position: "absolute", bottom: 24, left: 24,
+          width: 80, height: 80,
+          borderBottom: "1px solid rgba(245,230,200,0.15)",
+          borderLeft: "1px solid rgba(245,230,200,0.15)",
+        }} />
+        {/* Bottom-right corner line */}
+        <div style={{
+          position: "absolute", bottom: 24, right: 24,
+          width: 80, height: 80,
+          borderBottom: "1px solid rgba(245,230,200,0.15)",
+          borderRight: "1px solid rgba(245,230,200,0.15)",
+        }} />
+      </div>
 
-        {/* Inner spinner ring */}
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            borderRadius: "50%",
-            border: "2px solid rgba(255,255,255,0.06)",
-          }}
-        />
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            borderRadius: "50%",
-            border: "2px solid transparent",
-            borderTopColor: "#29e3ff",
-            borderRightColor: "#8b5cf6",
-            animation: "preloader-spin 1.2s linear infinite",
-          }}
-        />
+      {/* Main content */}
+      <div style={{
+        position: "relative",
+        zIndex: 2,
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: 0,
+        transition: "opacity 600ms ease, transform 600ms ease",
+        opacity: isWelcome ? 0 : 1,
+        transform: isWelcome ? "scale(0.95)" : "scale(1)",
+      }}>
+        {/* Small top label */}
+        <div style={{
+          fontFamily: '"Exo 2", sans-serif',
+          fontWeight: 600,
+          fontSize: "clamp(9px, 1.2vw, 11px)",
+          letterSpacing: "0.45em",
+          textTransform: "uppercase",
+          color: "rgba(245,230,200,0.5)",
+          marginBottom: 16,
+        }}>
+          Лазерное ателье
+        </div>
 
-        {/* Center percentage */}
-        <div
-          style={{
+        {/* Spinner ring with percentage */}
+        <div style={{ position: "relative", width: 140, height: 140, marginBottom: 28 }}>
+          {/* Outer glow ring */}
+          <div style={{
             position: "absolute",
-            inset: 0,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
+            inset: -16,
+            borderRadius: "50%",
+            border: "1px solid rgba(245,230,200,0.08)",
+            boxShadow: "0 0 40px rgba(245,230,200,0.06), inset 0 0 40px rgba(245,230,200,0.03)",
+          }} />
+
+          {/* Expanding pulse rings */}
+          <div style={{
+            position: "absolute", inset: -20, borderRadius: "50%",
+            border: "1px solid rgba(245,230,200,0.1)",
+            animation: "preloader-ring-expand 2.5s ease-out infinite",
+            pointerEvents: "none",
+          }} />
+          <div style={{
+            position: "absolute", inset: -20, borderRadius: "50%",
+            border: "1px solid rgba(41,227,255,0.08)",
+            animation: "preloader-ring-expand 2.5s ease-out 0.8s infinite",
+            pointerEvents: "none",
+          }} />
+          <div style={{
+            position: "absolute", inset: -20, borderRadius: "50%",
+            border: "1px solid rgba(139,92,246,0.06)",
+            animation: "preloader-ring-expand 2.5s ease-out 1.6s infinite",
+            pointerEvents: "none",
+          }} />
+
+          {/* Static background ring */}
+          <div style={{
+            position: "absolute", inset: 0, borderRadius: "50%",
+            border: "1px solid rgba(245,230,200,0.06)",
+          }} />
+
+          {/* Animated progress arc (SVG) */}
+          <svg
+            viewBox="0 0 140 140"
+            style={{
+              position: "absolute", inset: 0,
+              transform: "rotate(-90deg)",
+            }}
+          >
+            {/* Background track */}
+            <circle
+              cx="70" cy="70" r="64"
+              fill="none"
+              stroke="rgba(245,230,200,0.04)"
+              strokeWidth="2"
+            />
+            {/* Progress arc */}
+            <circle
+              cx="70" cy="70" r="64"
+              fill="none"
+              stroke="url(#preloaderGrad)"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeDasharray={`${2 * Math.PI * 64}`}
+              strokeDashoffset={`${2 * Math.PI * 64 * (1 - progress)}`}
+              style={{ transition: "stroke-dashoffset 200ms linear" }}
+            />
+            <defs>
+              <linearGradient id="preloaderGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="#f5e6c8" />
+                <stop offset="30%" stopColor="#29e3ff" />
+                <stop offset="60%" stopColor="#8b5cf6" />
+                <stop offset="100%" stopColor="#ff2bd6" />
+              </linearGradient>
+            </defs>
+          </svg>
+
+          {/* Spinner tick */}
+          <div style={{
+            position: "absolute", inset: 6, borderRadius: "50%",
+            border: "1px solid transparent",
+            borderTopColor: "rgba(245,230,200,0.3)",
+            borderRightColor: "rgba(41,227,255,0.15)",
+            animation: "preloader-spin 3s linear infinite",
+          }} />
+
+          {/* Center percentage */}
+          <div style={{
+            position: "absolute", inset: 0,
+            display: "flex", alignItems: "center", justifyContent: "center",
             fontFamily: '"Unbounded", sans-serif',
             fontWeight: 800,
-            fontSize: "2rem",
+            fontSize: "1.6rem",
             letterSpacing: "0.05em",
-            background: "linear-gradient(135deg, #29e3ff, #8b5cf6, #ff2bd6)",
+            background: "linear-gradient(135deg, #f5e6c8, #fff, #29e3ff)",
             WebkitBackgroundClip: "text",
             backgroundClip: "text",
             color: "transparent",
-          }}
-        >
-          {pct}
+            filter: "drop-shadow(0 0 12px rgba(245,230,200,0.3))",
+          }}>
+            {pct}
+          </div>
         </div>
-      </div>
 
-      {/* Brand name */}
-      <div
-        style={{
+        {/* Brand name — ГРАВИКОТ */}
+        <div style={{
           fontFamily: '"Unbounded", sans-serif',
           fontWeight: 800,
-          fontSize: "clamp(1.5rem, 4vw, 2.5rem)",
+          fontSize: "clamp(1.4rem, 4vw, 2.2rem)",
           letterSpacing: "0.35em",
           textTransform: "uppercase",
-          background: "linear-gradient(90deg, #29e3ff, #8b5cf6, #ff2bd6)",
+          background: "linear-gradient(90deg, #f5e6c8, #fff, #f5e6c8)",
+          backgroundSize: "200% auto",
           WebkitBackgroundClip: "text",
           backgroundClip: "text",
           color: "transparent",
-          marginBottom: 12,
-          textShadow: "0 0 32px rgba(41,227,255,0.35)",
-        }}
-      >
-        ГРАВИКОТ
-      </div>
+          animation: "shimmer 4s linear infinite",
+          filter: "drop-shadow(0 0 24px rgba(245,230,200,0.25))",
+          marginBottom: 20,
+        }}>
+          ГРАВИКОТ
+        </div>
 
-      {/* Progress bar */}
-      <div
-        style={{
-          width: "min(280px, 70vw)",
-          height: 3,
-          borderRadius: 999,
-          background: "rgba(255,255,255,0.06)",
+        {/* Elegant progress bar */}
+        <div style={{
+          width: "min(240px, 60vw)",
+          height: 1,
+          background: "rgba(245,230,200,0.08)",
           overflow: "hidden",
-          marginBottom: 24,
-        }}
-      >
-        <div
-          style={{
+          position: "relative",
+        }}>
+          <div style={{
             width: `${pct}%`,
             height: "100%",
-            background: "linear-gradient(90deg, #29e3ff, #8b5cf6, #ff2bd6)",
+            background: "linear-gradient(90deg, #f5e6c8, #29e3ff, #8b5cf6, #ff2bd6)",
             transition: "width 200ms linear",
-            boxShadow: "0 0 12px rgba(41,227,255,0.6)",
-          }}
-        />
+            boxShadow: "0 0 16px rgba(245,230,200,0.5), 0 0 32px rgba(41,227,255,0.3)",
+          }} />
+        </div>
+
+        {/* Subtle loading text */}
+        <div style={{
+          marginTop: 16,
+          fontFamily: '"Exo 2", sans-serif',
+          fontWeight: 400,
+          fontSize: "clamp(9px, 1.1vw, 11px)",
+          letterSpacing: "0.3em",
+          textTransform: "uppercase",
+          color: "rgba(245,230,200,0.25)",
+        }}>
+          Загрузка
+        </div>
       </div>
 
-      {/* Welcome message — appears when loading is done */}
-      {welcomeShown && !exiting && (
-        <div
-          style={{
-            position: "absolute",
-            bottom: "18%",
-            left: 0,
-            right: 0,
-            textAlign: "center",
-            animation: "preloader-welcome-appear 1s cubic-bezier(0.22, 0.61, 0.36, 1) forwards",
-          }}
-        >
-          <div
-            style={{
-              fontFamily: '"Unbounded", sans-serif',
-              fontWeight: 800,
-              fontSize: "clamp(1.2rem, 3.5vw, 2rem)",
-              letterSpacing: "0.2em",
-              textTransform: "uppercase",
-              background: "linear-gradient(90deg, #f5e6c8, #fff, #29e3ff, #c9a8ff, #ff8be0, #f5e6c8)",
-              backgroundSize: "200% auto",
-              WebkitBackgroundClip: "text",
-              backgroundClip: "text",
-              color: "transparent",
-              animation: "shimmer 3s linear infinite",
-              filter: "drop-shadow(0 0 20px rgba(41,227,255,.4)) drop-shadow(0 0 40px rgba(255,43,214,.3))",
-            }}
-          >
+      {/* Welcome message — ONLY appears briefly after loading completes */}
+      {isWelcome && (
+        <div style={{
+          position: "absolute",
+          inset: 0,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          zIndex: 10,
+          animation: "preloader-welcome-appear 0.8s cubic-bezier(0.22, 0.61, 0.36, 1) forwards",
+        }}>
+          {/* Welcome diamond accent */}
+          <div style={{
+            width: 40, height: 40,
+            border: "1px solid rgba(245,230,200,0.2)",
+            transform: "rotate(45deg)",
+            marginBottom: 28,
+            boxShadow: "0 0 30px rgba(245,230,200,0.1), inset 0 0 30px rgba(245,230,200,0.05)",
+          }} />
+
+          {/* Brand name small */}
+          <div style={{
+            fontFamily: '"Exo 2", sans-serif',
+            fontWeight: 600,
+            fontSize: "clamp(9px, 1.2vw, 11px)",
+            letterSpacing: "0.5em",
+            textTransform: "uppercase",
+            color: "rgba(245,230,200,0.4)",
+            marginBottom: 20,
+          }}>
+            Гравикот
+          </div>
+
+          {/* Welcome text */}
+          <div style={{
+            fontFamily: '"Unbounded", sans-serif',
+            fontWeight: 800,
+            fontSize: "clamp(1.1rem, 3vw, 1.8rem)",
+            letterSpacing: "0.25em",
+            textTransform: "uppercase",
+            background: "linear-gradient(90deg, #f5e6c8, #fff, #29e3ff, #c9a8ff, #ff8be0, #f5e6c8)",
+            backgroundSize: "200% auto",
+            WebkitBackgroundClip: "text",
+            backgroundClip: "text",
+            color: "transparent",
+            animation: "shimmer 3s linear infinite",
+            filter: "drop-shadow(0 0 24px rgba(245,230,200,0.5)) drop-shadow(0 0 48px rgba(41,227,255,0.3))",
+          }}>
             Добро пожаловать
           </div>
         </div>
