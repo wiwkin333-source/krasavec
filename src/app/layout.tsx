@@ -7,14 +7,14 @@ export const metadata: Metadata = {
   description: "ГРАВИКОТ — мастерская премиальной лазерной гравировки. Светящиеся сувениры, бокалы, аксессуары по вашим фото и логотипам. Доставка по России.",
   icons: {
     icon: [
-      { url: "/favicon.ico", sizes: "16x16 32x32 48x48" },
-      { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
-      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
-      { url: "/favicon-96x96.png", sizes: "96x96", type: "image/png" },
+      { url: "/favicon.ico?v=2", sizes: "16x16 32x32 48x48" },
+      { url: "/favicon-16x16.png?v=2", sizes: "16x16", type: "image/png" },
+      { url: "/favicon-32x32.png?v=2", sizes: "32x32", type: "image/png" },
+      { url: "/favicon-96x96.png?v=2", sizes: "96x96", type: "image/png" },
     ],
     apple: [
-      { url: "/apple-touch-icon.png", sizes: "180x180" },
-      { url: "/apple-touch-icon-precomposed.png", sizes: "180x180" },
+      { url: "/apple-touch-icon.png?v=2", sizes: "180x180" },
+      { url: "/apple-touch-icon-precomposed.png?v=2", sizes: "180x180" },
     ],
   },
   manifest: "/site.webmanifest",
@@ -55,7 +55,7 @@ export default function RootLayout({
           href="https://fonts.googleapis.com/css2?family=Unbounded:wght@600;800&family=Exo+2:wght@400;600&family=Bebas+Neue&display=swap"
         />
         {/* Safari pinned tab & macOS Touch Bar */}
-        <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#050510" />
+        <link rel="mask-icon" href="/safari-pinned-tab.svg?v=2" color="#050510" />
       </head>
       <body className="antialiased bg-background text-foreground" style={{ fontFamily: 'var(--font-sans)' }}>
         {children}
