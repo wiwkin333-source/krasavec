@@ -417,12 +417,9 @@ export function Gallery({ onOrder, canPlay }: { onOrder: () => void; canPlay?: b
       modeRef.current = "poster";
       setShowPoster(true);
     } else if (modeRef.current === "hero") {
-      // Loop the hero video — restart playback
-      const v = videoRef.current;
-      if (v) {
-        v.currentTime = 0;
-        v.play().catch(() => {});
-      }
+      // Hero plays once, then fade to poster
+      modeRef.current = "poster";
+      setShowPoster(true);
     }
   };
 
@@ -444,13 +441,26 @@ export function Gallery({ onOrder, canPlay }: { onOrder: () => void; canPlay?: b
     if (!canPlay) return;
     const v = videoRef.current;
     if (!v) return;
-    // Defer playMode to avoid synchronous setState in effect
+
+    let isVisible = true;
+
+    // Initial play after preloader
     const timer = setTimeout(() => playMode("hero"), 0);
+
     const io = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
-          if (entry.isIntersecting) { playMode("hero"); }
-          else { v.pause(); }
+          if (entry.isIntersecting) {
+            if (!isVisible) {
+              // Re-entering viewport: restart hero from the beginning
+              isVisible = true;
+              playMode("hero");
+            }
+          } else {
+            // Leaving viewport: pause video
+            isVisible = false;
+            v.pause();
+          }
         }
       },
       { threshold: 0.25 },
@@ -524,7 +534,7 @@ export function Gallery({ onOrder, canPlay }: { onOrder: () => void; canPlay?: b
                   fetchPriority="high"
                   decoding="async"
                   className="absolute inset-0 w-full h-full object-cover bg-black pointer-events-none"
-                  style={{ opacity: showPoster ? 1 : 0, transition: "opacity 1.2s ease-in-out" }}
+                  style={{ opacity: showPoster ? 1 : 0, transition: "opacity 1.5s ease-in-out" }}
                 />
               </div>
             </div>
