@@ -467,10 +467,10 @@ function CategoryOverlay({
               style={{ boxShadow: `0 20px 80px -10px ${accent}cc, 0 0 0 1px ${accent}55`, animationDelay: `${idx * 90}ms`, animationDuration: "600ms", animationFillMode: "both" }}>
               <button type="button"
                 onClick={(e) => { e.stopPropagation(); setLightbox({ images, index: 0, title: p.name ?? "" }); }}
-                className="relative flex-1 min-h-0 bg-transparent border-0 p-0 cursor-zoom-in text-left aspect-[3/4] sm:aspect-square"
+                className="relative bg-transparent border-0 p-0 cursor-zoom-in text-left block"
                 aria-label={`Открыть ${p.name}`}>
                 <img src={p.src} alt={`Гравировка на стекле — ${p.name}, ${p.desc}`}
-                  className="absolute inset-0 w-full h-full object-contain" loading="lazy" decoding="async"
+                  className="block w-full h-auto object-contain" loading="lazy" decoding="async"
                   style={{ background: "radial-gradient(ellipse at center, rgba(20,10,40,0.6) 0%, rgba(5,5,16,0.9) 100%)" }} />
               </button>
               <div className="px-4 sm:px-6 py-4 sm:py-5 bg-black/80 backdrop-blur-sm">

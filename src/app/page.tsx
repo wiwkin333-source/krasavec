@@ -19,9 +19,17 @@ export default function Home() {
   const [preloading, setPreloading] = useState<boolean>(() => {
     if (typeof window === "undefined") return false;
     try {
+      // Show preloader on every page load/reload (not just first visit)
+      // Use sessionStorage only as a soft signal — if the page was truly reloaded
+      // (F5 / Ctrl+R / navigation), the flag gets cleared by the browser on hard reload,
+      // but on soft navigation within the session it persists.
+      // We also check performance.navigation to detect reloads.
+      const navEntry = performance.getEntriesByType?.("navigation")?.[0] as PerformanceNavigationTiming | undefined;
+      const isReload = navEntry?.type === "reload";
       const done = sessionStorage.getItem(PRELOADER_KEY) === "1";
-      if (!done) return true;
-      return document.readyState !== "complete";
+      // Show preloader if: fresh visit (no flag), or it's a reload
+      if (!done || isReload) return true;
+      return false;
     } catch {
       return true;
     }
@@ -30,7 +38,11 @@ export default function Home() {
   const [siteVisible, setSiteVisible] = useState(() => {
     if (typeof window === "undefined") return false;
     try {
-      return sessionStorage.getItem(PRELOADER_KEY) === "1" && document.readyState === "complete";
+      const navEntry = performance.getEntriesByType?.("navigation")?.[0] as PerformanceNavigationTiming | undefined;
+      const isReload = navEntry?.type === "reload";
+      const done = sessionStorage.getItem(PRELOADER_KEY) === "1";
+      // Site is already visible only if preloader was completed AND this is not a reload
+      return done && !isReload;
     } catch {
       return false;
     }
