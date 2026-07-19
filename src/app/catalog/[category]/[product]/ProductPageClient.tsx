@@ -9,26 +9,48 @@ export function ProductPageClient({ cat, prod }: { cat: Category; prod: Product 
   const images = [prod.src, ...(prod.gallery ?? [])].filter(Boolean) as string[];
   const [currentIdx, setCurrentIdx] = useState(0);
   const [orderOpen, setOrderOpen] = useState(false);
+  const [zoomed, setZoomed] = useState(false);
 
-  // Keyboard navigation for gallery
+  const goNext = useCallback(() => setCurrentIdx((i) => (i + 1) % images.length), [images.length]);
+  const goPrev = useCallback(() => setCurrentIdx((i) => (i - 1 + images.length) % images.length), [images.length]);
+
+  // Keyboard navigation for gallery + zoom
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "ArrowRight") { e.preventDefault(); setCurrentIdx((i) => (i + 1) % images.length); }
-      if (e.key === "ArrowLeft") { e.preventDefault(); setCurrentIdx((i) => (i - 1 + images.length) % images.length); }
+      if (e.key === "Escape") { setZoomed(false); return; }
+      if (e.key === "ArrowRight") { e.preventDefault(); goNext(); }
+      if (e.key === "ArrowLeft") { e.preventDefault(); goPrev(); }
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [images.length]);
+  }, [goNext, goPrev]);
+
+  // Lock body scroll when zoomed
+  useEffect(() => {
+    if (zoomed) {
+      const y = window.scrollY;
+      document.body.style.position = "fixed";
+      document.body.style.top = `-${y}px`;
+      document.body.style.width = "100%";
+      return () => {
+        document.body.style.position = "";
+        document.body.style.top = "";
+        document.body.style.width = "";
+        window.scrollTo(0, y);
+      };
+    }
+  }, [zoomed]);
 
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8">
       <div className="grid md:grid-cols-2 gap-8 md:gap-12">
         {/* Image gallery */}
         <div>
-          {/* Main image */}
+          {/* Main image with navigation + counter */}
           <div
-            className="relative rounded-2xl overflow-hidden aspect-square"
+            className="relative rounded-2xl overflow-hidden aspect-square group cursor-zoom-in"
             style={{ boxShadow: `0 20px 80px -10px ${cat.accent}88` }}
+            onClick={() => setZoomed(true)}
           >
             <img
               src={images[currentIdx]}
@@ -38,6 +60,38 @@ export function ProductPageClient({ cat, prod }: { cat: Category; prod: Product 
                 background: "radial-gradient(ellipse at center, rgba(20,10,40,0.6) 0%, rgba(5,5,16,0.9) 100%)",
               }}
             />
+
+            {/* Navigation arrows — visible on hover or always on mobile */}
+            {images.length > 1 && (
+              <>
+                <button
+                  onClick={(e) => { e.stopPropagation(); goPrev(); }}
+                  className="absolute left-3 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full glass flex items-center justify-center text-foreground/60 hover:text-white hover:scale-110 transition opacity-0 group-hover:opacity-100 sm:opacity-0 sm:group-hover:opacity-100"
+                  aria-label="Предыдущее фото"
+                >
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6" /></svg>
+                </button>
+                <button
+                  onClick={(e) => { e.stopPropagation(); goNext(); }}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full glass flex items-center justify-center text-foreground/60 hover:text-white hover:scale-110 transition opacity-0 group-hover:opacity-100 sm:opacity-0 sm:group-hover:opacity-100"
+                  aria-label="Следующее фото"
+                >
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6" /></svg>
+                </button>
+              </>
+            )}
+
+            {/* Photo counter */}
+            {images.length > 1 && (
+              <div className="absolute bottom-3 left-1/2 -translate-x-1/2 z-10 px-3 py-1 rounded-full glass text-xs font-tech tracking-wider text-foreground/60 opacity-0 group-hover:opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition">
+                {currentIdx + 1} / {images.length}
+              </div>
+            )}
+
+            {/* Zoom hint icon */}
+            <div className="absolute top-3 right-3 z-10 w-8 h-8 rounded-full glass flex items-center justify-center text-foreground/40 opacity-0 group-hover:opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition pointer-events-none">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+            </div>
           </div>
 
           {/* Thumbnails */}
@@ -141,6 +195,79 @@ export function ProductPageClient({ cat, prod }: { cat: Category; prod: Product 
           )}
         </div>
       </div>
+
+      {/* Zoom lightbox */}
+      {zoomed && (
+        <div
+          className="fixed inset-0 z-[90] bg-black/95 backdrop-blur-xl flex items-center justify-center p-4"
+          onClick={() => setZoomed(false)}
+        >
+          <div className="relative max-w-4xl w-full" onClick={(e) => e.stopPropagation()}>
+            {/* Header: title + counter + close */}
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center gap-4">
+                <h2 className="font-display text-xl text-foreground">{prod.name}</h2>
+                {images.length > 1 && (
+                  <span className="text-foreground/40 font-tech text-sm tracking-wider">
+                    {currentIdx + 1} / {images.length}
+                  </span>
+                )}
+              </div>
+              <button
+                onClick={() => setZoomed(false)}
+                className="font-tech uppercase tracking-[.18em] text-xs px-4 py-2 rounded-full glass hover:scale-105 transition"
+              >
+                Закрыть &times;
+              </button>
+            </div>
+
+            {/* Main zoomed image */}
+            <div
+              className="relative aspect-square rounded-2xl overflow-hidden"
+              style={{ boxShadow: `0 20px 80px -10px ${cat.accent}88` }}
+            >
+              <img
+                src={images[currentIdx]}
+                alt={`${prod.name} — фото ${currentIdx + 1}`}
+                className="absolute inset-0 w-full h-full object-contain"
+                style={{ background: "radial-gradient(ellipse at center, rgba(20,10,40,0.6) 0%, rgba(5,5,16,0.9) 100%)" }}
+              />
+            </div>
+
+            {/* Lightbox navigation */}
+            {images.length > 1 && (
+              <div className="flex items-center justify-center gap-4 mt-4">
+                <button
+                  onClick={goPrev}
+                  className="px-4 py-2 rounded-full glass hover:scale-105 transition text-sm font-tech"
+                  aria-label="Предыдущее фото"
+                >
+                  &larr;
+                </button>
+                <div className="flex gap-2">
+                  {images.map((_, i) => (
+                    <button
+                      key={i}
+                      onClick={() => setCurrentIdx(i)}
+                      className={`w-2.5 h-2.5 rounded-full transition ${
+                        i === currentIdx ? "bg-white/80 scale-125" : "bg-white/20 hover:bg-white/40"
+                      }`}
+                      aria-label={`Фото ${i + 1}`}
+                    />
+                  ))}
+                </div>
+                <button
+                  onClick={goNext}
+                  className="px-4 py-2 rounded-full glass hover:scale-105 transition text-sm font-tech"
+                  aria-label="Следующее фото"
+                >
+                  &rarr;
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* Order modal */}
       {orderOpen && (
