@@ -224,6 +224,15 @@
 
   .text-luxury-glow { animation: luxury-flicker 4s ease-in-out infinite; }
 
+  /* Subtle neon shimmer — slow, breathing glow layered onto the luxe-title
+     gradient. Kept deliberately gentle: low opacity, long durations,
+     slight drift between two glow colors. No hard flicker, no flashing. */
+  .neon-title-soft {
+    animation:
+      shimmer 8s linear infinite,
+      neon-soft-breathe 6s ease-in-out infinite;
+  }
+
   .divider-beam {
     height: 1px;
     background: linear-gradient(90deg, transparent, #29e3ff, #ff2bd6, transparent);
@@ -353,6 +362,16 @@
 @keyframes luxury-flicker {
   0%,100% { text-shadow: 0 0 12px rgba(41,227,255,.4); }
   50% { text-shadow: 0 0 24px rgba(255,43,214,.5), 0 0 32px rgba(139,92,246,.4); }
+}
+/* Subtle neon breathing — gentle pulsation of the title's own drop-shadow.
+   No hard flicker, no flashing; just a slow drift in glow intensity. */
+@keyframes neon-soft-breathe {
+  0%, 100% {
+    filter: drop-shadow(0 0 18px rgba(41,227,255,.18)) drop-shadow(0 0 26px rgba(255,43,214,.12));
+  }
+  50% {
+    filter: drop-shadow(0 0 26px rgba(41,227,255,.26)) drop-shadow(0 0 36px rgba(255,43,214,.20));
+  }
 }
 @keyframes border-spin {
   to { --ang: 360deg; }
@@ -653,6 +672,7 @@
   .comet,
   .shimmer-text,
   .luxe-title,
+  .neon-title-soft,
   .headline-cta,
   .divider-beam,
   .bg-grid-anim,
