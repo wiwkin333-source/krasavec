@@ -29,6 +29,14 @@ export function SvoyakPromo() {
           <div className="relative aspect-[4/3] sm:aspect-square mx-auto max-w-[780px] w-full">
             <div className="absolute inset-0 pointer-events-none select-none"
               style={{ background: "radial-gradient(circle at 50% 55%, rgba(139,92,246,.35) 0%, rgba(41,227,255,.18) 35%, rgba(255,43,214,.12) 60%, transparent 75%)", filter: "blur(40px)", transform: "scale(1.15)", zIndex: 0 }} />
+            {/* Drifting smoke plume — three layered radial gradients (violet /
+                cyan / magenta) that slowly drift and breathe. Purely
+                decorative: pointer-events: none, no layout impact. Sits above
+                the static gradient backdrop but below the shar.webp image and
+                the foreground text content. */}
+            <div className="kvant-smoke" aria-hidden>
+              <span />
+            </div>
             <img src="/assets/shar.webp" alt="" aria-hidden
               className="absolute inset-0 w-full h-full object-contain pointer-events-none select-none scale-[1.15] md:scale-75"
               loading="lazy" decoding="async"
