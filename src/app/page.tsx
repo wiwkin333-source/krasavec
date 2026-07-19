@@ -65,7 +65,7 @@ export default function Home() {
       {preloading && <Preloader onComplete={handlePreloaderComplete} />}
       <StarrySky />
       <main
-        className="min-h-screen relative"
+        className="min-h-screen relative overflow-x-hidden max-w-full"
         suppressHydrationWarning
         style={{
           background: "transparent",
@@ -73,11 +73,11 @@ export default function Home() {
           transition: "opacity 1200ms cubic-bezier(0.4, 0, 0.2, 1)",
         }}
       >
-        <section className="relative flex items-center justify-center overflow-hidden pt-8 pb-2 px-4">
+        <section className="relative flex items-center justify-center overflow-hidden pt-8 pb-2 px-4 max-w-full">
           <HeroBackground />
           <HeartBurst />
           <div className="relative z-10 w-full text-center mx-auto">
-            <div className="font-tech uppercase tracking-[.4em] text-sky-300/80 text-[10px] md:text-xs leading-none">
+            <div className="font-tech uppercase tracking-[.2em] sm:tracking-[.4em] text-sky-300/80 text-[10px] md:text-xs leading-none">
               ГРАВИКОТ — ЛАЗЕРНОЕ АТЕЛЬЕ
             </div>
             <h1 className="luxe-title mt-1 uppercase leading-tight text-[clamp(1rem,3.8vw,2.25rem)]">Глоу-арт гравировка</h1>

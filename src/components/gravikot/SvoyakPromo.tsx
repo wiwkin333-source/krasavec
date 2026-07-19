@@ -26,7 +26,7 @@ export function SvoyakPromo() {
     <section className="relative py-14 px-4">
       <div className="mx-auto" style={{ maxWidth: 780 }}>
         <Reveal>
-          <div className="relative aspect-square mx-auto" style={{ maxWidth: 780 }}>
+          <div className="relative aspect-[4/3] sm:aspect-square mx-auto" style={{ maxWidth: 780 }}>
             <div className="absolute inset-0 pointer-events-none select-none"
               style={{ background: "radial-gradient(circle at 50% 55%, rgba(139,92,246,.35) 0%, rgba(41,227,255,.18) 35%, rgba(255,43,214,.12) 60%, transparent 75%)", filter: "blur(40px)", transform: "scale(1.15)", zIndex: 0 }} />
             <img src="/assets/shar.webp" alt="" aria-hidden

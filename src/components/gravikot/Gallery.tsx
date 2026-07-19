@@ -398,10 +398,10 @@ function CategoryOverlay({
   const gridCols = products.length === 3 ? "grid-cols-1 md:grid-cols-3" : "grid-cols-1 md:grid-cols-2";
 
   return createPortal(
-    <div className="fixed inset-0 z-[60] bg-background/85 backdrop-blur-xl animate-in fade-in duration-300 flex flex-col p-6 md:p-12 overflow-y-auto"
+    <div className="fixed inset-0 z-[60] bg-background/85 backdrop-blur-xl animate-in fade-in duration-300 flex flex-col p-3 sm:p-6 md:p-12 overflow-y-auto overflow-x-hidden"
       onClick={onClose}>
       <div className="flex items-center justify-between mb-6 md:mb-10" onClick={(e) => e.stopPropagation()}>
-        <h2 className="font-display text-3xl md:text-5xl text-foreground">{title}</h2>
+        <h2 className="font-display text-2xl sm:text-3xl md:text-5xl text-foreground break-words">{title}</h2>
         <button onClick={(e) => { e.stopPropagation(); onClose(); }}
           className="font-tech uppercase tracking-[.18em] text-xs px-4 py-2 rounded-full glass hover:scale-105 transition">
           Закрыть &times;
@@ -412,7 +412,7 @@ function CategoryOverlay({
           const images = [p.src, ...(p.gallery ?? [])].filter(Boolean) as string[];
           return (
             <div key={idx}
-              className="relative rounded-2xl overflow-hidden glass text-left flex flex-col animate-in fade-in zoom-in-75 slide-in-from-bottom-8 min-h-[60vh]"
+              className="relative rounded-2xl overflow-hidden glass text-left flex flex-col animate-in fade-in zoom-in-75 slide-in-from-bottom-8 min-h-[40vh] sm:min-h-[60vh]"
               style={{ boxShadow: `0 20px 80px -10px ${accent}cc, 0 0 0 1px ${accent}55`, animationDelay: `${idx * 90}ms`, animationDuration: "600ms", animationFillMode: "both" }}>
               <button type="button"
                 onClick={(e) => { e.stopPropagation(); setLightbox({ images, index: 0, title: p.name ?? "" }); }}
@@ -421,15 +421,15 @@ function CategoryOverlay({
                 <img src={p.src} alt={`Гравировка на стекле — ${p.name}, ${p.desc}`}
                   className="absolute inset-0 w-full h-full object-cover" loading="lazy" decoding="async" />
               </button>
-              <div className="px-6 py-5 bg-black/80 backdrop-blur-sm">
-                <div className="text-base md:text-lg font-tech uppercase tracking-[.14em] text-sky-200">{p.name}</div>
-                <div className="text-base text-foreground/70 leading-snug mt-1">{p.desc}</div>
+              <div className="px-4 sm:px-6 py-4 sm:py-5 bg-black/80 backdrop-blur-sm">
+                <div className="text-sm sm:text-base md:text-lg font-tech uppercase tracking-[.1em] sm:tracking-[.14em] text-sky-200 break-words">{p.name}</div>
+                <div className="text-sm sm:text-base text-foreground/70 leading-snug mt-1 break-words">{p.desc}</div>
                 <div className="flex items-center justify-between gap-3 mt-2">
-                  <div className="text-xl md:text-2xl font-display text-foreground">{p.price}</div>
+                  <div className="text-lg sm:text-xl md:text-2xl font-display text-foreground">{p.price}</div>
                   {onOrder && (
                     <button type="button" onClick={(e) => { e.stopPropagation(); onOrder(); }} aria-label="Заказать"
                       className="shrink-0 bg-transparent border-0 p-0 cursor-pointer transition-transform duration-300 hover:scale-110 focus:outline-none rounded-xl">
-                      <img src="/assets/cart-button.webp" alt="Заказать" className="w-14 h-14 md:w-16 md:h-16 select-none"
+                      <img src="/assets/cart-button.webp" alt="Заказать" className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 select-none"
                         style={{ filter: "drop-shadow(0 0 12px rgba(139,92,246,.55)) drop-shadow(0 0 20px rgba(41,227,255,.35))" }}
                         draggable={false} />
                     </button>
@@ -578,9 +578,9 @@ export function Gallery({ onOrder, canPlay }: { onOrder: () => void; canPlay?: b
     <>
       <section className="relative py-10 px-4 overflow-hidden" aria-label="Каталог гравировки">
         <h2 className="sr-only">Каталог коллекций</h2>
-        <div className="relative mx-auto" style={{ width: "min(820px, 100%)", aspectRatio: "1 / 1" }}>
+        <div className="relative mx-auto max-w-full" style={{ width: "min(820px, 100%)", aspectRatio: "1 / 1" }}>
           {/* glow */}
-          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[720px] h-[720px] max-w-[120vw] max-h-[120vw] rounded-full animate-pulse-glow pointer-events-none"
+          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[720px] h-[720px] max-w-[90vw] max-h-[90vw] rounded-full animate-pulse-glow pointer-events-none"
             style={{ background: "radial-gradient(circle, rgba(139,92,246,.4), rgba(255,43,214,.3) 40%, transparent 70%)" }} />
 
           {orbits.map((o) => (

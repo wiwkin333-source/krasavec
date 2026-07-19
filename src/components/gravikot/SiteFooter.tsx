@@ -31,7 +31,7 @@ export function SiteFooter() {
             <Link href="/terms" className="block text-sky-300 hover:text-white transition text-sm">Пользовательское соглашение</Link>
           </div>
         </nav>
-        <div className="text-sky-100/85 text-sm whitespace-pre-line">
+        <div className="text-sky-100/85 text-sm break-words">
           &copy; {new Date().getFullYear()} ГРАВИКОТ. Все права защищены
         </div>
       </div>

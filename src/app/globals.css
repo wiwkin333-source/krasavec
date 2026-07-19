@@ -94,13 +94,14 @@
 }
 
 @layer base {
-  * { border-color: var(--color-border); }
-  html { scroll-behavior: smooth; touch-action: pan-y; }
+  * { border-color: var(--color-border); box-sizing: border-box; }
+  html { scroll-behavior: smooth; touch-action: pan-y; overflow-x: hidden; max-width: 100vw; }
   body {
     background-color: var(--background);
     color: var(--foreground);
     font-family: var(--font-sans);
     overflow-x: hidden;
+    max-width: 100vw;
     touch-action: pan-y;
     overscroll-behavior-x: none;
     -webkit-font-smoothing: antialiased;
@@ -113,7 +114,7 @@
     pointer-events: auto;
     -webkit-touch-callout: none;
   }
-  img { -webkit-user-drag: none; }
+  img { -webkit-user-drag: none; max-width: 100%; height: auto; }
   img::selection, video::selection { background: transparent; }
   main, footer {
     padding-left: max(0px, env(safe-area-inset-left));
@@ -187,10 +188,10 @@
     font-size: clamp(1.5rem, 5.5vw, 3.75rem);
     line-height: 1.05;
     letter-spacing: -0.02em;
-    white-space: nowrap;
-    overflow-wrap: normal;
-    word-break: normal;
-    hyphens: none;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    hyphens: auto;
+    max-width: 100%;
     background: linear-gradient(90deg, #f5e6c8, #fff, #29e3ff, #c9a8ff, #ff8be0, #f5e6c8);
     background-size: 200% auto;
     -webkit-background-clip: text;
@@ -266,6 +267,23 @@
 
   @media (max-width: 479px) {
     .btn-fw-mobile { width: 100% !important; max-width: 100% !important; }
+    .luxe-title { font-size: clamp(1.2rem, 7vw, 1.8rem); letter-spacing: -0.01em; }
+    .headline-cta { font-size: clamp(2.2rem, 12vw, 4rem); }
+    .neon-border { border-width: 1px; }
+  }
+
+  /* Mobile: prevent horizontal overflow from any child */
+  @media (max-width: 640px) {
+    .luxe-title { white-space: normal; }
+    .glass { backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+    .social-icon { width: 3rem; height: 3rem; }
+  }
+
+  /* Very small screens: extra compact */
+  @media (max-width: 374px) {
+    .luxe-title { font-size: clamp(1rem, 6vw, 1.5rem); }
+    .font-display { letter-spacing: -0.02em; }
+    .font-tech { letter-spacing: 0.01em; }
   }
 }
 

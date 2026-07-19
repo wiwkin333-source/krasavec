@@ -30,9 +30,9 @@ export function CatWizardButton({ onClick }: { onClick: () => void }) {
       onClick={onClick}
       aria-label="Запустить проект"
       className="cat-wizard btn-fw-mobile group relative inline-block bg-transparent border-0 p-0 cursor-pointer"
-      style={{ width: "min(420px, 80vw)" }}
+      style={{ width: "min(420px, 90vw)" }}
     >
-      <span aria-hidden className="absolute inset-0 pointer-events-none overflow-visible">
+      <span aria-hidden className="absolute inset-0 pointer-events-none overflow-hidden">
         {fireflies.map((f) => (
           <span
             key={f.id}

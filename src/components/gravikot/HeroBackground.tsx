@@ -37,11 +37,11 @@ export function HeroBackground() {
     <div className="absolute inset-0 overflow-hidden pointer-events-none">
       {!isMobile && <div className="absolute inset-0 bg-grid-anim opacity-60" />}
       <div className="absolute inset-0 radial-glow" />
-      <div className={`absolute -top-32 -left-32 w-[520px] h-[520px] rounded-full ${blurClass} opacity-50 ${floatClass}`}
+      <div className={`absolute -top-32 -left-32 w-[520px] h-[520px] max-w-[60vw] max-h-[60vw] rounded-full ${blurClass} opacity-50 ${floatClass}`}
         style={{ background: "radial-gradient(circle, #29e3ff, transparent 70%)" }} />
-      <div className={`absolute top-1/3 -right-40 w-[600px] h-[600px] rounded-full ${blurClass} opacity-40 ${floatClass}`}
+      <div className={`absolute top-1/3 -right-40 w-[600px] h-[600px] max-w-[70vw] max-h-[70vw] rounded-full ${blurClass} opacity-40 ${floatClass}`}
         style={{ background: "radial-gradient(circle, #ff2bd6, transparent 70%)", animationDelay: "2s" }} />
-      <div className={`absolute bottom-0 left-1/3 w-[380px] h-[380px] rounded-full ${blurClass} opacity-50 ${floatClass}`}
+      <div className={`absolute bottom-0 left-1/3 w-[380px] h-[380px] max-w-[50vw] max-h-[50vw] rounded-full ${blurClass} opacity-50 ${floatClass}`}
         style={{ background: "radial-gradient(circle, #8b5cf6, transparent 70%)", animationDelay: "4s" }} />
       <div className="absolute top-0 inset-x-0 h-[40vh]" style={{ background: "linear-gradient(to bottom, var(--background), transparent)" }} />
       <div className="absolute bottom-0 inset-x-0 h-[40vh]" style={{ background: "linear-gradient(to top, var(--background), transparent)" }} />

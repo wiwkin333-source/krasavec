@@ -36,7 +36,7 @@ export function OrderForm({ open, onClose }: { open: boolean; onClose: () => voi
           className="absolute top-4 right-4 p-2 rounded-full glass hover:scale-110 transition">
           <X className="w-5 h-5" />
         </button>
-        <h2 className="luxe-title text-center">Свяжитесь с нами</h2>
+        <h2 className="luxe-title text-center text-xl sm:text-2xl">Свяжитесь с нами</h2>
         <p className="mt-3 text-center text-sky-200/80 font-tech">
           Выберите удобный для вас мессенджер:
         </p>
@@ -48,7 +48,7 @@ export function OrderForm({ open, onClose }: { open: boolean; onClose: () => voi
                 style={{ background: `${color}22`, boxShadow: `0 0 24px -4px ${color}`, color }}>
                 <Icon className="w-6 h-6" />
               </span>
-              <span className="font-tech uppercase tracking-[.2em] text-lg">{name}</span>
+              <span className="font-tech uppercase tracking-[.15em] sm:tracking-[.2em] text-base sm:text-lg">{name}</span>
             </a>
           ))}
         </div>

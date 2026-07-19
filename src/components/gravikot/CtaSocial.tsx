@@ -28,7 +28,7 @@ export function CtaSocial() {
                 style={{ fontFamily: '"Unbounded", sans-serif', color: "#0a2472", animation: "slogan-glow-cycle 6s ease-in-out infinite" }}>
                 точность в деталях, характер в результате.
               </p>
-              <div className="relative flex flex-wrap items-center justify-center gap-6 sm:gap-12 md:gap-20 px-4">
+              <div className="relative flex flex-wrap items-center justify-center gap-4 sm:gap-12 md:gap-20 px-4">
                 {links.map(({ name, url, color, Icon }) => (
                   <a key={name} href={url} target="_blank" rel="noopener noreferrer"
                     className="social-icon social-icon-neon w-16 h-16 sm:w-20 sm:h-20 md:!w-[5.4rem] md:!h-[5.4rem]"

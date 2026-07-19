@@ -11,14 +11,14 @@ export function NeonButton({ variant = "primary", children, className = "", ...r
   if (variant === "ghost") {
     return (
       <button {...rest}
-        className={`neon-border rounded-full px-8 py-4 font-tech uppercase tracking-[.22em] text-sm text-white hover:scale-105 transition-transform ${className}`}>
+        className={`neon-border rounded-full px-5 sm:px-8 py-3 sm:py-4 font-tech uppercase tracking-[.22em] text-sm text-white hover:scale-105 transition-transform ${className}`}>
         {children}
       </button>
     );
   }
   return (
     <button {...rest}
-      className={`relative group inline-flex items-center justify-center h-16 px-10 rounded-full font-tech uppercase tracking-[.22em] text-sm text-black overflow-hidden ${className}`}
+      className={`relative group inline-flex items-center justify-center h-12 sm:h-16 px-6 sm:px-10 rounded-full font-tech uppercase tracking-[.22em] text-sm text-black overflow-hidden ${className}`}
       style={{
         background: "linear-gradient(135deg, #29e3ff, #8b5cf6, #ff2bd6)",
         backgroundSize: "200% 200%",
