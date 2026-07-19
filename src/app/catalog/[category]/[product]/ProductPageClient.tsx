@@ -5,18 +5,16 @@ import { useRouter } from "next/navigation";
 import type { Category, Product } from "@/lib/catalog-data";
 
 /**
- * Full-screen product gallery — exact replica of the original Lightbox
- * from CategoryOverlay.tsx in neon-gravikot.
+ * Full-screen product gallery.
  *
  * Features:
  *  - Click to zoom (1x ↔ 2x), pan when zoomed (pointer capture)
- *  - Horizontal swipe → navigate images, vertical swipe down → close
- *  - Drag-to-close animation (opacity + translateY fade)
- *  - Top pill: title + counter + zoom −/+ + close ✕
- *  - Side arrows: ‹ › with glass + accent glow
+ *  - Horizontal swipe → navigate, vertical swipe down → close with drag animation
+ *  - Top bar: title + zoom −/+ + close ✕  (dark translucent, visible on any background)
+ *  - Side arrows: round, dark translucent, white chevrons, visible on any background
  *  - Dot indicators at bottom
  *  - Keyboard: ← → navigate, +/- zoom, Escape close
- *  - Disclaimer text: "Каждое изделие уникально..."
+ *  - Disclaimer: very dim text
  */
 
 export function ProductPageClient({ cat, prod }: { cat: Category; prod: Product }) {
@@ -26,6 +24,7 @@ export function ProductPageClient({ cat, prod }: { cat: Category; prod: Product 
   const [pan, setPan] = useState({ x: 0, y: 0 });
   const [dragY, setDragY] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
+  const imageAreaRef = useRef<HTMLDivElement>(null);
   const touchStartX = useRef<number | null>(null);
   const touchStartY = useRef<number | null>(null);
   const swipeAxis = useRef<"x" | "y" | null>(null);
@@ -85,7 +84,9 @@ export function ProductPageClient({ cat, prod }: { cat: Category; prod: Product 
     return () => { document.body.style.overflow = prev; };
   }, []);
 
+  // Touch handlers for swipe (only when NOT zoomed)
   const onTouchStart = (e: React.TouchEvent) => {
+    if (zoom !== 1) return;
     touchStartX.current = e.touches[0].clientX;
     touchStartY.current = e.touches[0].clientY;
     swipeAxis.current = null;
@@ -94,10 +95,12 @@ export function ProductPageClient({ cat, prod }: { cat: Category; prod: Product 
     if (touchStartX.current == null || touchStartY.current == null || zoom !== 1) return;
     const dx = e.touches[0].clientX - touchStartX.current;
     const dy = e.touches[0].clientY - touchStartY.current;
-    if (swipeAxis.current == null && (Math.abs(dx) > 8 || Math.abs(dy) > 8)) {
+    if (swipeAxis.current == null && (Math.abs(dx) > 10 || Math.abs(dy) > 10)) {
       swipeAxis.current = Math.abs(dy) > Math.abs(dx) ? "y" : "x";
     }
-    if (swipeAxis.current === "y" && dy > 0) setDragY(dy);
+    if (swipeAxis.current === "y" && dy > 0) {
+      setDragY(dy);
+    }
   };
   const onTouchEnd = (e: React.TouchEvent) => {
     if (touchStartX.current == null || touchStartY.current == null || zoom !== 1) {
@@ -131,31 +134,36 @@ export function ProductPageClient({ cat, prod }: { cat: Category; prod: Product 
         WebkitBackdropFilter: "blur(16px)",
       }}
     >
-      {/* Top pill: title + counter + zoom + close */}
+      {/* Top bar: title + zoom + close — dark translucent, visible on any background */}
       <div className="absolute top-4 left-0 right-0 flex justify-center pointer-events-none z-10">
-        <div className="pointer-events-auto flex items-center gap-4 md:gap-5 px-4 py-2 rounded-full border border-white/[0.06] bg-white/[0.04] backdrop-blur-md shadow-[0_8px_32px_-8px_rgba(0,0,0,0.4)]">
-          <div className="font-tech text-[11px] tracking-[.14em] text-foreground/40 truncate max-w-[42vw] md:max-w-[280px]">
+        <div
+          className="pointer-events-auto flex items-center gap-4 md:gap-5 px-5 py-2.5 rounded-full"
+          style={{
+            background: "rgba(0,0,0,0.55)",
+            boxShadow: "0 4px 24px rgba(0,0,0,0.4)",
+          }}
+        >
+          <div className="font-tech text-[11px] tracking-[.14em] text-white/80 truncate max-w-[42vw] md:max-w-[280px]">
             {prod.name}
-            {hasMany && <span className="ml-2 text-foreground/25">{idx + 1} / {images.length}</span>}
           </div>
-          <div className="flex items-center gap-0.5">
+          <div className="flex items-center gap-1">
             <button
               type="button"
               aria-label="Уменьшить"
               onClick={(e) => { e.stopPropagation(); setZoomReset((z) => Math.max(1, z - 0.5)); }}
-              className="w-7 h-7 flex items-center justify-center rounded-full text-foreground/40 hover:text-foreground/75 hover:bg-white/[0.06] transition text-xs"
+              className="w-8 h-8 flex items-center justify-center rounded-full text-white/70 hover:text-white hover:bg-white/10 transition text-sm"
             >−</button>
             <button
               type="button"
               aria-label="Увеличить"
               onClick={(e) => { e.stopPropagation(); setZoomReset((z) => Math.min(4, z + 0.5)); }}
-              className="w-7 h-7 flex items-center justify-center rounded-full text-foreground/40 hover:text-foreground/75 hover:bg-white/[0.06] transition text-xs"
+              className="w-8 h-8 flex items-center justify-center rounded-full text-white/70 hover:text-white hover:bg-white/10 transition text-sm"
             >+</button>
             <button
               type="button"
               aria-label="Закрыть"
               onClick={(e) => { e.stopPropagation(); handleClose(); }}
-              className="w-7 h-7 flex items-center justify-center rounded-full text-foreground/40 hover:text-foreground/75 hover:bg-white/[0.06] transition text-xs"
+              className="w-8 h-8 flex items-center justify-center rounded-full text-white/70 hover:text-white hover:bg-white/10 transition text-sm"
             >✕</button>
           </div>
         </div>
@@ -163,6 +171,7 @@ export function ProductPageClient({ cat, prod }: { cat: Category; prod: Product 
 
       {/* Main image area */}
       <div
+        ref={imageAreaRef}
         className="relative flex-1 min-h-0 overflow-hidden pt-14 md:pt-16"
         onTouchStart={onTouchStart}
         onTouchMove={onTouchMove}
@@ -180,7 +189,7 @@ export function ProductPageClient({ cat, prod }: { cat: Category; prod: Product 
             <div
               key={i}
               className="absolute inset-0 flex items-center justify-center transition-opacity duration-500 ease-in-out overflow-hidden"
-              style={{ opacity: active ? 1 : 0, pointerEvents: active ? "auto" : "none", touchAction: zoomed ? "none" : "auto" }}
+              style={{ opacity: active ? 1 : 0, pointerEvents: active ? "auto" : "none" }}
             >
               <img
                 src={src}
@@ -202,7 +211,7 @@ export function ProductPageClient({ cat, prod }: { cat: Category; prod: Product 
                   if (!d || d.pointerId !== e.pointerId) return;
                   const dx = e.clientX - d.startX;
                   const dy = e.clientY - d.startY;
-                  if (!isPanning.current && Math.abs(dx) + Math.abs(dy) > 4) isPanning.current = true;
+                  if (!isPanning.current && Math.abs(dx) + Math.abs(dy) > 3) isPanning.current = true;
                   setPan({ x: d.baseX + dx, y: d.baseY + dy });
                 }}
                 onPointerUp={(e) => {
@@ -225,23 +234,33 @@ export function ProductPageClient({ cat, prod }: { cat: Category; prod: Product 
           );
         })}
 
-        {/* Navigation arrows */}
+        {/* Navigation arrows — round, dark translucent, visible on any background */}
         {hasMany && (
           <>
             <button
               type="button"
               aria-label="Предыдущее"
               onClick={(e) => { e.stopPropagation(); go(-1); }}
-              className="absolute top-1/2 -translate-y-1/2 left-4 md:left-8 w-12 h-12 rounded-full glass flex items-center justify-center text-2xl text-foreground hover:scale-110 transition"
-              style={{ boxShadow: `0 0 20px ${cat.accent}aa` }}
-            >‹</button>
+              className="absolute top-1/2 -translate-y-1/2 left-3 md:left-6 w-11 h-11 md:w-12 md:h-12 rounded-full flex items-center justify-center transition hover:scale-110"
+              style={{
+                background: "rgba(0,0,0,0.5)",
+                boxShadow: "0 2px 12px rgba(0,0,0,0.3)",
+              }}
+            >
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.85)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6" /></svg>
+            </button>
             <button
               type="button"
               aria-label="Следующее"
               onClick={(e) => { e.stopPropagation(); go(1); }}
-              className="absolute top-1/2 -translate-y-1/2 right-4 md:right-8 w-12 h-12 rounded-full glass flex items-center justify-center text-2xl text-foreground hover:scale-110 transition"
-              style={{ boxShadow: `0 0 20px ${cat.accent}aa` }}
-            >›</button>
+              className="absolute top-1/2 -translate-y-1/2 right-3 md:right-6 w-11 h-11 md:w-12 md:h-12 rounded-full flex items-center justify-center transition hover:scale-110"
+              style={{
+                background: "rgba(0,0,0,0.5)",
+                boxShadow: "0 2px 12px rgba(0,0,0,0.3)",
+              }}
+            >
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.85)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6" /></svg>
+            </button>
             {/* Dot indicators */}
             <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
               {images.map((_, i) => (
@@ -257,9 +276,9 @@ export function ProductPageClient({ cat, prod }: { cat: Category; prod: Product 
           </>
         )}
 
-        {/* Disclaimer */}
+        {/* Disclaimer — very dim */}
         <div className="absolute bottom-10 left-1/2 -translate-x-1/2 text-center pointer-events-none select-none z-10 w-[90%] md:w-[70%]">
-          <span className="text-[13px] font-tech text-foreground/60 px-2">
+          <span className="text-[13px] font-tech text-white/20 px-2">
             Каждое изделие уникально, поэтому может слегка отличаться от фото
           </span>
         </div>
