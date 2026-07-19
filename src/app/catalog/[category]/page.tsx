@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { categories, categoryBySlug, categoryUrl, productUrl } from "@/lib/catalog-data";
 import { CategoryPageClient } from "./CategoryPageClient";
+import { Breadcrumbs } from "@/components/gravikot/Breadcrumbs";
 import { notFound } from "next/navigation";
 
 interface Props {
@@ -51,20 +52,13 @@ export default async function CategoryPage({ params }: Props) {
       {/* Header */}
       <div className="sticky top-0 z-30 bg-[#050510]/90 backdrop-blur-xl border-b border-white/5">
         <div className="max-w-5xl mx-auto flex items-center justify-between px-4 sm:px-6 py-3">
-          <div className="flex items-center gap-3">
-            <Link
-              href="/"
-              className="text-sm font-tech uppercase tracking-[.12em] text-foreground/60 hover:text-sky-300 transition"
-            >
-              &larr; Главная
-            </Link>
-            <span className="text-foreground/20">/</span>
-            <span className="text-sm font-tech uppercase tracking-[.12em] text-foreground/40">Каталог</span>
-            <span className="text-foreground/20">/</span>
-            <span className="text-sm font-tech uppercase tracking-[.12em]" style={{ color: cat.accent }}>
-              {cat.title}
-            </span>
-          </div>
+          <Breadcrumbs
+            items={[
+              { name: "Главная", href: "/" },
+              { name: "Каталог", href: "/catalog" },
+              { name: cat.title },
+            ]}
+          />
           <Link
             href="/"
             className="font-display text-sm tracking-[.08em] text-foreground/70 hover:text-sky-300 transition"

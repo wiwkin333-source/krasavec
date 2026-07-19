@@ -142,6 +142,23 @@ const nextConfig: NextConfig = {
           },
         ],
       },
+      // Pagination query params — noindex to avoid duplicate content
+      // Only the clean canonical URLs should be indexed
+      {
+        source: "/catalog/:path*",
+        has: [
+          {
+            type: "query",
+            key: "page",
+          },
+        ],
+        headers: [
+          {
+            key: "X-Robots-Tag",
+            value: "noindex, nofollow",
+          },
+        ],
+      },
     ];
   },
 };

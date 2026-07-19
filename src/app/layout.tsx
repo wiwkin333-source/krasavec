@@ -97,9 +97,28 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const orgJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: "ГРАВИКОТ",
+    url: "https://gravikot.ru",
+    logo: "https://gravikot.ru/favicon.svg",
+    description: "ГРАВИКОТ — кружки и бокалы со светящейся гравировкой по вашему фото. Уникальные сувениры с подсветкой. Доставка по России.",
+    address: {
+      "@type": "PostalAddress",
+      addressCountry: "RU",
+    },
+    sameAs: [],
+  };
+
   return (
     <html lang="ru" suppressHydrationWarning>
       <head>
+        {/* Organization structured data for search engines */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd) }}
+        />
         {/* Preconnect to font origins — resolve DNS early */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
