@@ -46,11 +46,16 @@ export function ProductPageClient({ cat, prod }: { cat: Category; prod: Product 
     setIdx((i) => (i + delta + images.length) % images.length);
   }, [images.length]);
 
+  const goBack = useCallback(() => {
+    sessionStorage.setItem("__gravikot_skip_preload__", "1");
+    router.back();
+  }, [router]);
+
   useEffect(() => {
     containerRef.current?.focus?.();
 
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") { e.preventDefault(); router.back(); return; }
+      if (e.key === "Escape") { e.preventDefault(); goBack(); return; }
       if (e.key === "ArrowRight") { e.preventDefault(); go(1); return; }
       if (e.key === "ArrowLeft") { e.preventDefault(); go(-1); return; }
       if (e.key === "+" || e.key === "=") { e.preventDefault(); setZoomReset((z) => Math.min(4, z + 0.5)); return; }
@@ -75,7 +80,7 @@ export function ProductPageClient({ cat, prod }: { cat: Category; prod: Product 
       panDrag.current = null;
       isPanning.current = false;
     };
-  }, [go, router, setZoomReset]);
+  }, [go, goBack, setZoomReset]);
 
   // Lock body scroll
   useEffect(() => {
@@ -112,7 +117,7 @@ export function ProductPageClient({ cat, prod }: { cat: Category; prod: Product 
     const dy = e.changedTouches[0].clientY - touchStartY.current;
     if (swipeAxis.current === "y") {
       // Close on downward swipe — 20px threshold for instant reaction
-      if (dy > 20) { router.back(); }
+      if (dy > 20) { goBack(); }
       setDragY(0);
     } else if (swipeAxis.current === "x" && images.length > 1 && Math.abs(dx) > 30) {
       go(dx < 0 ? 1 : -1);
@@ -146,7 +151,7 @@ export function ProductPageClient({ cat, prod }: { cat: Category; prod: Product 
   };
 
   const hasMany = images.length > 1;
-  const handleClose = () => router.back();
+  const handleClose = () => goBack();
 
   return (
     <div
