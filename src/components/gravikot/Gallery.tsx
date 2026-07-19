@@ -289,24 +289,24 @@ function Lightbox({
         WebkitBackdropFilter: "blur(16px)",
       }}
     >
-      <div className="absolute top-0 left-0 right-0 z-10 flex justify-center pointer-events-none" onClick={(e) => e.stopPropagation()}>
-        <div className="pointer-events-auto mt-3 md:mt-4 flex items-center gap-2 md:gap-3 pl-4 md:pl-5 pr-1.5 md:pr-2 py-1.5 md:py-2 rounded-xl"
+      <div className="absolute top-0 left-0 right-0 z-10 flex justify-center px-2 pointer-events-none" onClick={(e) => e.stopPropagation()}>
+        <div className="pointer-events-auto mt-3 md:mt-4 flex items-center gap-1.5 sm:gap-2 md:gap-3 pl-2.5 sm:pl-4 md:pl-5 pr-1 sm:pr-1.5 md:pr-2 py-1.5 md:py-2 rounded-xl max-w-full"
           style={{ background: "linear-gradient(135deg, rgba(0,0,0,0.72) 0%, rgba(10,4,24,0.82) 100%)", backdropFilter: "blur(24px) saturate(1.6)", border: "1px solid rgba(255,255,255,0.10)", boxShadow: "0 8px 40px -4px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.08)" }}>
-          <div className="flex items-baseline gap-2 min-w-0">
-            <span className="font-display text-sm md:text-base text-white truncate max-w-[46vw] md:max-w-[280px] leading-tight">{title}</span>
-            {hasMany && <span className="font-tech text-[11px] md:text-xs tracking-[.16em] text-sky-300/80 shrink-0">{idx + 1}<span className="mx-1 text-white/20">/</span>{images.length}</span>}
+          <div className="flex items-baseline gap-1.5 sm:gap-2 min-w-0">
+            <span className="font-display text-xs sm:text-sm md:text-base text-white truncate max-w-[32vw] sm:max-w-[46vw] md:max-w-[280px] leading-tight">{title}</span>
+            {hasMany && <span className="font-tech text-[10px] sm:text-[11px] md:text-xs tracking-[.12em] sm:tracking-[.16em] text-sky-300/80 shrink-0">{idx + 1}<span className="mx-0.5 sm:mx-1 text-white/20">/</span>{images.length}</span>}
           </div>
-          <div className="w-px h-6 bg-white/10 mx-0.5" />
-          <div className="flex items-center gap-1 md:gap-1.5">
+          <div className="w-px h-5 sm:h-6 bg-white/10 mx-0.5 shrink-0" />
+          <div className="flex items-center gap-0.5 sm:gap-1 md:gap-1.5 shrink-0">
             <button type="button" aria-label="Уменьшить" onClick={(e) => { e.stopPropagation(); setZoom((z) => Math.max(1, z - 0.5)); }}
-              className="w-8 h-8 md:w-9 md:h-9 flex items-center justify-center rounded-lg text-white/80 hover:text-white transition-all text-lg md:text-xl font-light"
+              className="w-7 h-7 sm:w-8 sm:h-8 md:w-9 md:h-9 flex items-center justify-center rounded-lg text-white/80 hover:text-white transition-all text-base sm:text-lg md:text-xl font-light"
               style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.08)" }}>-</button>
             <button type="button" aria-label="Увеличить" onClick={(e) => { e.stopPropagation(); setZoom((z) => Math.min(4, z + 0.5)); }}
-              className="w-8 h-8 md:w-9 md:h-9 flex items-center justify-center rounded-lg text-white/80 hover:text-white transition-all text-lg md:text-xl font-light"
+              className="w-7 h-7 sm:w-8 sm:h-8 md:w-9 md:h-9 flex items-center justify-center rounded-lg text-white/80 hover:text-white transition-all text-base sm:text-lg md:text-xl font-light"
               style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.08)" }}>+</button>
-            <div className="w-px h-5 bg-white/10 mx-0.5" />
+            <div className="w-px h-4 sm:h-5 bg-white/10 mx-0.5 shrink-0" />
             <button type="button" aria-label="Закрыть" onClick={(e) => { e.stopPropagation(); onClose(); }}
-              className="w-8 h-8 md:w-9 md:h-9 flex items-center justify-center rounded-lg text-white/60 hover:text-white transition-all text-lg md:text-xl"
+              className="w-7 h-7 sm:w-8 sm:h-8 md:w-9 md:h-9 flex items-center justify-center rounded-lg text-white/60 hover:text-white transition-all text-base sm:text-lg md:text-xl"
               style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.06)" }}>&times;</button>
           </div>
         </div>
@@ -398,7 +398,7 @@ function CategoryOverlay({
   const gridCols = products.length === 3 ? "grid-cols-1 md:grid-cols-3" : "grid-cols-1 md:grid-cols-2";
 
   return createPortal(
-    <div className="fixed inset-0 z-[60] bg-background/85 backdrop-blur-xl animate-in fade-in duration-300 flex flex-col p-3 sm:p-6 md:p-12 overflow-y-auto overflow-x-hidden"
+    <div className="fixed inset-0 z-[60] bg-background/85 backdrop-blur-xl animate-in fade-in duration-300 flex flex-col p-3 sm:p-6 md:p-12 overflow-y-auto overflow-x-clip"
       onClick={onClose}>
       <div className="flex items-center justify-between mb-6 md:mb-10" onClick={(e) => e.stopPropagation()}>
         <h2 className="font-display text-2xl sm:text-3xl md:text-5xl text-foreground break-words">{title}</h2>
@@ -576,7 +576,7 @@ export function Gallery({ onOrder, canPlay }: { onOrder: () => void; canPlay?: b
 
   return (
     <>
-      <section className="relative py-10 px-4 overflow-hidden" aria-label="Каталог гравировки">
+      <section className="relative py-6 sm:py-10 px-4 overflow-hidden" aria-label="Каталог гравировки">
         <h2 className="sr-only">Каталог коллекций</h2>
         <div className="relative mx-auto max-w-full" style={{ width: "min(820px, 100%)", aspectRatio: "1 / 1" }}>
           {/* glow */}

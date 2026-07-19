@@ -95,13 +95,14 @@
 
 @layer base {
   * { border-color: var(--color-border); box-sizing: border-box; }
-  html { scroll-behavior: smooth; touch-action: pan-y; overflow-x: hidden; max-width: 100vw; }
+  html { scroll-behavior: smooth; touch-action: pan-y; overflow-x: hidden; overflow-x: clip; max-width: 100%; }
   body {
     background-color: var(--background);
     color: var(--foreground);
     font-family: var(--font-sans);
     overflow-x: hidden;
-    max-width: 100vw;
+    overflow-x: clip;
+    max-width: 100%;
     touch-action: pan-y;
     overscroll-behavior-x: none;
     -webkit-font-smoothing: antialiased;
@@ -127,8 +128,13 @@
   h1, h2, h3, p { overflow-wrap: anywhere; word-break: break-word; }
   /* Prevent any child from causing horizontal overflow */
   section, header, footer, nav, article, aside, main, div {
-    max-width: 100vw;
+    max-width: 100%;
     box-sizing: border-box;
+  }
+  /* Additional overflow guard for section-level containers */
+  section, header, footer, main {
+    overflow-x: hidden;
+    overflow-x: clip;
   }
   table { max-width: 100%; overflow-x: auto; display: block; }
   .preloader-root {
@@ -271,6 +277,14 @@
   .animate-pulse-glow { animation: pulse-glow 4s ease-in-out infinite; }
   .animate-float-slow { animation: float-slow 9s ease-in-out infinite; }
 
+  /* ---- Mobile: general adjustments up to 640px ---- */
+  @media (max-width: 640px) {
+    .luxe-title { white-space: normal; }
+    .glass { backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+    .social-icon { width: 3.5rem; height: 3.5rem; }
+  }
+
+  /* ---- Small mobile (up to 479px) ---- */
   @media (max-width: 479px) {
     .btn-fw-mobile { width: 100% !important; max-width: 100% !important; }
     .luxe-title { font-size: clamp(1.2rem, 7vw, 1.8rem); letter-spacing: -0.01em; }
@@ -278,32 +292,28 @@
     .neon-border { border-width: 1px; }
     .social-icon { width: 3rem; height: 3rem; }
     .social-icon-neon { box-shadow: none; filter: none; }
+    /* Hide comet on small screens — decorative, avoids potential overflow */
+    .comet { display: none; }
   }
 
-  /* Mobile: prevent horizontal overflow from any child */
-  @media (max-width: 640px) {
-    .luxe-title { white-space: normal; }
-    .glass { backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
-    .social-icon { width: 3.5rem; height: 3.5rem; }
-  }
-
-  /* Small mobile (375px–414px): tighter spacing, smaller touch targets */
+  /* ---- Small mobile (375px–414px): tighter spacing, smaller touch targets ---- */
   @media (max-width: 414px) {
     .luxe-title { font-size: clamp(1.1rem, 6.5vw, 1.6rem); }
     .headline-cta { font-size: clamp(2rem, 11vw, 3.5rem); }
-    .social-icon { width: 3rem; height: 3rem; }
-    .social-icon svg { width: 1.25rem; height: 1.25rem; }
+    .social-icon { width: 2.75rem; height: 2.75rem; }
+    .social-icon svg { width: 1.15rem; height: 1.15rem; }
     .conic-border::before { padding: 1px; }
     .divider-beam { max-width: 80%; }
     .glass { backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
   }
 
-  /* Very small screens: extra compact */
+  /* ---- Very small screens (<375px): extra compact ---- */
   @media (max-width: 374px) {
     .luxe-title { font-size: clamp(1rem, 6vw, 1.5rem); }
     .font-display { letter-spacing: -0.02em; }
     .font-tech { letter-spacing: 0.01em; }
-    .social-icon { width: 2.75rem; height: 2.75rem; }
+    .social-icon { width: 2.5rem; height: 2.5rem; }
+    .social-icon svg { width: 1rem; height: 1rem; }
   }
 }
 

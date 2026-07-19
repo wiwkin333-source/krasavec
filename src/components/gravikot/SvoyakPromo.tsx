@@ -37,19 +37,19 @@ export function SvoyakPromo() {
               <Sparkles className="w-7 h-7 sm:w-10 sm:h-10" style={{ filter: "drop-shadow(0 0 12px #c084fc)" }} />
             </div>
             <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-[12%] sm:px-[18%]" style={{ zIndex: 2 }}>
-              <div className="font-display text-3xl sm:text-4xl md:text-[3.375rem] lg:text-7xl tracking-tight"
+              <div className="font-display text-2xl sm:text-4xl md:text-[3.375rem] lg:text-7xl tracking-tight"
                 style={{ color: "#f5e6c8", textShadow: "0 2px 12px rgba(0,0,0,.7)", letterSpacing: "0.06em" }}>
                 КВАНТ
               </div>
-              <div className="font-display font-black text-2xl sm:text-3xl md:text-5xl lg:text-6xl mt-2 sm:mt-3"
+              <div className="font-display font-black text-xl sm:text-3xl md:text-5xl lg:text-6xl mt-2 sm:mt-3"
                 style={{ background: "linear-gradient(135deg, #c084fc, #f0abfc)", WebkitBackgroundClip: "text", backgroundClip: "text", color: "transparent" }}>
                 20% скидка
               </div>
-              <div className="font-tech uppercase tracking-[.2em] sm:tracking-[.28em] text-[10px] sm:text-xs md:text-sm mt-2 sm:mt-3" style={{ color: "#f5e6c8" }}>
+              <div className="font-tech uppercase tracking-[.15em] sm:tracking-[.28em] text-[9px] sm:text-xs md:text-sm mt-2 sm:mt-3" style={{ color: "#f5e6c8" }}>
                 на последующие заказы
               </div>
               <button onClick={() => setOpen(true)}
-                className="btn-fw-mobile mt-4 sm:mt-6 inline-flex items-center justify-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 rounded-full text-white font-tech uppercase tracking-[.14em] sm:tracking-[.18em] text-[11px] sm:text-xs md:text-sm hover:scale-105 transition-transform"
+                className="btn-fw-mobile mt-4 sm:mt-6 inline-flex items-center justify-center gap-2 px-3 sm:px-6 py-2 sm:py-3 rounded-full text-white font-tech uppercase tracking-[.1em] sm:tracking-[.18em] text-[10px] sm:text-xs md:text-sm hover:scale-105 transition-transform"
                 style={{ background: "linear-gradient(135deg, #6b21a8, #3d2310)", boxShadow: "0 4px 24px rgba(139, 92, 246, .5)" }}>
                 Подробнее
                 <ChevronDown className="w-4 h-4" />

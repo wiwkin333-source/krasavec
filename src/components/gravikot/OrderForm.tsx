@@ -27,9 +27,9 @@ export function OrderForm({ open, onClose }: { open: boolean; onClose: () => voi
   if (!open || typeof document === "undefined") return null;
 
   return createPortal(
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-background/85 backdrop-blur-xl"
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-4 bg-background/85 backdrop-blur-xl overflow-x-clip"
       onClick={onClose}>
-      <div className="relative neon-border rounded-3xl max-w-lg w-full p-8 md:p-10"
+      <div className="relative neon-border rounded-3xl max-w-lg w-full p-6 sm:p-8 md:p-10"
         onClick={(e) => e.stopPropagation()}
         style={{ boxShadow: "0 0 60px -10px #29e3ff, 0 0 100px -20px #ff2bd6" }}>
         <button onClick={onClose} aria-label="Close"

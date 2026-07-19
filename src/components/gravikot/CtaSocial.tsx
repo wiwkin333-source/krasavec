@@ -24,16 +24,16 @@ export function CtaSocial() {
           <Reveal>
             <div className="relative glass rounded-[1.5rem] sm:rounded-[2rem] pt-[0.5rem] pb-5 sm:pb-7 md:pt-[0.5rem] md:pb-10 text-center overflow-hidden"
               style={{ backgroundImage: "url(/assets/cta-pyramid-bg.webp)", backgroundSize: "cover", backgroundPosition: "center" }}>
-              <p className="relative mt-[2rem] sm:mt-[3rem] mb-8 sm:mb-16 px-3 sm:px-4 text-center uppercase tracking-[.12em] sm:tracking-[.18em] text-lg sm:text-2xl md:text-4xl font-black leading-snug"
+              <p className="relative mt-[2rem] sm:mt-[3rem] mb-8 sm:mb-16 px-3 sm:px-4 text-center uppercase tracking-[.08em] sm:tracking-[.18em] text-base sm:text-2xl md:text-4xl font-black leading-snug"
                 style={{ fontFamily: '"Unbounded", sans-serif', color: "#0a2472", animation: "slogan-glow-cycle 6s ease-in-out infinite" }}>
                 точность в деталях, характер в результате.
               </p>
-              <div className="relative flex flex-wrap items-center justify-center gap-3 sm:gap-12 md:gap-20 px-4 pb-2">
+              <div className="relative flex flex-wrap items-center justify-center gap-4 sm:gap-12 md:gap-20 px-4 pb-2">
                 {links.map(({ name, url, color, Icon }) => (
                   <a key={name} href={url} target="_blank" rel="noopener noreferrer"
-                    className="social-icon social-icon-neon w-12 h-12 sm:w-16 sm:h-16 md:!w-[5.4rem] md:!h-[5.4rem]"
+                    className="social-icon social-icon-neon w-11 h-11 sm:w-16 sm:h-16 md:!w-[5.4rem] md:!h-[5.4rem]"
                     style={{ color, "--neon-color": color } as CustomCSS}>
-                    <Icon className={name === "Вконтакте" ? "w-7 h-7 sm:w-10 sm:h-10 md:w-[3.6rem] md:h-[3.6rem]" : "w-5 h-5 sm:w-6 sm:h-6 md:w-[2.1rem] md:h-[2.1rem]"} />
+                    <Icon className={name === "Вконтакте" ? "w-6 h-6 sm:w-10 sm:h-10 md:w-[3.6rem] md:h-[3.6rem]" : "w-4 h-4 sm:w-6 sm:h-6 md:w-[2.1rem] md:h-[2.1rem]"} />
                     <span className="social-tooltip">{name}</span>
                   </a>
                 ))}

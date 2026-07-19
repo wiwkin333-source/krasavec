@@ -108,3 +108,31 @@ Stage Summary:
 - Total video size reduced by 513KB
 - All faststart verified for instant playback
 - No audio tracks on any video
+---
+Task ID: 5
+Agent: Main Agent
+Task: Fix mobile responsiveness bugs (375px/414px) — overlapping elements and horizontal scrolling
+
+Work Log:
+- Diagnosed root cause of horizontal scrolling: `max-width: 100vw` includes scrollbar width, causing horizontal overflow
+- Fixed globals.css: replaced `100vw` → `100%` in all `max-width` rules (html, body, sections, divs)
+- Added `overflow-x: clip` (with `hidden` fallback) to html, body, section, header, footer, main
+- Improved mobile media queries in globals.css:
+  - 414px: reduced social-icon from 3rem → 2.75rem, svg from 1.25rem → 1.15rem
+  - 374px: reduced social-icon from 2.75rem → 2.5rem, added svg 1rem
+  - 479px: hidden `.comet` on small screens (decorative, avoids potential overflow)
+- Fixed Gallery Lightbox toolbar: smaller buttons (w-7 h-7 → sm:w-8), tighter gaps, max-w-[32vw] title truncation, px-2 on container
+- Fixed CtaSocial: reduced icon sizes on mobile (w-11 h-11 base, sm:w-16), reduced slogan font (text-base → sm:text-2xl), tighter tracking
+- Fixed SvoyakPromo: reduced text sizes on mobile (text-2xl→2xl, text-xl for "20% скидка"), tighter tracking and button padding
+- Fixed page.tsx hero: reduced tracking on subtitle, smaller font on description (text-xs → sm:text-sm), added px-2
+- Fixed OrderForm: added overflow-x-clip, reduced padding on mobile (p-6 → sm:p-8)
+- Fixed Gallery CategoryOverlay: changed overflow-x-hidden → overflow-x-clip
+- Fixed main element: changed overflow-x-hidden → overflow-x-clip
+- Verified build passes successfully
+
+Stage Summary:
+- Horizontal scrolling eliminated: 100vw→100% fix, overflow-x: clip everywhere
+- Element overlap fixed at 375px/414px: smaller buttons, icons, text, tighter spacing
+- Progressive mobile breakpoints: 640px → 479px → 414px → 374px
+- All changes backward compatible with fallbacks
+- Build verified: 0 errors

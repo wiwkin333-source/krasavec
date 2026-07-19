@@ -65,7 +65,7 @@ export default function Home() {
       {preloading && <Preloader onComplete={handlePreloaderComplete} />}
       <StarrySky />
       <main
-        className="min-h-screen relative overflow-x-hidden max-w-full"
+        className="min-h-screen relative overflow-x-clip max-w-full"
         suppressHydrationWarning
         style={{
           background: "transparent",
@@ -73,15 +73,15 @@ export default function Home() {
           transition: "opacity 1200ms cubic-bezier(0.4, 0, 0.2, 1)",
         }}
       >
-        <section className="relative flex items-center justify-center overflow-hidden pt-8 pb-2 px-4 max-w-full">
+        <section className="relative flex items-center justify-center overflow-hidden pt-6 sm:pt-8 pb-2 px-4 max-w-full">
           <HeroBackground />
           <HeartBurst />
           <div className="relative z-10 w-full text-center mx-auto">
-            <div className="font-tech uppercase tracking-[.2em] sm:tracking-[.4em] text-sky-300/80 text-[10px] md:text-xs leading-none">
+            <div className="font-tech uppercase tracking-[.15em] sm:tracking-[.4em] text-sky-300/80 text-[9px] sm:text-[10px] md:text-xs leading-none">
               ГРАВИКОТ — ЛАЗЕРНОЕ АТЕЛЬЕ
             </div>
             <h1 className="luxe-title mt-1 uppercase leading-tight text-[clamp(1rem,3.8vw,2.25rem)]">Глоу-арт гравировка</h1>
-            <p className="text-sky-200 text-luxury-glow mt-1 max-w-2xl mx-auto font-tech text-sm md:text-base leading-snug">
+            <p className="text-sky-200 text-luxury-glow mt-1 max-w-2xl mx-auto font-tech text-xs sm:text-sm md:text-base leading-snug px-2">
               Создаём стильные светящиеся сувениры и подарки по вашим фото и любимым изображениям — для близких людей, брендов и особых событий.
             </p>
             <div className="divider-beam mx-auto mt-2" style={{ width: 120 }} />
