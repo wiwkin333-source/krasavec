@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { categories, categoryBySlug, findProduct, categoryUrl, productUrl, extractPrice } from "@/lib/catalog-data";
 import { ProductPageClient } from "./ProductPageClient";
 import { Breadcrumbs } from "@/components/gravikot/Breadcrumbs";
@@ -56,9 +55,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!prod) return {};
 
   const priceNum = extractPrice(prod.price);
-  // Title: "Купить Грамине, цена от 2499 ₽ | ГРАВИКОТ" ≈ 40 chars ✅ (≤65)
   const title = `Купить ${prod.name}, цена от ${priceNum} ₽ | ГРАВИКОТ`;
-  // Strip trailing period from desc to avoid double punctuation
   const cleanDesc = prod.desc.replace(/\.\s*$/, "");
   const description = `Купить ${prod.name} — ${cleanDesc}. Коллекция ${cat.title}. Цена ${prod.price}. Светящаяся гравировка на стекле. Доставка по России.`;
   const canonicalUrl = `${SITE_URL}${productUrl(cat, prod)}`;
@@ -94,36 +91,31 @@ export default async function ProductPage({ params }: Props) {
   const canonicalUrl = `${SITE_URL}${productUrl(cat, prod)}`;
 
   return (
-    <main className="min-h-screen bg-[#050510] text-foreground">
-      {/* Product structured data for search engines */}
+    <>
+      {/* SEO: structured data for search engines */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }}
       />
 
-      {/* Header breadcrumb */}
-      <div className="sticky top-0 z-30 bg-[#050510]/90 backdrop-blur-xl border-b border-white/5">
-        <div className="max-w-5xl mx-auto flex items-center justify-between px-4 sm:px-6 py-3">
-          <Breadcrumbs
-            items={[
-              { name: "Главная", href: "/" },
-              { name: "Каталог", href: "/catalog" },
-              { name: cat.title, href: categoryUrl(cat) },
-              { name: prod.name },
-            ]}
-            currentUrl={canonicalUrl}
-          />
-          <Link
-            href="/"
-            className="font-display text-sm tracking-[.08em] text-foreground/70 hover:text-sky-300 transition hidden sm:block"
-          >
-            ГРАВИКОТ
-          </Link>
-        </div>
+      {/* SEO: H1 hidden visually but present in DOM */}
+      <h1 className="sr-only">{prod.name} — светящаяся гравировка на стекле</h1>
+
+      {/* SEO: BreadcrumbList microdata — hidden visually */}
+      <div className="sr-only">
+        <Breadcrumbs
+          items={[
+            { name: "Главная", href: "/" },
+            { name: "Каталог", href: "/catalog" },
+            { name: cat.title, href: categoryUrl(cat) },
+            { name: prod.name },
+          ]}
+          currentUrl={canonicalUrl}
+        />
       </div>
 
-      {/* Product detail */}
+      {/* Fullscreen gallery — the only visible content */}
       <ProductPageClient cat={cat} prod={prod} />
-    </main>
+    </>
   );
 }
