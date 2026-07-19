@@ -433,21 +433,21 @@ function CategoryOverlay({
     // Save scroll position before locking body scroll
     const savedScrollY = window.scrollY;
     const prevOverflow = document.body.style.overflow;
-    const prevOverscroll = document.body.style.overscrollBehavior;
-    const prevTouchAction = document.body.style.touchAction;
+    const prevPosition = document.body.style.position;
+    const prevTop = document.body.style.top;
+    const prevWidth = document.body.style.width;
+    // Lock body scroll: overflow hidden + fixed position to prevent background scroll on iOS
     document.body.style.overflow = "hidden";
-    document.body.style.overscrollBehavior = "none";
-    document.body.style.touchAction = "none";
+    document.body.style.position = "fixed";
+    document.body.style.top = `-${savedScrollY}px`;
+    document.body.style.width = "100%";
     const onKey = (e: KeyboardEvent) => { if (e.key === "Escape" && !lightboxRef.current) onClose(); };
-    // Prevent touch events from scrolling the page underneath
-    const onTouchMove = (e: TouchEvent) => { e.preventDefault(); };
-    document.addEventListener("touchmove", onTouchMove, { passive: false });
     window.addEventListener("keydown", onKey);
     return () => {
       document.body.style.overflow = prevOverflow;
-      document.body.style.overscrollBehavior = prevOverscroll;
-      document.body.style.touchAction = prevTouchAction;
-      document.removeEventListener("touchmove", onTouchMove);
+      document.body.style.position = prevPosition;
+      document.body.style.top = prevTop;
+      document.body.style.width = prevWidth;
       window.removeEventListener("keydown", onKey);
       // Restore scroll position to prevent page jump
       window.scrollTo(0, savedScrollY);
@@ -459,8 +459,7 @@ function CategoryOverlay({
   const gridCols = products.length === 3 ? "grid-cols-1 md:grid-cols-3" : "grid-cols-1 md:grid-cols-2";
 
   return createPortal(
-    <div className="fixed inset-0 z-[60] bg-background/85 backdrop-blur-xl animate-in fade-in duration-300 flex flex-col p-3 sm:p-6 md:p-12 overflow-y-auto overflow-x-clip"
-      style={{ overscrollBehaviorY: "contain", touchAction: "pan-y" }}
+    <div className="fixed inset-0 z-[60] bg-background/85 backdrop-blur-xl animate-in fade-in duration-300 flex flex-col p-3 sm:p-6 md:p-12 overflow-y-auto overflow-x-clip overscroll-y-contain"
       onClick={onClose}>
       <div className="flex items-center justify-between mb-6 md:mb-10" onClick={(e) => e.stopPropagation()}>
         <h2 className="font-display text-2xl sm:text-3xl md:text-5xl text-foreground break-words">{title}</h2>
