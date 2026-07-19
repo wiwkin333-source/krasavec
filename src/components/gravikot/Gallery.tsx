@@ -433,11 +433,21 @@ function CategoryOverlay({
     // Save scroll position before locking body scroll
     const savedScrollY = window.scrollY;
     const prevOverflow = document.body.style.overflow;
+    const prevOverscroll = document.body.style.overscrollBehavior;
+    const prevTouchAction = document.body.style.touchAction;
     document.body.style.overflow = "hidden";
+    document.body.style.overscrollBehavior = "none";
+    document.body.style.touchAction = "none";
     const onKey = (e: KeyboardEvent) => { if (e.key === "Escape" && !lightboxRef.current) onClose(); };
+    // Prevent touch events from scrolling the page underneath
+    const onTouchMove = (e: TouchEvent) => { e.preventDefault(); };
+    document.addEventListener("touchmove", onTouchMove, { passive: false });
     window.addEventListener("keydown", onKey);
     return () => {
       document.body.style.overflow = prevOverflow;
+      document.body.style.overscrollBehavior = prevOverscroll;
+      document.body.style.touchAction = prevTouchAction;
+      document.removeEventListener("touchmove", onTouchMove);
       window.removeEventListener("keydown", onKey);
       // Restore scroll position to prevent page jump
       window.scrollTo(0, savedScrollY);
@@ -450,6 +460,7 @@ function CategoryOverlay({
 
   return createPortal(
     <div className="fixed inset-0 z-[60] bg-background/85 backdrop-blur-xl animate-in fade-in duration-300 flex flex-col p-3 sm:p-6 md:p-12 overflow-y-auto overflow-x-clip"
+      style={{ overscrollBehaviorY: "contain", touchAction: "pan-y" }}
       onClick={onClose}>
       <div className="flex items-center justify-between mb-6 md:mb-10" onClick={(e) => e.stopPropagation()}>
         <h2 className="font-display text-2xl sm:text-3xl md:text-5xl text-foreground break-words">{title}</h2>
