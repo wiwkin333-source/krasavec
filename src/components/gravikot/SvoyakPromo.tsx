@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, type CSSProperties } from "react";
-import { ChevronDown, Sparkles, X } from "lucide-react";
+import { Sparkles, X } from "lucide-react";
 import { Reveal } from "./Reveal";
 
 // Allow CSS custom properties (--x, --delay, etc.) in React style objects
@@ -47,7 +47,13 @@ export function SvoyakPromo() {
     <section className="relative py-14 px-4">
       <div className="mx-auto max-w-[780px] w-full">
         <Reveal>
-          <div className="relative aspect-[4/3] sm:aspect-square mx-auto max-w-[780px] w-full">
+          <div
+            className="relative aspect-[4/3] sm:aspect-square mx-auto max-w-[780px] w-full cursor-pointer"
+            role="button"
+            tabIndex={0}
+            onClick={() => setOpen(true)}
+            onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setOpen(true); } }}
+          >
             <div className="absolute inset-0 pointer-events-none select-none"
               style={{ background: "radial-gradient(circle at 50% 55%, rgba(139,92,246,.35) 0%, rgba(41,227,255,.18) 35%, rgba(255,43,214,.12) 60%, transparent 75%)", filter: "blur(40px)", transform: "scale(1.15)", zIndex: 0 }} />
             {/* Drifting smoke plume — three layered radial gradients (violet /
@@ -97,12 +103,6 @@ export function SvoyakPromo() {
               <div className="font-tech uppercase tracking-[.15em] sm:tracking-[.28em] text-[9px] sm:text-xs md:text-sm mt-2 sm:mt-3" style={{ color: "#f5e6c8" }}>
                 на последующие заказы
               </div>
-              <button onClick={() => setOpen(true)}
-                className="btn-fw-mobile mt-4 sm:mt-6 inline-flex items-center justify-center gap-1.5 px-2 sm:px-3 py-1.5 sm:py-2 rounded-full text-white font-tech uppercase tracking-[.08em] sm:tracking-[.12em] text-[8px] sm:text-[10px] md:text-xs hover:scale-105 transition-transform w-1/2 max-w-[160px]"
-                style={{ background: "linear-gradient(135deg, #6b21a8, #3d2310)", boxShadow: "0 4px 24px rgba(139, 92, 246, .5)" }}>
-                Подробнее
-                <ChevronDown className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
-              </button>
             </div>
           </div>
         </Reveal>
