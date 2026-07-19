@@ -10,7 +10,7 @@ interface PreloaderProps {
 
 /**
  * Luxury preloader — «Добро пожаловать» is always visible.
- * Layout: ГРАВИКОТ → Добро пожаловать → spinner % → progress → Лазерное ателье
+ * Layout: ГРАВИКОТ → Добро пожаловать → spinner % → progress → Кружки со светящейся гравировкой
  */
 export function Preloader({
   onComplete,
@@ -440,7 +440,7 @@ export function Preloader({
           textTransform: "uppercase",
           color: "rgba(245,230,200,0.3)",
         }}>
-          Лазерное ателье
+          Кружки со светящейся гравировкой
         </div>
       </div>
     </div>

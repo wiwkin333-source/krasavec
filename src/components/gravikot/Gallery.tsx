@@ -117,7 +117,7 @@ function OrbCard({
         {o.image && (
           <img
             src={o.image}
-            alt={`Коллекция ${o.label.replace(/[\u200B-\u200D\uFEFF]/g, "")} — лазерная гравировка на стекле`}
+            alt={`Коллекция ${o.label.replace(/[\u200B-\u200D\uFEFF]/g, "")} — кружки со светящейся гравировкой`}
             className="absolute inset-0 w-full h-full object-cover"
           />
         )}
