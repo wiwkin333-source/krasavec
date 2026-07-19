@@ -83,3 +83,28 @@ Stage Summary:
 - Cache-busting ?v=4 forces browsers to load new images
 - Full coverage: browser tabs, iOS, Android, Windows tiles, PWA, social sharing
 - All verified working correctly
+
+---
+Task ID: 4
+Agent: Main Agent
+Task: Replace click video with uploaded, remove audio from all videos, optimize for web
+
+Work Log:
+- Extracted uploaded zip: assets (2-я копия).zip → 5 video files (1080p/720p/480p in mp4+webm)
+- Replaced click video with uploaded IMG_8432_720p.mp4 (closest to original 602x766 resolution)
+- New click video: 636x612, 15.5s (was 602x766, 15.2s)
+- Removed audio tracks from ALL videos (click.mp4, click.webm, hero.mp4, hero.webm)
+- Optimized all videos for web:
+  - H.264: profile high, CRF 23-28, faststart, proper keyframes
+  - VP9: CRF 32-38, row-mt, proper keyframes
+  - All files have moov atom at start (faststart verified)
+- Size savings: 7123KB → 6610KB (saved 513KB, ~7% reduction)
+- All videos served correctly (HTTP 200)
+- Site verified working after changes
+
+Stage Summary:
+- Click video: replaced with new uploaded video, no audio, web-optimized
+- Hero video: audio removed, re-compressed for smaller size
+- Total video size reduced by 513KB
+- All faststart verified for instant playback
+- No audio tracks on any video
