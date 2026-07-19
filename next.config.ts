@@ -16,6 +16,21 @@ const nextConfig: NextConfig = {
   // Single-step redirects — NO chains
   async redirects() {
     return [
+      // ===== Mirror consolidation: www → non-www (301 permanent) =====
+      // Yandex and Google both use 301 (not the robots.txt `Host:` directive,
+      // which is deprecated). This single rule consolidates all link equity
+      // onto the canonical https://gravikot.ru host.
+      {
+        source: "/:path*",
+        has: [
+          {
+            type: "host",
+            value: "www.gravikot.ru",
+          },
+        ],
+        destination: "https://gravikot.ru/:path*",
+        permanent: true,
+      },
       // Trailing slash redirect — single step to non-trailing
       {
         source: "/:path+/",

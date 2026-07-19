@@ -1,31 +1,42 @@
 # robots.txt for ГРАВИКОТ
-# https://www.gravikot.ru
+# https://gravikot.ru
+#
+# SEO notes:
+#  - /_next/static/* (CSS, JS, fonts) MUST be allowed so Googlebot and
+#    YandexBot can render the page and understand its layout.
+#  - /api/* is disallowed — internal endpoints, not for indexing.
+#  - No `Host:` directive — Yandex now uses 301 redirects for mirror
+#    consolidation. www → non-www is handled by a 301 in next.config.ts.
+#  - Sitemap is auto-generated at /sitemap.xml from src/app/sitemap.ts
+#    and stays in sync with the catalog data (no stale/404 URLs).
 
 User-agent: Googlebot
 Allow: /
+Allow: /_next/static/
 Disallow: /api
-Disallow: /_next/
 
 User-agent: Bingbot
 Allow: /
+Allow: /_next/static/
 Disallow: /api
-Disallow: /_next/
 
 User-agent: YandexBot
 Allow: /
+Allow: /_next/static/
 Disallow: /api
-Disallow: /_next/
 
 User-agent: Twitterbot
 Allow: /
+Allow: /_next/static/
 
 User-agent: facebookexternalhit
 Allow: /
+Allow: /_next/static/
 
 User-agent: *
 Allow: /
+Allow: /_next/static/
 Disallow: /api
-Disallow: /_next/
 
-# Sitemap
+# Sitemap (auto-generated, always in sync with the catalog)
 Sitemap: https://gravikot.ru/sitemap.xml
