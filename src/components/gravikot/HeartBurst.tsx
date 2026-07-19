@@ -1,10 +1,17 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 
 interface Heart { id: number; x: number; y: number; dx: number; dy: number; dr: number; color: string; }
 
-let nextId = 0;
+// Allow CSS custom properties in React style objects
+type CustomCSS = CSSProperties & Record<`--${string}`, string | number>;
+
+let _nextId = 0;
+function getNextId(): number {
+  if (typeof window === "undefined") return 0;
+  return ++_nextId;
+}
 
 const CLICKABLE_SELECTOR = 'a, button, input, textarea, select, label, summary, [role="button"], [role="link"], [role="tab"], [role="menuitem"], [data-clickable], [contenteditable="true"]';
 
@@ -26,7 +33,7 @@ export function HeartBurst() {
         const angle = Math.random() * Math.PI * 2;
         const dist = 120 + Math.random() * 240;
         batch.push({
-          id: nextId++, x: cx, y: cy,
+          id: getNextId(), x: cx, y: cy,
           dx: Math.cos(angle) * dist,
           dy: Math.sin(angle) * dist - 80,
           dr: (Math.random() - 0.5) * 360,
@@ -85,14 +92,14 @@ export function HeartBurst() {
           className="absolute pointer-events-none"
           style={{
             left: h.x, top: h.y,
-            ["--dx" as any]: `${h.dx}px`,
-            ["--dy" as any]: `${h.dy}px`,
-            ["--dr" as any]: `${h.dr}deg`,
+            "--dx": `${h.dx}px`,
+            "--dy": `${h.dy}px`,
+            "--dr": `${h.dr}deg`,
             color: h.color,
             filter: `drop-shadow(0 0 8px ${h.color}) drop-shadow(0 0 16px ${h.color})`,
             animation: "heart-fly 2.2s ease-out forwards",
             transformOrigin: "center",
-          }}>
+          } as CustomCSS}>
           <path fill="currentColor" d="M12 2l2.9 6.9 7.1.6-5.4 4.7 1.7 7L12 17.8 5.7 21.2l1.7-7L2 9.5l7.1-.6L12 2z" />
         </svg>
       ))}

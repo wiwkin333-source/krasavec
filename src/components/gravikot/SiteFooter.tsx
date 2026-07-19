@@ -21,7 +21,7 @@ export function SiteFooter() {
             <a href="tel:+79258343045" className="text-sky-300 hover:text-white transition text-sm">+7 (925) 834-30-45</a>
             <a href="mailto:gravikotik@yandex.ru" className="text-sky-300 hover:text-white transition text-sm">gravikotik@yandex.ru</a>
             <a href="https://t.me/gravikotik" target="_blank" rel="noopener noreferrer" className="text-sky-300 hover:text-white transition text-sm">Telegram: @gravikotik</a>
-            <a href="https://vk.ru/club239806069" target="_blank" rel="noopener noreferrer" className="text-sky-300 hover:text-white transition text-sm">ВКонтакте: ГРАВИКОТ</a>
+            <a href="https://vk.com/club239806069" target="_blank" rel="noopener noreferrer" className="text-sky-300 hover:text-white transition text-sm">ВКонтакте: ГРАВИКОТ</a>
           </div>
         </nav>
         <nav aria-label="Документы">
@@ -32,7 +32,7 @@ export function SiteFooter() {
           </div>
         </nav>
         <div className="text-sky-100/85 text-sm whitespace-pre-line">
-          &copy; 2026 ГРАВИКОТ. Все права защищены
+          &copy; {new Date().getFullYear()} ГРАВИКОТ. Все права защищены
         </div>
       </div>
     </footer>

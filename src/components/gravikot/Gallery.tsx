@@ -1,9 +1,12 @@
 "use client";
 
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useState, useCallback, type CSSProperties } from "react";
 import { getHeroVideoUrl, getClickVideoUrl, resolveVideoUrl } from "./Preloader";
 import { GiftMaketButton } from "./GiftMaketButton";
 import { createPortal } from "react-dom";
+
+// Allow CSS custom properties in React style objects
+type CustomCSS = CSSProperties & Record<`--${string}`, string | number>;
 
 type VideoMode = "hero" | "click" | "poster";
 
@@ -104,15 +107,15 @@ function OrbCard({
           isEntering ? "is-entering" : ""
         } ${isLeaving ? "is-leaving" : ""} ${isFrontFinal ? "is-front-final" : ""}`}
         style={{
-          ["--orb-rot" as any]: o.tilt,
-          ["--orb-shadow" as any]: o.color,
-          ["--tilt" as any]: o.tilt,
+          ["--orb-rot"]: o.tilt,
+          ["--orb-shadow"]: o.color,
+          ["--tilt"]: o.tilt,
           animation:
             phase === "idle"
               ? `float-slow ${o.dur} ease-in-out ${o.delay} infinite`
               : undefined,
           boxShadow: `0 12px 60px -20px ${o.color}`,
-        }}
+        } as CustomCSS}
       >
         {o.image && (
           <img
@@ -558,15 +561,15 @@ export function Gallery({ onOrder, canPlay }: { onOrder: () => void; canPlay?: b
   useEffect(() => {
     if (typeof window === "undefined") return;
     const prevent = (e: Event) => e.preventDefault();
-    document.addEventListener("gesturestart", prevent as any, { passive: false });
-    document.addEventListener("gesturechange", prevent as any, { passive: false });
-    document.addEventListener("gestureend", prevent as any, { passive: false });
+    document.addEventListener("gesturestart", prevent, { passive: false });
+    document.addEventListener("gesturechange", prevent, { passive: false });
+    document.addEventListener("gestureend", prevent, { passive: false });
     const onWheel = (e: WheelEvent) => { if (e.ctrlKey) e.preventDefault(); };
     document.addEventListener("wheel", onWheel, { passive: false });
     return () => {
-      document.removeEventListener("gesturestart", prevent as any);
-      document.removeEventListener("gesturechange", prevent as any);
-      document.removeEventListener("gestureend", prevent as any);
+      document.removeEventListener("gesturestart", prevent);
+      document.removeEventListener("gesturechange", prevent);
+      document.removeEventListener("gestureend", prevent);
       document.removeEventListener("wheel", onWheel);
     };
   }, []);

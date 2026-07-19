@@ -11,7 +11,7 @@ const VkIcon = ({ className = "" }: { className?: string }) => (
 const links = [
   { name: "Max", url: "https://max.ru/u/f9LHodD0cOLK18QCsfIszzSgyxb-hXR-hb_1AwW4xmnZpq4wc7xUfIZVV-8", color: "#00e676", Icon: MessageCircle },
   { name: "Telegram", url: "https://t.me/gravikot_avto_bot", color: "#29e3ff", Icon: Send },
-  { name: "Вконтакте", url: "https://vk.ru/club239806069", color: "#4C75A3", Icon: VkIcon },
+  { name: "Вконтакте", url: "https://vk.com/club239806069", color: "#4C75A3", Icon: VkIcon },
 ];
 
 export function OrderForm({ open, onClose }: { open: boolean; onClose: () => void }) {
