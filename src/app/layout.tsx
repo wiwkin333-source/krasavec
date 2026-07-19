@@ -139,6 +139,8 @@ export default function RootLayout({
         <Toaster />
         {/* Non-critical script: defer execution to not block render */}
         <script defer dangerouslySetInnerHTML={{ __html: `document.addEventListener('contextmenu',function(e){if(e.target.tagName==='IMG'||e.target.tagName==='VIDEO'||e.target.closest('img')||e.target.closest('video'))e.preventDefault()});` }} />
+        {/* Scroll to top on page load/reload */}
+        <script dangerouslySetInnerHTML={{ __html: `window.addEventListener('load',function(){window.scrollTo(0,0)});if('scrollRestoration' in history)history.scrollRestoration='manual';` }} />
       </body>
     </html>
   );

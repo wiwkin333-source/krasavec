@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { categories, categoryBySlug, categoryUrl, minCategoryPrice } from "@/lib/catalog-data";
 import { CategoryPageClient } from "./CategoryPageClient";
 import { Breadcrumbs } from "@/components/gravikot/Breadcrumbs";
@@ -22,7 +21,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const productNames = cat.products.map((p) => p.name).join(", ");
   const minPrice = minCategoryPrice(cat);
-  // Title: ≤65 chars. "Коллекция ВИЖН — светящаяся гравировка | ГРАВИКОТ" = 49
   const title = `Коллекция ${cat.title} — светящаяся гравировка | ГРАВИКОТ`;
   const description = `Коллекция ${cat.title}: ${productNames}. Светящаяся гравировка на стекле от ГРАВИКОТ. Цены от ${minPrice} ₽. Доставка по России.`;
   const canonicalUrl = `${SITE_URL}${categoryUrl(cat)}`;
@@ -56,23 +54,25 @@ export default async function CategoryPage({ params }: Props) {
 
   return (
     <main className="min-h-screen bg-[#050510] text-foreground">
-      {/* Header */}
+      {/* Header with miniaturized breadcrumbs (visible for SEO, shrunk 300% for UI) */}
       <div className="sticky top-0 z-30 bg-[#050510]/90 backdrop-blur-xl border-b border-white/5">
         <div className="max-w-5xl mx-auto flex items-center justify-between px-4 sm:px-6 py-3">
-          <Breadcrumbs
-            items={[
-              { name: "Главная", href: "/" },
-              { name: "Каталог", href: "/catalog" },
-              { name: cat.title },
-            ]}
-            currentUrl={canonicalUrl}
-          />
-          <Link
-            href="/"
-            className="font-display text-sm tracking-[.08em] text-foreground/70 hover:text-sky-300 transition"
+          <div style={{ transform: "scale(0.33)", transformOrigin: "left center", pointerEvents: "none" }}>
+            <Breadcrumbs
+              items={[
+                { name: "Главная", href: "/" },
+                { name: "Каталог", href: "/catalog" },
+                { name: cat.title },
+              ]}
+              currentUrl={canonicalUrl}
+            />
+          </div>
+          <span
+            className="font-display text-sm tracking-[.08em] text-foreground/70"
+            style={{ transform: "scale(0.33)", transformOrigin: "right center", display: "inline-block" }}
           >
             ГРАВИКОТ
-          </Link>
+          </span>
         </div>
       </div>
 
@@ -85,7 +85,7 @@ export default async function CategoryPage({ params }: Props) {
           {cat.title}
         </h1>
         <p className="mt-2 text-foreground/50 font-tech text-sm tracking-wide">
-          Коллекция светящейся гравировки
+          точность, стиль, качество
         </p>
         <div
           className="mt-3 h-px w-24"
@@ -93,18 +93,8 @@ export default async function CategoryPage({ params }: Props) {
         />
       </section>
 
-      {/* Products grid */}
-      <CategoryPageClient cat={cat} />
-
-      {/* Footer link */}
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-10 text-center">
-        <Link
-          href="/"
-          className="inline-flex items-center gap-2 px-6 py-3 rounded-xl glass text-sky-300 hover:text-white hover:scale-105 transition font-tech text-sm"
-        >
-          &larr; Вернуться на главную
-        </Link>
-      </div>
+      {/* Products grid + back button (client component) */}
+      <CategoryPageClient cat={cat} showBackButton />
     </main>
   );
 }

@@ -5,12 +5,13 @@ import { categoryUrl, productUrl } from "@/lib/catalog-data";
 import type { Category } from "@/lib/catalog-data";
 import { useState } from "react";
 
-export function CategoryPageClient({ cat }: { cat: Category }) {
+export function CategoryPageClient({ cat, showBackButton }: { cat: Category; showBackButton?: boolean }) {
   const [lightbox, setLightbox] = useState<{ images: string[]; index: number; title: string } | null>(null);
 
   const gridCols = cat.products.length === 3 ? "grid-cols-1 md:grid-cols-3" : "grid-cols-1 md:grid-cols-2";
 
   return (
+    <>
     <section className="max-w-5xl mx-auto px-4 sm:px-6 pb-10">
       <div className={`grid gap-6 md:gap-8 ${gridCols}`}>
         {cat.products.map((p, idx) => {
@@ -89,6 +90,20 @@ export function CategoryPageClient({ cat }: { cat: Category }) {
         />
       )}
     </section>
+
+    {/* Back button — uses history.back() to close without restarting */}
+    {showBackButton && (
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-10 text-center">
+        <button
+          type="button"
+          onClick={() => { if (typeof window !== "undefined") window.history.back(); }}
+          className="inline-flex items-center gap-2 px-6 py-3 rounded-xl glass text-sky-300 hover:text-white hover:scale-105 transition font-tech text-sm"
+        >
+          &larr; Вернуться на главную
+        </button>
+      </div>
+    )}
+    </>
   );
 }
 
