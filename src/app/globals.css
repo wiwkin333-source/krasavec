@@ -407,6 +407,41 @@
     }
   }
 
+  /* ===== Heartbeat pulse for the 'Получить макет бесплатно' button =====
+     The entire button (image + its glow) gently scales up and back down
+     twice in quick succession, then rests — mimicking a 'lub-dub'
+     heartbeat. Amplitude kept small (1.0 → 1.025 → 1.0 → 1.025 → 1.0)
+     so it reads as alive, not distracting. The button's hover:scale-105
+     and transition-transform on the element itself are preserved — this
+     animation runs on the inner <img>, so the two never conflict. */
+  .gift-maket-btn-heartbeat {
+    animation: gift-maket-heartbeat 2.6s ease-in-out infinite;
+    transform-origin: center center;
+    will-change: transform, filter;
+  }
+  @keyframes gift-maket-heartbeat {
+    0%, 28%, 54%, 100% {
+      transform: scale(1);
+      filter:
+        drop-shadow(0 0 24px rgba(139, 92, 246, .55))
+        drop-shadow(0 0 40px rgba(41, 227, 255, .35));
+    }
+    /* First beat (lub) */
+    12% {
+      transform: scale(1.025);
+      filter:
+        drop-shadow(0 0 28px rgba(139, 92, 246, .65))
+        drop-shadow(0 0 48px rgba(41, 227, 255, .45));
+    }
+    /* Second beat (dub) — slightly weaker */
+    42% {
+      transform: scale(1.018);
+      filter:
+        drop-shadow(0 0 26px rgba(139, 92, 246, .60))
+        drop-shadow(0 0 44px rgba(41, 227, 255, .40));
+    }
+  }
+
   .divider-beam {
     height: 1px;
     background: linear-gradient(90deg, transparent, #29e3ff, #ff2bd6, transparent);
@@ -900,6 +935,7 @@
   .kvant-smoke > span,
   .kvant-embers,
   .kvant-ember,
+  .gift-maket-btn-heartbeat,
   .headline-cta,
   .divider-beam,
   .bg-grid-anim,
