@@ -190,7 +190,16 @@ function Lightbox({
       if (e.key === "ArrowLeft") { e.preventDefault(); go(-1); return; }
     };
     window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
+    // Lock body scroll and save position
+    const savedScrollY = window.scrollY;
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.body.style.overflow = prevOverflow;
+      // Restore scroll position to prevent page jump after zoom/pan
+      window.scrollTo(0, savedScrollY);
+    };
   }, [go, onClose]);
 
   const onTouchStart = (e: React.TouchEvent) => {
@@ -421,11 +430,18 @@ function CategoryOverlay({
 
   useEffect(() => {
     if (!open) return;
-    const prev = document.body.style.overflow;
+    // Save scroll position before locking body scroll
+    const savedScrollY = window.scrollY;
+    const prevOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     const onKey = (e: KeyboardEvent) => { if (e.key === "Escape" && !lightboxRef.current) onClose(); };
     window.addEventListener("keydown", onKey);
-    return () => { document.body.style.overflow = prev; window.removeEventListener("keydown", onKey); };
+    return () => {
+      document.body.style.overflow = prevOverflow;
+      window.removeEventListener("keydown", onKey);
+      // Restore scroll position to prevent page jump
+      window.scrollTo(0, savedScrollY);
+    };
   }, [open, onClose]);
 
   if (!open || typeof document === "undefined") return null;
@@ -447,14 +463,15 @@ function CategoryOverlay({
           const images = [p.src, ...(p.gallery ?? [])].filter(Boolean) as string[];
           return (
             <div key={idx}
-              className="relative rounded-2xl overflow-hidden glass text-left flex flex-col animate-in fade-in zoom-in-75 slide-in-from-bottom-8 min-h-[40vh] sm:min-h-[60vh]"
+              className="relative rounded-2xl overflow-hidden glass text-left flex flex-col animate-in fade-in zoom-in-75 slide-in-from-bottom-8"
               style={{ boxShadow: `0 20px 80px -10px ${accent}cc, 0 0 0 1px ${accent}55`, animationDelay: `${idx * 90}ms`, animationDuration: "600ms", animationFillMode: "both" }}>
               <button type="button"
                 onClick={(e) => { e.stopPropagation(); setLightbox({ images, index: 0, title: p.name ?? "" }); }}
-                className="relative flex-1 min-h-0 bg-transparent border-0 p-0 cursor-zoom-in text-left"
+                className="relative flex-1 min-h-0 bg-transparent border-0 p-0 cursor-zoom-in text-left aspect-[3/4] sm:aspect-square"
                 aria-label={`Открыть ${p.name}`}>
                 <img src={p.src} alt={`Гравировка на стекле — ${p.name}, ${p.desc}`}
-                  className="absolute inset-0 w-full h-full object-cover" loading="lazy" decoding="async" />
+                  className="absolute inset-0 w-full h-full object-contain" loading="lazy" decoding="async"
+                  style={{ background: "radial-gradient(ellipse at center, rgba(20,10,40,0.6) 0%, rgba(5,5,16,0.9) 100%)" }} />
               </button>
               <div className="px-4 sm:px-6 py-4 sm:py-5 bg-black/80 backdrop-blur-sm">
                 <div className="text-sm sm:text-base md:text-lg font-tech uppercase tracking-[.1em] sm:tracking-[.14em] text-sky-200 break-words">{p.name}</div>

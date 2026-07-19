@@ -23,11 +23,11 @@ export default function TermsPage() {
           ← На главную
         </Link>
 
-        <h1 className="font-display font-extrabold text-3xl md:text-4xl mb-2">
+        <h1 className="font-display font-extrabold text-2xl sm:text-3xl md:text-4xl mb-2 break-words">
           Пользовательское соглашение
         </h1>
         <p className="text-sky-300/60 text-sm font-tech mb-10">
-          Настоящее Пользовательское соглашение (далее&nbsp;— «Соглашение») является публичной офертой и регламентирует отношения между вами («Пользователь», «Заказчик») и LASER ATELIER / ГРАВИКОТ (далее&nbsp;— «Исполнитель», «Мы»), осуществляющей деятельность через сайт gravikot.ru
+          Настоящее Пользовательское соглашение (далее — «Соглашение») является публичной офертой и регламентирует отношения между вами («Пользователь», «Заказчик») и LASER ATELIER / ГРАВИКОТ (далее — «Исполнитель», «Мы»), осуществляющей деятельность через сайт gravikot.ru
         </p>
 
         <article className="space-y-10 text-sky-100/90 leading-relaxed">
@@ -132,7 +132,7 @@ export default function TermsPage() {
               <div>
                 <p className="font-semibold text-foreground/90 mb-1">5.2.</p>
                 <p>
-                  Возможен самовывоз заказа в г.&nbsp;Самаре по предварительной договоренности.
+                  Возможен самовывоз заказа в г. Самаре по предварительной договоренности.
                 </p>
               </div>
               <div>
