@@ -54,10 +54,11 @@ export default async function CategoryPage({ params }: Props) {
 
   return (
     <main className="min-h-screen bg-[#050510] text-foreground">
-      {/* Header with miniaturized breadcrumbs (visible for SEO, shrunk 300% for UI) */}
-      <div className="sticky top-0 z-30 bg-[#050510]/90 backdrop-blur-xl border-b border-white/5">
-        <div className="max-w-5xl mx-auto flex items-center justify-between px-4 sm:px-6 py-3">
-          <div style={{ transform: "scale(0.33)", transformOrigin: "left center", pointerEvents: "none" }}>
+      {/* Header with breadcrumbs & brand — visually hidden (opacity 0) but kept in DOM for SEO.
+          Area shrunk 500% vertically (py-3 → h-[2px]) to reclaim space. */}
+      <div className="sticky top-0 z-30 bg-[#050510]/90 backdrop-blur-xl border-b border-white/5" style={{ height: 2, overflow: "hidden" }}>
+        <div className="max-w-5xl mx-auto flex items-center justify-between px-4 sm:px-6" style={{ opacity: 0, pointerEvents: "none" }}>
+          <div style={{ transform: "scale(0.2)", transformOrigin: "left center" }}>
             <Breadcrumbs
               items={[
                 { name: "Главная", href: "/" },
@@ -68,8 +69,8 @@ export default async function CategoryPage({ params }: Props) {
             />
           </div>
           <span
-            className="font-display text-sm tracking-[.08em] text-foreground/70"
-            style={{ transform: "scale(0.33)", transformOrigin: "right center", display: "inline-block" }}
+            className="font-display text-sm tracking-[.08em]"
+            style={{ transform: "scale(0.2)", transformOrigin: "right center", display: "inline-block" }}
           >
             ГРАВИКОТ
           </span>
@@ -77,7 +78,7 @@ export default async function CategoryPage({ params }: Props) {
       </div>
 
       {/* Category title — strictly one H1 per page */}
-      <section className="max-w-5xl mx-auto px-4 sm:px-6 pt-8 pb-4">
+      <section className="max-w-5xl mx-auto px-4 sm:px-6 pt-4 pb-4">
         <h1
           className="font-display text-3xl sm:text-4xl md:text-5xl"
           style={{ color: cat.accent }}

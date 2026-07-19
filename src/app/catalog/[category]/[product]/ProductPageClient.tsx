@@ -95,13 +95,13 @@ export function ProductPageClient({ cat, prod }: { cat: Category; prod: Product 
     if (touchStartX.current == null || touchStartY.current == null || zoom !== 1) return;
     const dx = e.touches[0].clientX - touchStartX.current;
     const dy = e.touches[0].clientY - touchStartY.current;
-    // Determine swipe axis after minimal movement
-    if (swipeAxis.current == null && (Math.abs(dx) > 5 || Math.abs(dy) > 5)) {
+    // Determine swipe axis after minimal movement (3px threshold for instant axis detection)
+    if (swipeAxis.current == null && (Math.abs(dx) > 3 || Math.abs(dy) > 3)) {
       swipeAxis.current = Math.abs(dy) > Math.abs(dx) ? "y" : "x";
     }
-    // Vertical drag-to-close: apply immediately, amplify for responsiveness
+    // Vertical drag-to-close: apply 1:1 instantly — no amplification lag
     if (swipeAxis.current === "y" && dy > 0) {
-      setDragY(dy * 1.5);
+      setDragY(dy);
     }
   };
   const onTouchEnd = (e: React.TouchEvent) => {
@@ -111,8 +111,8 @@ export function ProductPageClient({ cat, prod }: { cat: Category; prod: Product 
     const dx = e.changedTouches[0].clientX - touchStartX.current;
     const dy = e.changedTouches[0].clientY - touchStartY.current;
     if (swipeAxis.current === "y") {
-      // Close on any noticeable downward swipe (lower threshold = more responsive)
-      if (dy > 50) { router.back(); }
+      // Close on downward swipe — 20px threshold for instant reaction
+      if (dy > 20) { router.back(); }
       setDragY(0);
     } else if (swipeAxis.current === "x" && images.length > 1 && Math.abs(dx) > 30) {
       go(dx < 0 ? 1 : -1);

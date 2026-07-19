@@ -98,10 +98,10 @@ export function SvoyakPromo() {
                 на последующие заказы
               </div>
               <button onClick={() => setOpen(true)}
-                className="btn-fw-mobile mt-4 sm:mt-6 inline-flex items-center justify-center gap-2 px-3 sm:px-6 py-2 sm:py-3 rounded-full text-white font-tech uppercase tracking-[.1em] sm:tracking-[.18em] text-[10px] sm:text-xs md:text-sm hover:scale-105 transition-transform"
+                className="btn-fw-mobile mt-4 sm:mt-6 inline-flex items-center justify-center gap-1.5 px-2 sm:px-3 py-1.5 sm:py-2 rounded-full text-white font-tech uppercase tracking-[.08em] sm:tracking-[.12em] text-[8px] sm:text-[10px] md:text-xs hover:scale-105 transition-transform w-1/2 max-w-[160px]"
                 style={{ background: "linear-gradient(135deg, #6b21a8, #3d2310)", boxShadow: "0 4px 24px rgba(139, 92, 246, .5)" }}>
                 Подробнее
-                <ChevronDown className="w-4 h-4" />
+                <ChevronDown className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
               </button>
             </div>
           </div>
