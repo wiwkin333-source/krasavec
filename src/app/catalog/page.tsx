@@ -71,7 +71,8 @@ export default function CatalogPage() {
                 <div className="relative aspect-[4/3] overflow-hidden">
                   <img
                     src={cat.products[0].src}
-                    alt={`Коллекция ${cat.title}`}
+                    alt={`Коллекция ${cat.title} — светящаяся гравировка на стекле ГРАВИКОТ. Изделия: ${cat.products.map((p) => p.name).join(", ")}`}
+                    title={`Коллекция ${cat.title}`}
                     className="absolute inset-0 w-full h-full object-contain transition-transform duration-500 group-hover:scale-105"
                     style={{
                       background:

@@ -104,7 +104,8 @@ export function ProductPageClient({ cat, prod }: { cat: Category; prod: Product 
         >
           <img
             src={images[currentIdx]}
-            alt={`${prod.name} — фото ${currentIdx + 1}`}
+            alt={`${prod.name} — фото ${currentIdx + 1} из ${images.length}. ${prod.desc} Светящаяся гравировка на стекле ГРАВИКОТ, коллекция ${cat.title}, цена ${prod.price}`}
+            title={`${prod.name} — фото ${currentIdx + 1} из ${images.length}`}
             className="max-w-full max-h-full object-contain transition-transform duration-300"
             style={{
               transform: `scale(${zoomLevel})`,

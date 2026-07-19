@@ -314,7 +314,7 @@ function Lightbox({
           return (
             <div key={i} className="absolute inset-0 flex items-center justify-center transition-opacity duration-500 ease-in-out overflow-hidden"
               style={{ opacity: active ? 1 : 0, pointerEvents: active ? "auto" : "none" }}>
-              <img src={src} alt={`${title} ${i + 1}`} className="max-w-full max-h-full object-contain select-none" loading="lazy" decoding="async"
+              <img src={src} alt={`${title} — фото ${i + 1} светящаяся гравировка ГРАВИКОТ`} className="max-w-full max-h-full object-contain select-none" loading="lazy" decoding="async"
                 onClick={(e) => { e.stopPropagation(); if (zoom > 1) setZoom(1); else setZoom((z) => (z === 1 ? 2 : 1)); }}
                 onMouseDown={handleMouseDown}
                 style={{ transform: `scale(${active ? zoom : 1}) translate(${active && zoom > 1 ? `${pan.x / zoom}px` : "0px"}, ${active && zoom > 1 ? `${pan.y / zoom}px` : "0px"})`, transition: isPanning.current ? "none" : "transform 300ms ease", cursor: zoom > 1 ? (isPanning.current ? "grabbing" : "grab") : "zoom-in" }}
@@ -534,7 +534,7 @@ export function Gallery({ onOrder, canPlay }: { onOrder: () => void; canPlay?: b
                 />
                 <img
                   src="/assets/gravikot-poster.webp"
-                  alt="Логотип мастерской ГРАВИКОТ"
+                  alt="Логотип мастерской ГРАВИКОТ — светящаяся гравировка на стекле"
                   aria-hidden={!showPoster}
                   fetchPriority="high"
                   decoding="async"
@@ -563,7 +563,7 @@ export function Gallery({ onOrder, canPlay }: { onOrder: () => void; canPlay?: b
               style={{ boxShadow: `0 12px 60px -20px ${o.color}` }}>
               <span className="absolute inset-0 block rounded-2xl overflow-hidden">
                 {o.image && (
-                  <img src={o.image} alt={`Коллекция ${o.label}`} className="absolute inset-0 w-full h-full object-cover" loading="lazy" decoding="async" />
+                  <img src={o.image} alt={`Коллекция ${o.label} — светящаяся гравировка на стекле ГРАВИКОТ`} title={`Коллекция ${o.label}`} className="absolute inset-0 w-full h-full object-cover" loading="lazy" decoding="async" />
                 )}
                 <div className="absolute inset-0 pointer-events-none"
                   style={{ background: `radial-gradient(circle, ${o.color}33, transparent 70%)` }} />

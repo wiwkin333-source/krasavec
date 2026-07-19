@@ -30,7 +30,8 @@ export function CategoryPageClient({ cat }: { cat: Category }) {
               <Link href={productUrl(cat, p)} className="relative bg-transparent border-0 p-0 text-left block group">
                 <img
                   src={p.src}
-                  alt={`Гравировка на стекле — ${p.name}, ${p.desc}`}
+                  alt={`${p.name} — ${p.desc} Коллекция ${cat.title}. Светящаяся гравировка на стекле ГРАВИКОТ, фото 1`}
+                  title={`${p.name} — ${p.price}`}
                   className="block w-full h-auto object-contain transition-transform duration-300 group-hover:scale-[1.02]"
                   loading="lazy"
                   decoding="async"
@@ -125,7 +126,8 @@ function LightboxModal({
         <div className="relative aspect-square rounded-2xl overflow-hidden" style={{ boxShadow: `0 20px 80px -10px ${accent}88` }}>
           <img
             src={images[idx]}
-            alt={`${title} — фото ${idx + 1}`}
+            alt={`${title} — фото ${idx + 1} светящаяся гравировка на стекле ГРАВИКОТ`}
+            title={`${title} — фото ${idx + 1} из ${images.length}`}
             className="absolute inset-0 w-full h-full object-contain"
             style={{ background: "radial-gradient(ellipse at center, rgba(20,10,40,0.6) 0%, rgba(5,5,16,0.9) 100%)" }}
           />
