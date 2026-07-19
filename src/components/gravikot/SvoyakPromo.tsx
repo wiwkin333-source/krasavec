@@ -31,6 +31,7 @@ export function SvoyakPromo() {
               style={{ background: "radial-gradient(circle at 50% 55%, rgba(139,92,246,.35) 0%, rgba(41,227,255,.18) 35%, rgba(255,43,214,.12) 60%, transparent 75%)", filter: "blur(40px)", transform: "scale(1.15)", zIndex: 0 }} />
             <img src="/assets/shar.webp" alt="" aria-hidden
               className="absolute inset-0 w-full h-full object-contain pointer-events-none select-none scale-[1.15] md:scale-75"
+              loading="lazy" decoding="async"
               draggable={false} style={{ zIndex: 1 }} />
             <div className="absolute top-[18%] right-[20%] text-purple-200" style={{ animation: "sparkle 2.5s ease-in-out infinite", zIndex: 2 }}>
               <Sparkles className="w-10 h-10" style={{ filter: "drop-shadow(0 0 12px #c084fc)" }} />

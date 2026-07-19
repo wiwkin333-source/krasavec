@@ -55,6 +55,8 @@ export function CatWizardButton({ onClick }: { onClick: () => void }) {
         src="/assets/krutysh.webp"
         alt="Запустить проект"
         className="relative w-full h-auto select-none cat-float transition-transform duration-500 group-hover:scale-105"
+        loading="lazy"
+        decoding="async"
         style={{
           filter:
             "drop-shadow(0 0 24px rgba(139,92,246,.6)) drop-shadow(0 0 40px rgba(41,227,255,.35))",

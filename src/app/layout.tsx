@@ -51,7 +51,7 @@ export const metadata: Metadata = {
     siteName: "ГРАВИКОТ",
     images: [
       {
-        url: "/og-image.png?v=4",
+        url: "/og-image.webp?v=4",
         width: 1200,
         height: 1200,
         alt: "ГРАВИКОТ — Кружка со светящейся гравировкой по фото",
@@ -62,7 +62,7 @@ export const metadata: Metadata = {
     card: "summary",
     title: "ГРАВИКОТ - Кружка со светящейся гравировкой по фото",
     description: "Кружки и бокалы со светящейся гравировкой по вашему фото. Уникальные сувениры с подсветкой. Доставка по России.",
-    images: ["/og-image.png?v=4"],
+    images: ["/og-image.webp?v=4"],
   },
 };
 
@@ -86,8 +86,10 @@ export default function RootLayout({
   return (
     <html lang="ru" suppressHydrationWarning>
       <head>
+        {/* Preconnect to font origins — resolve DNS early */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        {/* Font CSS loaded with display=swap to prevent render blocking */}
         <link
           rel="stylesheet"
           href="https://fonts.googleapis.com/css2?family=Unbounded:wght@600;800&family=Exo+2:wght@400;600&family=Bebas+Neue&display=swap"
@@ -96,12 +98,14 @@ export default function RootLayout({
         <link rel="mask-icon" href="/safari-pinned-tab.svg?v=4" color="#050510" />
         {/* Apple startup images for PWA — explicit link for iOS */}
         <link rel="apple-touch-startup-image" href="/apple-touch-icon.png?v=4" />
+        {/* Preload hero poster for LCP — highest priority image */}
+        <link rel="preload" as="image" href="/assets/gravikot-poster.webp" fetchPriority="high" />
       </head>
       <body className="antialiased bg-background text-foreground" style={{ fontFamily: 'var(--font-sans)' }}>
         {children}
         <Toaster />
-        {/* Disable right-click on images/videos */}
-        <script dangerouslySetInnerHTML={{ __html: `document.addEventListener('contextmenu',function(e){if(e.target.tagName==='IMG'||e.target.tagName==='VIDEO'||e.target.closest('img')||e.target.closest('video'))e.preventDefault()});` }} />
+        {/* Non-critical script: defer execution to not block render */}
+        <script defer dangerouslySetInnerHTML={{ __html: `document.addEventListener('contextmenu',function(e){if(e.target.tagName==='IMG'||e.target.tagName==='VIDEO'||e.target.closest('img')||e.target.closest('video'))e.preventDefault()});` }} />
       </body>
     </html>
   );

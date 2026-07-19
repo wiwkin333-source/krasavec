@@ -9,41 +9,41 @@ type VideoMode = "hero" | "click" | "poster";
 
 // Product images map
 const productImages: Record<number, string> = {
-  2: "/assets/products/p2.png",
-  3: "/assets/products/p3.png",
-  5: "/assets/products/p5.png",
-  6: "/assets/products/p6.png",
-  7: "/assets/products/p7.png",
-  8: "/assets/products/p8.png",
-  9: "/assets/products/p9.png",
-  10: "/assets/products/p10.png",
+  2: "/assets/products/p2.webp",
+  3: "/assets/products/p3.webp",
+  5: "/assets/products/p5.webp",
+  6: "/assets/products/p6.webp",
+  7: "/assets/products/p7.webp",
+  8: "/assets/products/p8.webp",
+  9: "/assets/products/p9.webp",
+  10: "/assets/products/p10.webp",
 };
 const img = (n: number) => productImages[n];
 
 // Import product gallery images
-const glass1 = "/assets/products/glass-1.png";
-const glass2 = "/assets/products/glass-2.png";
-const flute1 = "/assets/products/flute-1.png";
-const flute2 = "/assets/products/flute-2.png";
-const dresden1 = "/assets/products/dresden-1.png";
-const dresden2 = "/assets/products/dresden-2.png";
-const gramine1 = "/assets/products/gramine-1.jpg";
-const gramine2 = "/assets/products/gramine-2.png";
-const gramine3 = "/assets/products/gramine-3.png";
-const gramine4 = "/assets/products/gramine-4.png";
-const gramine5 = "/assets/products/gramine-5.png";
-const gramine6 = "/assets/products/gramine-6.png";
-const gramine7 = "/assets/products/gramine-7.png";
-const maag1 = "/assets/products/maag-1.jpg";
-const maag2 = "/assets/products/maag-2.jpg";
-const maag3 = "/assets/products/maag-3.jpg";
-const maag4 = "/assets/products/maag-4.jpg";
-const maag5 = "/assets/products/maag-5.jpg";
-const maag6 = "/assets/products/maag-6.jpg";
-const collins1 = "/assets/products/collins-1.png";
-const collins2 = "/assets/products/collins-2.png";
-const collins3 = "/assets/products/collins-3.png";
-const collins4 = "/assets/products/collins-4.png";
+const glass1 = "/assets/products/glass-1.webp";
+const glass2 = "/assets/products/glass-2.webp";
+const flute1 = "/assets/products/flute-1.webp";
+const flute2 = "/assets/products/flute-2.webp";
+const dresden1 = "/assets/products/dresden-1.webp";
+const dresden2 = "/assets/products/dresden-2.webp";
+const gramine1 = "/assets/products/gramine-1.webp";
+const gramine2 = "/assets/products/gramine-2.webp";
+const gramine3 = "/assets/products/gramine-3.webp";
+const gramine4 = "/assets/products/gramine-4.webp";
+const gramine5 = "/assets/products/gramine-5.webp";
+const gramine6 = "/assets/products/gramine-6.webp";
+const gramine7 = "/assets/products/gramine-7.webp";
+const maag1 = "/assets/products/maag-1.webp";
+const maag2 = "/assets/products/maag-2.webp";
+const maag3 = "/assets/products/maag-3.webp";
+const maag4 = "/assets/products/maag-4.webp";
+const maag5 = "/assets/products/maag-5.webp";
+const maag6 = "/assets/products/maag-6.webp";
+const collins1 = "/assets/products/collins-1.webp";
+const collins2 = "/assets/products/collins-2.webp";
+const collins3 = "/assets/products/collins-3.webp";
+const collins4 = "/assets/products/collins-4.webp";
 
 type OrbPhase = "idle" | "entering-back" | "entering-front" | "front" | "leaving-front" | "leaving-back";
 
@@ -119,6 +119,8 @@ function OrbCard({
             src={o.image}
             alt={`Коллекция ${o.label.replace(/[\u200B-\u200D\uFEFF]/g, "")} — кружки со светящейся гравировкой`}
             className="absolute inset-0 w-full h-full object-cover"
+            loading="lazy"
+            decoding="async"
           />
         )}
         <div
@@ -316,7 +318,7 @@ function Lightbox({
           return (
             <div key={i} className="absolute inset-0 flex items-center justify-center transition-opacity duration-500 ease-in-out overflow-hidden"
               style={{ opacity: active ? 1 : 0, pointerEvents: active ? "auto" : "none" }}>
-              <img src={src} alt={`${title} ${i + 1}`} className="max-w-full max-h-full object-contain select-none"
+              <img src={src} alt={`${title} ${i + 1}`} className="max-w-full max-h-full object-contain select-none" loading="lazy" decoding="async"
                 onClick={(e) => { e.stopPropagation(); if (zoom > 1) setZoom(1); else setZoom((z) => (z === 1 ? 2 : 1)); }}
                 onMouseDown={handleMouseDown}
                 style={{ transform: `scale(${active ? zoom : 1}) translate(${active && zoom > 1 ? `${pan.x / zoom}px` : "0px"}, ${active && zoom > 1 ? `${pan.y / zoom}px` : "0px"})`, transition: isPanning.current ? "none" : "transform 300ms ease", cursor: zoom > 1 ? (isPanning.current ? "grabbing" : "grab") : "zoom-in" }}
@@ -414,7 +416,7 @@ function CategoryOverlay({
                 className="relative flex-1 min-h-0 bg-transparent border-0 p-0 cursor-zoom-in text-left"
                 aria-label={`Открыть ${p.name}`}>
                 <img src={p.src} alt={`Гравировка на стекле — ${p.name}, ${p.desc}`}
-                  className="absolute inset-0 w-full h-full object-cover" />
+                  className="absolute inset-0 w-full h-full object-cover" loading="lazy" decoding="async" />
               </button>
               <div className="px-6 py-5 bg-black/80 backdrop-blur-sm">
                 <div className="text-base md:text-lg font-tech uppercase tracking-[.14em] text-sky-200">{p.name}</div>
@@ -641,7 +643,7 @@ export function Gallery({ onOrder, canPlay }: { onOrder: () => void; canPlay?: b
               style={{ boxShadow: `0 12px 60px -20px ${o.color}` }}>
               <span className="absolute inset-0 block rounded-2xl overflow-hidden">
                 {o.image && (
-                  <img src={o.image} alt={`Коллекция ${o.label}`} className="absolute inset-0 w-full h-full object-cover" />
+                  <img src={o.image} alt={`Коллекция ${o.label}`} className="absolute inset-0 w-full h-full object-cover" loading="lazy" decoding="async" />
                 )}
                 <div className="absolute inset-0 pointer-events-none"
                   style={{ background: `radial-gradient(circle, ${o.color}33, transparent 70%)` }} />

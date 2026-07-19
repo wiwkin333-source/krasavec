@@ -18,6 +18,8 @@ export function GiftMaketButton({
         src="/assets/poluchit-maket.webp"
         alt="Получить макет бесплатно"
         className="w-full h-auto select-none"
+        loading="lazy"
+        decoding="async"
         style={{
           filter:
             "drop-shadow(0 0 24px rgba(139,92,246,.55)) drop-shadow(0 0 40px rgba(41,227,255,.35))",
