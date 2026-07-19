@@ -3,8 +3,22 @@ import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://gravikot.ru"),
   title: "ГРАВИКОТ - Кружка со светящейся гравировкой по фото",
   description: "ГРАВИКОТ — кружки и бокалы со светящейся гравировкой по вашему фото. Уникальные сувениры с подсветкой. Доставка по России.",
+  alternates: {
+    canonical: "https://gravikot.ru",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
   icons: {
     icon: [
       // SVG favicon — highest priority for modern browsers

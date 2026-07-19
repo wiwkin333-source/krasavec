@@ -1,8 +1,20 @@
+# robots.txt for ГРАВИКОТ
+# https://www.gravikot.ru
+
 User-agent: Googlebot
 Allow: /
+Disallow: /api
+Disallow: /_next/
 
 User-agent: Bingbot
 Allow: /
+Disallow: /api
+Disallow: /_next/
+
+User-agent: YandexBot
+Allow: /
+Disallow: /api
+Disallow: /_next/
 
 User-agent: Twitterbot
 Allow: /
@@ -12,3 +24,8 @@ Allow: /
 
 User-agent: *
 Allow: /
+Disallow: /api
+Disallow: /_next/
+
+# Sitemap
+Sitemap: https://gravikot.ru/sitemap.xml

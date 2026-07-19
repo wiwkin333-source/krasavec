@@ -3,6 +3,13 @@ import Link from "next/link";
 export const metadata = {
   title: "Политика конфиденциальности — ГРАВИКОТ",
   description: "Политика конфиденциальности мастерской ГРАВИКОТ. Порядок обработки и защиты персональных данных.",
+  robots: {
+    index: false,
+    follow: true,
+  },
+  alternates: {
+    canonical: "https://gravikot.ru/privacy",
+  },
 };
 
 export default function PrivacyPolicyPage() {

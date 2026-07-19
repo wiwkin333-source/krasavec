@@ -13,9 +13,87 @@ const nextConfig: NextConfig = {
     formats: ["image/avif", "image/webp"],
     minimumCacheTTL: 60 * 60 * 24 * 365, // 1 year
   },
-  // Headers for caching static assets
+  // Single-step redirects — NO chains
+  async redirects() {
+    return [
+      // Trailing slash redirect — single step to non-trailing
+      {
+        source: "/:path+/",
+        destination: "/:path+",
+        permanent: true,
+      },
+      // Common misspellings / old URLs → single redirect to correct page
+      {
+        source: "/index.html",
+        destination: "/",
+        permanent: true,
+      },
+      {
+        source: "/home",
+        destination: "/",
+        permanent: true,
+      },
+      {
+        source: "/catalog",
+        destination: "/",
+        permanent: true,
+      },
+      {
+        source: "/shop",
+        destination: "/",
+        permanent: true,
+      },
+      {
+        source: "/product",
+        destination: "/",
+        permanent: true,
+      },
+      {
+        source: "/products",
+        destination: "/",
+        permanent: true,
+      },
+      {
+        source: "/about",
+        destination: "/",
+        permanent: true,
+      },
+      {
+        source: "/contacts",
+        destination: "/",
+        permanent: true,
+      },
+      {
+        source: "/order",
+        destination: "/",
+        permanent: true,
+      },
+      {
+        source: "/cart",
+        destination: "/",
+        permanent: true,
+      },
+      {
+        source: "/checkout",
+        destination: "/",
+        permanent: true,
+      },
+      {
+        source: "/politika",
+        destination: "/privacy",
+        permanent: true,
+      },
+      {
+        source: "/usloviya",
+        destination: "/terms",
+        permanent: true,
+      },
+    ];
+  },
+  // Headers for caching and SEO
   async headers() {
     return [
+      // Static assets — long cache
       {
         source: "/assets/:path*",
         headers: [
@@ -25,6 +103,7 @@ const nextConfig: NextConfig = {
           },
         ],
       },
+      // Favicon — 1 day cache
       {
         source: "/favicon.ico",
         headers: [
@@ -34,12 +113,37 @@ const nextConfig: NextConfig = {
           },
         ],
       },
+      // WebP images — long cache
       {
         source: "/(.*)?.webp",
         headers: [
           {
             key: "Cache-Control",
             value: "public, max-age=31536000, immutable",
+          },
+        ],
+      },
+      // API routes — noindex, no cache
+      {
+        source: "/api/:path*",
+        headers: [
+          {
+            key: "X-Robots-Tag",
+            value: "noindex, nofollow",
+          },
+          {
+            key: "Cache-Control",
+            value: "no-store, no-cache, must-revalidate",
+          },
+        ],
+      },
+      // _next internal — noindex
+      {
+        source: "/_next/:path*",
+        headers: [
+          {
+            key: "X-Robots-Tag",
+            value: "noindex, nofollow",
           },
         ],
       },

@@ -2,7 +2,14 @@ import Link from "next/link";
 
 export const metadata = {
   title: "Пользовательское соглашение — ГРАВИКОТ",
-  description: "Пользовательское соглашение LASER ATELIER / ГРАВИКОТ. Условия использования сайта и заказа услуг.",
+  description: "Пользовательское соглашение ГРАВИКОТ. Условия использования сайта и заказа услуг.",
+  robots: {
+    index: false,
+    follow: true,
+  },
+  alternates: {
+    canonical: "https://gravikot.ru/terms",
+  },
 };
 
 export default function TermsPage() {
