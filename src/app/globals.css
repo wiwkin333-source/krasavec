@@ -200,9 +200,6 @@
     font-size: clamp(1.5rem, 5.5vw, 3.75rem);
     line-height: 1.05;
     letter-spacing: -0.02em;
-    overflow-wrap: anywhere;
-    word-break: break-word;
-    hyphens: auto;
     max-width: 100%;
     background: linear-gradient(90deg, #f5e6c8, #fff, #29e3ff, #c9a8ff, #ff8be0, #f5e6c8);
     background-size: 200% auto;
@@ -279,7 +276,6 @@
 
   /* ---- Mobile: general adjustments up to 640px ---- */
   @media (max-width: 640px) {
-    .luxe-title { white-space: normal; }
     .glass { backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
     .social-icon { width: 3.5rem; height: 3.5rem; }
   }
@@ -287,7 +283,6 @@
   /* ---- Small mobile (up to 479px) ---- */
   @media (max-width: 479px) {
     .btn-fw-mobile { width: 100% !important; max-width: 100% !important; }
-    .luxe-title { font-size: clamp(1.2rem, 7vw, 1.8rem); letter-spacing: -0.01em; }
     .headline-cta { font-size: clamp(2.2rem, 12vw, 4rem); }
     .neon-border { border-width: 1px; }
     .social-icon { width: 3rem; height: 3rem; }
@@ -298,7 +293,6 @@
 
   /* ---- Small mobile (375px–414px): tighter spacing, smaller touch targets ---- */
   @media (max-width: 414px) {
-    .luxe-title { font-size: clamp(1.1rem, 6.5vw, 1.6rem); }
     .headline-cta { font-size: clamp(2rem, 11vw, 3.5rem); }
     .social-icon { width: 2.75rem; height: 2.75rem; }
     .social-icon svg { width: 1.15rem; height: 1.15rem; }
@@ -309,7 +303,6 @@
 
   /* ---- Very small screens (<375px): extra compact ---- */
   @media (max-width: 374px) {
-    .luxe-title { font-size: clamp(1rem, 6vw, 1.5rem); }
     .font-display { letter-spacing: -0.02em; }
     .font-tech { letter-spacing: 0.01em; }
     .social-icon { width: 2.5rem; height: 2.5rem; }

@@ -13,7 +13,6 @@ export function SiteFooter() {
             <PawPrint className="w-6 h-6 mx-0.5" style={{ color: "#ff2bd6", filter: "drop-shadow(0 0 8px #ff2bd6)" }} aria-hidden="true" />
             <span className="shimmer-text">Т</span>
           </div>
-          <p className="text-sky-100/90 text-sm mt-3 font-tech">Кружки и бокалы со светящейся гравировкой по фото</p>
         </div>
         <nav aria-label="Контакты">
           <div className="font-display font-semibold mb-2">Контакты:</div>

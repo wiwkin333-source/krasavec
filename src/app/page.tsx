@@ -80,7 +80,7 @@ export default function Home() {
             <div className="font-tech uppercase tracking-[.15em] sm:tracking-[.4em] text-sky-300/80 text-[9px] sm:text-[10px] md:text-xs leading-none">
               ГРАВИКОТ — ЛАЗЕРНОЕ АТЕЛЬЕ
             </div>
-            <h1 className="luxe-title mt-1 uppercase leading-tight text-[clamp(1rem,3.8vw,2.25rem)]">Глоу-арт гравировка</h1>
+            <h1 className="luxe-title mt-1 uppercase leading-tight whitespace-nowrap text-[clamp(.7rem,3.2vw,2.25rem)]">Глоу-арт гравировка</h1>
             <p className="text-sky-200 text-luxury-glow mt-1 max-w-2xl mx-auto font-tech text-xs sm:text-sm md:text-base leading-snug px-2">
               Создаём стильные светящиеся сувениры и подарки по вашим фото и любимым изображениям — для близких людей, брендов и особых событий.
             </p>
