@@ -1,6 +1,10 @@
 /**
  * Breadcrumb component with Schema.org/BreadcrumbList JSON-LD microdata.
  * The last item (current page) is rendered as a non-clickable <span>.
+ *
+ * Props:
+ *  - items: breadcrumb trail (last item = current page, no href needed)
+ *  - currentUrl: absolute URL of the current page (used in JSON-LD `item` for the last element)
  */
 
 interface BreadcrumbItem {
@@ -8,21 +12,29 @@ interface BreadcrumbItem {
   href?: string; // undefined = current page (non-clickable)
 }
 
-function buildBreadcrumbJsonLd(items: BreadcrumbItem[]) {
+function buildBreadcrumbJsonLd(items: BreadcrumbItem[], currentUrl?: string) {
   return {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
-    itemListElement: items.map((item, i) => ({
-      "@type": "ListItem",
-      position: i + 1,
-      name: item.name,
-      ...(item.href ? { item: `https://gravikot.ru${item.href}` } : {}),
-    })),
+    itemListElement: items.map((item, i) => {
+      const isLast = i === items.length - 1;
+      const itemUrl = item.href
+        ? `https://gravikot.ru${item.href}`
+        : isLast && currentUrl
+          ? currentUrl
+          : undefined;
+      return {
+        "@type": "ListItem",
+        position: i + 1,
+        name: item.name,
+        ...(itemUrl ? { item: itemUrl } : {}),
+      };
+    }),
   };
 }
 
-export function Breadcrumbs({ items }: { items: BreadcrumbItem[] }) {
-  const jsonLd = buildBreadcrumbJsonLd(items);
+export function Breadcrumbs({ items, currentUrl }: { items: BreadcrumbItem[]; currentUrl?: string }) {
+  const jsonLd = buildBreadcrumbJsonLd(items, currentUrl);
 
   return (
     <>

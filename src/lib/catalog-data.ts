@@ -182,3 +182,13 @@ export function productUrl(cat: Category, prod: Product): string {
 export function findProduct(cat: Category, productSlug: string): Product | undefined {
   return cat.products.find((p) => p.slug === productSlug);
 }
+
+/** Extract numeric price from string like "2499 ₽" → 2499 */
+export function extractPrice(price: string): number {
+  return parseFloat(price.replace(/[^\d.,]/g, "").replace(",", "."));
+}
+
+/** Get minimum price among products in a category */
+export function minCategoryPrice(cat: Category): number {
+  return Math.min(...cat.products.map((p) => extractPrice(p.price)));
+}

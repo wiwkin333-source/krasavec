@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { categories, categoryBySlug, findProduct, categoryUrl, productUrl } from "@/lib/catalog-data";
+import { categories, categoryBySlug, findProduct, categoryUrl, productUrl, extractPrice } from "@/lib/catalog-data";
 import { ProductPageClient } from "./ProductPageClient";
 import { Breadcrumbs } from "@/components/gravikot/Breadcrumbs";
 import { notFound } from "next/navigation";
+
+const SITE_URL = "https://gravikot.ru";
 
 interface Props {
   params: Promise<{ category: string; product: string }>;
@@ -20,16 +22,15 @@ export async function generateStaticParams() {
 }
 
 function buildProductJsonLd(cat: { slug: string; title: string; accent: string }, prod: { name: string; desc: string; price: string; src?: string; slug: string }) {
-  const url = `https://gravikot.ru${productUrl(cat as any, prod as any)}`;
-  // Extract numeric price: "2499 ₽" → 2499
-  const priceNum = parseFloat(prod.price.replace(/[^\d.,]/g, "").replace(",", "."));
+  const url = `${SITE_URL}${productUrl(cat as any, prod as any)}`;
+  const priceNum = extractPrice(prod.price);
   return {
     "@context": "https://schema.org",
     "@type": "Product",
     name: prod.name,
     description: prod.desc,
     url,
-    image: prod.src ? `https://gravikot.ru${prod.src}` : undefined,
+    image: prod.src ? `${SITE_URL}${prod.src}` : undefined,
     brand: {
       "@type": "Brand",
       name: "ГРАВИКОТ",
@@ -54,19 +55,24 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const prod = findProduct(cat, prodSlug);
   if (!prod) return {};
 
-  const title = `${prod.name} — ${cat.title} | ГРАВИКОТ`;
-  const description = `${prod.name}: ${prod.desc} Коллекция ${cat.title}. Светящаяся гравировка на стекле от ГРАВИКОТ. ${prod.price}`;
+  const priceNum = extractPrice(prod.price);
+  // Title: "Купить Грамине, цена от 2499 ₽ | ГРАВИКОТ" ≈ 40 chars ✅ (≤65)
+  const title = `Купить ${prod.name}, цена от ${priceNum} ₽ | ГРАВИКОТ`;
+  // Strip trailing period from desc to avoid double punctuation
+  const cleanDesc = prod.desc.replace(/\.\s*$/, "");
+  const description = `Купить ${prod.name} — ${cleanDesc}. Коллекция ${cat.title}. Цена ${prod.price}. Светящаяся гравировка на стекле. Доставка по России.`;
+  const canonicalUrl = `${SITE_URL}${productUrl(cat, prod)}`;
 
   return {
     title,
     description,
     alternates: {
-      canonical: `https://gravikot.ru${productUrl(cat, prod)}`,
+      canonical: canonicalUrl,
     },
     openGraph: {
       title,
       description,
-      url: `https://gravikot.ru${productUrl(cat, prod)}`,
+      url: canonicalUrl,
       type: "website",
       locale: "ru_RU",
       siteName: "ГРАВИКОТ",
@@ -85,6 +91,7 @@ export default async function ProductPage({ params }: Props) {
   if (!prod) notFound();
 
   const productJsonLd = buildProductJsonLd(cat, prod);
+  const canonicalUrl = `${SITE_URL}${productUrl(cat, prod)}`;
 
   return (
     <main className="min-h-screen bg-[#050510] text-foreground">
@@ -104,6 +111,7 @@ export default async function ProductPage({ params }: Props) {
               { name: cat.title, href: categoryUrl(cat) },
               { name: prod.name },
             ]}
+            currentUrl={canonicalUrl}
           />
           <Link
             href="/"

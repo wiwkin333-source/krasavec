@@ -3,18 +3,20 @@ import Link from "next/link";
 import { categories, categoryUrl } from "@/lib/catalog-data";
 import { Breadcrumbs } from "@/components/gravikot/Breadcrumbs";
 
+const SITE_URL = "https://gravikot.ru";
+
 export const metadata: Metadata = {
-  title: "Каталог — ГРАВИКОТ | Светящаяся гравировка на стекле",
+  title: "Каталог — светящаяся гравировка на стекле | ГРАВИКОТ",
   description:
-    "Каталог коллекций светящейся гравировки от ГРАВИКОТ. Кружки, бокалы и стаканы с уникальной глоу-арт гравировкой по вашему фото.",
+    "Каталог коллекций светящейся гравировки от ГРАВИКОТ. Кружки, бокалы и стаканы с уникальной глоу-арт гравировкой по вашему фото. Цены от 2 399 ₽. Доставка по России.",
   alternates: {
-    canonical: "https://gravikot.ru/catalog",
+    canonical: `${SITE_URL}/catalog`,
   },
   openGraph: {
-    title: "Каталог — ГРАВИКОТ",
+    title: "Каталог — светящаяся гравировка на стекле | ГРАВИКОТ",
     description:
-      "Коллекции светящейся гравировки на стекле. Кружки, бокалы, стаканы с глоу-арт гравировкой.",
-    url: "https://gravikot.ru/catalog",
+      "Коллекции светящейся гравировки на стекле. Кружки, бокалы, стаканы с глоу-арт гравировкой. Цены от 2 399 ₽.",
+    url: `${SITE_URL}/catalog`,
     type: "website",
     locale: "ru_RU",
     siteName: "ГРАВИКОТ",
@@ -32,6 +34,7 @@ export default function CatalogPage() {
               { name: "Главная", href: "/" },
               { name: "Каталог" },
             ]}
+            currentUrl={`${SITE_URL}/catalog`}
           />
           <Link
             href="/"

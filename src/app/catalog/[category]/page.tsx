@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { categories, categoryBySlug, categoryUrl, productUrl } from "@/lib/catalog-data";
+import { categories, categoryBySlug, categoryUrl, minCategoryPrice } from "@/lib/catalog-data";
 import { CategoryPageClient } from "./CategoryPageClient";
 import { Breadcrumbs } from "@/components/gravikot/Breadcrumbs";
 import { notFound } from "next/navigation";
+
+const SITE_URL = "https://gravikot.ru";
 
 interface Props {
   params: Promise<{ category: string }>;
@@ -19,19 +21,22 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!cat) return {};
 
   const productNames = cat.products.map((p) => p.name).join(", ");
-  const title = `${cat.title} — ГРАВИКОТ | Светящаяся гравировка`;
-  const description = `Коллекция ${cat.title}: ${productNames}. Кружки и бокалы со светящейся гравировкой от ГРАВИКОТ. Доставка по России.`;
+  const minPrice = minCategoryPrice(cat);
+  // Title: ≤65 chars. "Коллекция ВИЖН — светящаяся гравировка | ГРАВИКОТ" = 49
+  const title = `Коллекция ${cat.title} — светящаяся гравировка | ГРАВИКОТ`;
+  const description = `Коллекция ${cat.title}: ${productNames}. Светящаяся гравировка на стекле от ГРАВИКОТ. Цены от ${minPrice} ₽. Доставка по России.`;
+  const canonicalUrl = `${SITE_URL}${categoryUrl(cat)}`;
 
   return {
     title,
     description,
     alternates: {
-      canonical: `https://gravikot.ru${categoryUrl(cat)}`,
+      canonical: canonicalUrl,
     },
     openGraph: {
       title,
       description,
-      url: `https://gravikot.ru${categoryUrl(cat)}`,
+      url: canonicalUrl,
       type: "website",
       locale: "ru_RU",
       siteName: "ГРАВИКОТ",
@@ -47,6 +52,8 @@ export default async function CategoryPage({ params }: Props) {
   const cat = categoryBySlug[slug];
   if (!cat) notFound();
 
+  const canonicalUrl = `${SITE_URL}${categoryUrl(cat)}`;
+
   return (
     <main className="min-h-screen bg-[#050510] text-foreground">
       {/* Header */}
@@ -58,6 +65,7 @@ export default async function CategoryPage({ params }: Props) {
               { name: "Каталог", href: "/catalog" },
               { name: cat.title },
             ]}
+            currentUrl={canonicalUrl}
           />
           <Link
             href="/"
@@ -68,7 +76,7 @@ export default async function CategoryPage({ params }: Props) {
         </div>
       </div>
 
-      {/* Category title */}
+      {/* Category title — strictly one H1 per page */}
       <section className="max-w-5xl mx-auto px-4 sm:px-6 pt-8 pb-4">
         <h1
           className="font-display text-3xl sm:text-4xl md:text-5xl"
