@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Preloader } from "@/components/gravikot/Preloader";
 import { StarrySky } from "@/components/gravikot/StarrySky";
 import { HeroBackground } from "@/components/gravikot/HeroBackground";
@@ -19,17 +19,12 @@ export default function Home() {
   const [preloading, setPreloading] = useState<boolean>(() => {
     if (typeof window === "undefined") return false;
     try {
-      // Show preloader on every page load/reload (not just first visit)
-      // Use sessionStorage only as a soft signal — if the page was truly reloaded
-      // (F5 / Ctrl+R / navigation), the flag gets cleared by the browser on hard reload,
-      // but on soft navigation within the session it persists.
-      // We also check performance.navigation to detect reloads.
-      const navEntry = performance.getEntriesByType?.("navigation")?.[0] as PerformanceNavigationTiming | undefined;
-      const isReload = navEntry?.type === "reload";
+      // Show preloader only on the very first visit per browser session.
+      // Once completed (flag set in sessionStorage), never show again —
+      // even on F5 or router.back(). This prevents the preloader from
+      // re-appearing when navigating back from a category page.
       const done = sessionStorage.getItem(PRELOADER_KEY) === "1";
-      // Show preloader if: fresh visit (no flag), or it's a reload
-      if (!done || isReload) return true;
-      return false;
+      return !done;
     } catch {
       return true;
     }
@@ -38,11 +33,9 @@ export default function Home() {
   const [siteVisible, setSiteVisible] = useState(() => {
     if (typeof window === "undefined") return false;
     try {
-      const navEntry = performance.getEntriesByType?.("navigation")?.[0] as PerformanceNavigationTiming | undefined;
-      const isReload = navEntry?.type === "reload";
+      // Site is immediately visible if preloader was already completed in this session
       const done = sessionStorage.getItem(PRELOADER_KEY) === "1";
-      // Site is already visible only if preloader was completed AND this is not a reload
-      return done && !isReload;
+      return done;
     } catch {
       return false;
     }
