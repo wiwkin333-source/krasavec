@@ -7,6 +7,14 @@ export const metadata = {
     index: false,
     follow: false,
   },
+  // Override the inherited root canonical (https://gravikot.ru) with an
+  // empty value. A 404 must NOT claim to be a canonical copy of the
+  // homepage — that would conflict with the noindex robots directive and
+  // confuse Search Console. Leaving canonical unset would inherit the
+  // root layout's value, so we explicitly blank it here.
+  alternates: {
+    canonical: "",
+  },
 };
 
 export default function NotFoundPage() {

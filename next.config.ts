@@ -16,6 +16,24 @@ const nextConfig: NextConfig = {
   // Single-step redirects — NO chains
   async redirects() {
     return [
+      // ===== Mirror consolidation: http → https (301 permanent) =====
+      // Fires when the upstream proxy/load-balancer signals the original
+      // request was plain HTTP via the X-Forwarded-Proto header. Caddyfile
+      // already forwards this header (header_up X-Forwarded-Proto {scheme}).
+      // This consolidates all http://gravikot.ru/* onto https://gravikot.ru/*
+      // and also catches http://www.gravikot.ru/* (single hop).
+      {
+        source: "/:path*",
+        has: [
+          {
+            type: "header",
+            key: "x-forwarded-proto",
+            value: "http",
+          },
+        ],
+        destination: "https://gravikot.ru/:path*",
+        permanent: true,
+      },
       // ===== Mirror consolidation: www → non-www (301 permanent) =====
       // Yandex and Google both use 301 (not the robots.txt `Host:` directive,
       // which is deprecated). This single rule consolidates all link equity
@@ -173,6 +191,57 @@ const nextConfig: NextConfig = {
             value: "noindex, nofollow",
           },
         ],
+      },
+      // Sort/filter query params — noindex for any URL with these params,
+      // regardless of path. Prevents duplicate-content indexing when bots
+      // crawl /catalog/vizhn?sort=price, /catalog?filter=cheap, etc.
+      // Canonical tags on each page also point at the clean URL, so this is
+      // belt-and-suspenders: even if a bot ignores canonical, the noindex
+      // header keeps the variant out of the index.
+      {
+        source: "/:path*",
+        has: [{ type: "query", key: "sort" }],
+        headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow" }],
+      },
+      {
+        source: "/:path*",
+        has: [{ type: "query", key: "filter" }],
+        headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow" }],
+      },
+      {
+        source: "/:path*",
+        has: [{ type: "query", key: "order" }],
+        headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow" }],
+      },
+      {
+        source: "/:path*",
+        has: [{ type: "query", key: "utm_source" }],
+        headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow" }],
+      },
+      {
+        source: "/:path*",
+        has: [{ type: "query", key: "utm_medium" }],
+        headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow" }],
+      },
+      {
+        source: "/:path*",
+        has: [{ type: "query", key: "utm_campaign" }],
+        headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow" }],
+      },
+      {
+        source: "/:path*",
+        has: [{ type: "query", key: "gclid" }],
+        headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow" }],
+      },
+      {
+        source: "/:path*",
+        has: [{ type: "query", key: "fbclid" }],
+        headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow" }],
+      },
+      {
+        source: "/:path*",
+        has: [{ type: "query", key: "yclid" }],
+        headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow" }],
       },
     ];
   },
