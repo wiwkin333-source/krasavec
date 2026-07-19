@@ -10,7 +10,7 @@ import io
 import base64
 import json
 
-SRC = "/home/z/my-project/upload/ChatGPT Image 19 июл. 2026 г., 02_44_06.png"
+SRC = "/home/z/my-project/upload/ChatGPT Image 19 июл. 2026 г., 11_48_07.png"
 OUT = "/home/z/my-project/public"
 
 img = Image.open(SRC).convert("RGBA")
