@@ -24,32 +24,32 @@ export function SvoyakPromo() {
 
   return (
     <section className="relative py-14 px-4">
-      <div className="mx-auto" style={{ maxWidth: 780 }}>
+      <div className="mx-auto max-w-[780px] w-full">
         <Reveal>
-          <div className="relative aspect-[4/3] sm:aspect-square mx-auto" style={{ maxWidth: 780 }}>
+          <div className="relative aspect-[4/3] sm:aspect-square mx-auto max-w-[780px] w-full">
             <div className="absolute inset-0 pointer-events-none select-none"
               style={{ background: "radial-gradient(circle at 50% 55%, rgba(139,92,246,.35) 0%, rgba(41,227,255,.18) 35%, rgba(255,43,214,.12) 60%, transparent 75%)", filter: "blur(40px)", transform: "scale(1.15)", zIndex: 0 }} />
             <img src="/assets/shar.webp" alt="" aria-hidden
               className="absolute inset-0 w-full h-full object-contain pointer-events-none select-none scale-[1.15] md:scale-75"
               loading="lazy" decoding="async"
               draggable={false} style={{ zIndex: 1 }} />
-            <div className="absolute top-[18%] right-[20%] text-purple-200" style={{ animation: "sparkle 2.5s ease-in-out infinite", zIndex: 2 }}>
-              <Sparkles className="w-10 h-10" style={{ filter: "drop-shadow(0 0 12px #c084fc)" }} />
+            <div className="absolute top-[18%] right-[15%] sm:right-[20%] text-purple-200" style={{ animation: "sparkle 2.5s ease-in-out infinite", zIndex: 2 }}>
+              <Sparkles className="w-7 h-7 sm:w-10 sm:h-10" style={{ filter: "drop-shadow(0 0 12px #c084fc)" }} />
             </div>
-            <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-[18%]" style={{ zIndex: 2 }}>
-              <div className="font-display text-4xl md:text-[3.375rem] lg:text-7xl tracking-tight"
+            <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-[12%] sm:px-[18%]" style={{ zIndex: 2 }}>
+              <div className="font-display text-3xl sm:text-4xl md:text-[3.375rem] lg:text-7xl tracking-tight"
                 style={{ color: "#f5e6c8", textShadow: "0 2px 12px rgba(0,0,0,.7)", letterSpacing: "0.06em" }}>
                 КВАНТ
               </div>
-              <div className="font-display font-black text-3xl md:text-5xl lg:text-6xl mt-3"
+              <div className="font-display font-black text-2xl sm:text-3xl md:text-5xl lg:text-6xl mt-2 sm:mt-3"
                 style={{ background: "linear-gradient(135deg, #c084fc, #f0abfc)", WebkitBackgroundClip: "text", backgroundClip: "text", color: "transparent" }}>
                 20% скидка
               </div>
-              <div className="font-tech uppercase tracking-[.28em] text-xs md:text-sm mt-3" style={{ color: "#f5e6c8" }}>
+              <div className="font-tech uppercase tracking-[.2em] sm:tracking-[.28em] text-[10px] sm:text-xs md:text-sm mt-2 sm:mt-3" style={{ color: "#f5e6c8" }}>
                 на последующие заказы
               </div>
               <button onClick={() => setOpen(true)}
-                className="btn-fw-mobile mt-6 inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full text-white font-tech uppercase tracking-[.18em] text-xs md:text-sm hover:scale-105 transition-transform"
+                className="btn-fw-mobile mt-4 sm:mt-6 inline-flex items-center justify-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 rounded-full text-white font-tech uppercase tracking-[.14em] sm:tracking-[.18em] text-[11px] sm:text-xs md:text-sm hover:scale-105 transition-transform"
                 style={{ background: "linear-gradient(135deg, #6b21a8, #3d2310)", boxShadow: "0 4px 24px rgba(139, 92, 246, .5)" }}>
                 Подробнее
                 <ChevronDown className="w-4 h-4" />

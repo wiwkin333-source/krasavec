@@ -43,15 +43,15 @@ export function Faq() {
             <Reveal key={i} delay={i * 80}>
               <div className="glass conic-border rounded-2xl overflow-hidden">
                 <button onClick={() => setOpen(open === i ? null : i)}
-                  className="w-full flex items-center gap-4 p-5 text-left">
-                  <span className="flex-1 font-display font-semibold">{it.q}</span>
-                  <span className="neon-border rounded-full w-9 h-9 flex items-center justify-center flex-shrink-0 transition-transform"
+                  className="w-full flex items-center gap-3 sm:gap-4 p-3.5 sm:p-5 text-left">
+                  <span className="flex-1 font-display font-semibold text-sm sm:text-base pr-2">{it.q}</span>
+                  <span className="neon-border rounded-full w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center flex-shrink-0 transition-transform"
                     style={{ transform: open === i ? "rotate(135deg)" : "none" }}>
-                    <Plus className="w-4 h-4" />
+                    <Plus className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                   </span>
                 </button>
                 {open === i && (
-                  <div className="px-5 pb-5 text-sky-100/95 text-sm leading-relaxed whitespace-pre-line animate-in fade-in slide-in-from-top-2 duration-300">
+                  <div className="px-3.5 sm:px-5 pb-3.5 sm:pb-5 text-sky-100/95 text-xs sm:text-sm leading-relaxed whitespace-pre-line animate-in fade-in slide-in-from-top-2 duration-300">
                     {it.a}
                   </div>
                 )}

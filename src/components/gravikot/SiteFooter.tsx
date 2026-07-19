@@ -5,8 +5,8 @@ import { PawPrint } from "lucide-react";
 
 export function SiteFooter() {
   return (
-    <footer className="border-t border-white/10 py-8 px-4">
-      <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
+    <footer className="border-t border-white/10 py-6 sm:py-8 px-4">
+      <div className="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8">
         <div>
           <div className="font-display font-black uppercase text-2xl animate-pulse-glow flex items-center">
             <span className="shimmer-text">ГРАВИК</span>
