@@ -1,14 +1,35 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, type CSSProperties } from "react";
 import { ChevronDown, Sparkles, X } from "lucide-react";
 import { Reveal } from "./Reveal";
+
+// Allow CSS custom properties (--x, --delay, etc.) in React style objects
+type CustomCSS = CSSProperties & Record<`--${string}`, string | number>;
 
 const steps = [
   { t: "Оформите первый заказ", d: "Любое изделие из каталога." },
   { t: "Получите КВАНТ в подарок", d: "Фирменный аксессуар вкладывается в посылку бесплатно и действует сразу и только после заказа нашего изделия." },
   { t: "Сфотографируйте КВАНТ", d: "Сделайте фото в любой обстановке — в руке, на ключах, в интерьере. Но обязательно рядом должна быть дата текущего дня — на листке бумаги, на экране гаджета и т.д. (без фотошопа и нейронок!)" },
   { t: "Покажите фото", d: "И получите −20% на последующий заказ. Скидка действует бессрочно." },
+];
+
+// Ember particles — small warm dots that rise like ash sparks from a
+// campfire. Each has a different start position, delay, duration and size
+// so the swarm looks organic rather than synchronized.
+const embers: { left: string; bottom: string; delay: string; dur: string; size: number }[] = [
+  { left: "8%",  bottom: "22%", delay: "0s",   dur: "7s",   size: 3 },
+  { left: "18%", bottom: "30%", delay: "1.5s", dur: "8.5s", size: 2 },
+  { left: "28%", bottom: "25%", delay: "3s",   dur: "7.5s", size: 3 },
+  { left: "38%", bottom: "32%", delay: "0.8s", dur: "9s",   size: 2 },
+  { left: "48%", bottom: "20%", delay: "2.2s", dur: "8s",   size: 4 },
+  { left: "58%", bottom: "28%", delay: "4s",   dur: "7s",   size: 2 },
+  { left: "68%", bottom: "24%", delay: "1.2s", dur: "8.5s", size: 3 },
+  { left: "78%", bottom: "30%", delay: "3.5s", dur: "7.5s", size: 2 },
+  { left: "88%", bottom: "26%", delay: "5s",   dur: "9s",   size: 3 },
+  { left: "15%", bottom: "36%", delay: "6s",   dur: "8s",   size: 2 },
+  { left: "45%", bottom: "36%", delay: "2.8s", dur: "7s",   size: 3 },
+  { left: "75%", bottom: "36%", delay: "4.5s", dur: "8.5s", size: 2 },
 ];
 
 export function SvoyakPromo() {
@@ -41,6 +62,26 @@ export function SvoyakPromo() {
               className="absolute inset-0 w-full h-full object-contain pointer-events-none select-none scale-[1.15] md:scale-75"
               loading="lazy" decoding="async"
               draggable={false} style={{ zIndex: 1 }} />
+            {/* Ember particles — warm ash sparks that rise upward from the
+                lower area of the block, flickering as they ascend. Sits on
+                top of the smoke and the product image (z-index 1, later in
+                DOM) but below the text/sparkle layer (z-index 2). */}
+            <div className="kvant-embers" aria-hidden>
+              {embers.map((e, i) => (
+                <span
+                  key={i}
+                  className="kvant-ember"
+                  style={{
+                    left: e.left,
+                    bottom: e.bottom,
+                    width: `${e.size}px`,
+                    height: `${e.size}px`,
+                    animationDelay: e.delay,
+                    animationDuration: e.dur,
+                  } as CustomCSS}
+                />
+              ))}
+            </div>
             <div className="absolute top-[18%] right-[15%] sm:right-[20%] text-purple-200" style={{ animation: "sparkle 2.5s ease-in-out infinite", zIndex: 2 }}>
               <Sparkles className="w-7 h-7 sm:w-10 sm:h-10" style={{ filter: "drop-shadow(0 0 12px #c084fc)" }} />
             </div>

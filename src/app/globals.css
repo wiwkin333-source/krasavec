@@ -324,24 +324,87 @@
     animation: kvant-smoke-drift-3 22s ease-in-out infinite;
   }
   @keyframes kvant-smoke-drift-1 {
-    0%, 100% { transform: translate(0, 0) scale(1);    opacity: .85; }
-    33%      { transform: translate(8%, -6%) scale(1.08); opacity: .65; }
-    66%      { transform: translate(-4%, 4%) scale(.96);  opacity: .9; }
+    0%   { transform: translate(0, 0) scale(1);          opacity: .85; }
+    20%  { transform: translate(6%, -4%) scale(1.06);    opacity: .7;  }
+    40%  { transform: translate(14%, -10%) scale(1.14);  opacity: .5;  }
+    60%  { transform: translate(5%, 3%) scale(1.0);      opacity: .75; }
+    80%  { transform: translate(-8%, 7%) scale(.92);     opacity: .9;  }
+    100% { transform: translate(0, 0) scale(1);          opacity: .85; }
   }
   @keyframes kvant-smoke-drift-2 {
-    0%, 100% { transform: translate(0, 0) scale(1);    opacity: .75; }
-    40%      { transform: translate(-7%, -3%) scale(1.06); opacity: .95; }
-    75%      { transform: translate(3%, 5%) scale(.94);  opacity: .6; }
+    0%   { transform: translate(0, 0) scale(1);          opacity: .75; }
+    25%  { transform: translate(-8%, -5%) scale(1.08);   opacity: .55; }
+    50%  { transform: translate(-12%, 2%) scale(1.12);   opacity: .95; }
+    75%  { transform: translate(-3%, 6%) scale(.96);     opacity: .65; }
+    100% { transform: translate(0, 0) scale(1);          opacity: .75; }
   }
   @keyframes kvant-smoke-drift-3 {
-    0%, 100% { transform: translate(0, 0) scale(1);    opacity: .6; }
-    50%      { transform: translate(5%, -8%) scale(1.12); opacity: .85; }
+    0%   { transform: translate(0, 0) scale(1);          opacity: .6;  }
+    30%  { transform: translate(8%, -10%) scale(1.15);   opacity: .4;  }
+    55%  { transform: translate(-6%, -5%) scale(1.08);   opacity: .85; }
+    80%  { transform: translate(4%, 4%) scale(.95);      opacity: .5;  }
+    100% { transform: translate(0, 0) scale(1);          opacity: .6;  }
   }
   @media (max-width: 640px) {
     .kvant-smoke { filter: blur(20px); }
     .kvant-smoke::before { width: 60%; height: 60%; filter: blur(28px); }
     .kvant-smoke::after  { width: 50%; height: 50%; filter: blur(24px); }
     .kvant-smoke > span  { width: 42%; height: 42%; filter: blur(22px); }
+  }
+
+  /* ===== Ember particles (ash sparks / лучинки золы) =====
+     Small warm-toned dots that rise upward like embers from a campfire,
+     flickering as they ascend. Purely decorative — pointer-events: none.
+     Z-index 1 with DOM order after the image so they render on top of the
+     smoke and the product image, but below the text/sparkle layer (z 2). */
+  .kvant-embers {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    overflow: hidden;
+  }
+  .kvant-ember {
+    position: absolute;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%,
+      #ffffff 0%,
+      #fef3c7 25%,
+      #fbbf24 55%,
+      rgba(251, 146, 60, 0) 100%);
+    box-shadow:
+      0 0 4px rgba(254, 243, 199, .9),
+      0 0 8px rgba(251, 191, 36, .6),
+      0 0 14px rgba(251, 146, 60, .35);
+    opacity: 0;
+    will-change: transform, opacity;
+    animation: kvant-ember-rise 8s ease-out infinite;
+  }
+  /* The rise path has a gentle zigzag (right-left-right-left) to mimic
+     embers caught in air currents. Opacity flickers irregularly so the
+     ember 'twinkles' as it ascends rather than fading linearly. */
+  @keyframes kvant-ember-rise {
+    0%   { transform: translate(0, 0) scale(0.3);         opacity: 0;   }
+    6%   { transform: translate(1px, -8px) scale(0.8);    opacity: 0.7; }
+    10%  { transform: translate(2px, -14px) scale(1);     opacity: 1;   }
+    16%  { transform: translate(0px, -22px) scale(0.95);  opacity: 0.5; }
+    22%  { transform: translate(-3px, -30px) scale(0.9);  opacity: 0.9; }
+    30%  { transform: translate(-5px, -42px) scale(0.85); opacity: 0.4; }
+    38%  { transform: translate(-2px, -54px) scale(0.8);  opacity: 0.75;}
+    48%  { transform: translate(3px, -68px) scale(0.7);   opacity: 0.35;}
+    58%  { transform: translate(6px, -82px) scale(0.65);  opacity: 0.6; }
+    68%  { transform: translate(4px, -96px) scale(0.55);  opacity: 0.2; }
+    78%  { transform: translate(1px, -108px) scale(0.5);  opacity: 0.45;}
+    88%  { transform: translate(-2px, -118px) scale(0.4); opacity: 0.15;}
+    100% { transform: translate(-3px, -130px) scale(0.2); opacity: 0;   }
+  }
+  @media (max-width: 640px) {
+    .kvant-ember {
+      box-shadow:
+        0 0 3px rgba(254, 243, 199, .85),
+        0 0 6px rgba(251, 191, 36, .5),
+        0 0 10px rgba(251, 146, 60, .25);
+    }
   }
 
   .divider-beam {
@@ -835,6 +898,8 @@
   .kvant-smoke::before,
   .kvant-smoke::after,
   .kvant-smoke > span,
+  .kvant-embers,
+  .kvant-ember,
   .headline-cta,
   .divider-beam,
   .bg-grid-anim,
