@@ -5,14 +5,15 @@ import { PawPrint } from "lucide-react";
 
 export function SiteFooter() {
   return (
-    <footer className="border-t border-white/10 py-6 sm:py-8 px-4">
-      <div className="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8">
+    <footer className="border-t border-white/10 py-8 px-4">
+      <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
         <div>
-          <div className="font-display font-black uppercase text-2xl flex items-center">
-            <span className="neon-title-soft">ГРАВИК</span>
-            <PawPrint className="w-6 h-6 mx-0.5" style={{ color: "#ff2bd6", filter: "drop-shadow(0 0 6px rgba(255,43,214,.6)) drop-shadow(0 0 12px rgba(255,43,214,.35))" }} aria-hidden="true" />
-            <span className="neon-title-soft">Т</span>
+          <div className="font-display font-black uppercase text-2xl animate-pulse-glow flex items-center">
+            <span className="shimmer-text">ГРАВИК</span>
+            <PawPrint className="w-6 h-6 mx-0.5" style={{ color: "#ff2bd6", filter: "drop-shadow(0 0 8px #ff2bd6)" }} aria-hidden="true" />
+            <span className="shimmer-text">Т</span>
           </div>
+          <p className="text-sky-100/90 text-sm mt-3 font-tech">Кружки и бокалы со светящейся гравировкой по фото</p>
         </div>
         <nav aria-label="Контакты">
           <div className="font-display font-semibold mb-2">Контакты:</div>
@@ -30,7 +31,7 @@ export function SiteFooter() {
             <Link href="/terms" className="block text-sky-300 hover:text-white transition text-sm">Пользовательское соглашение</Link>
           </div>
         </nav>
-        <div className="text-sky-100/85 text-sm break-words">
+        <div className="text-sky-100/85 text-sm whitespace-pre-line">
           &copy; {new Date().getFullYear()} ГРАВИКОТ. Все права защищены
         </div>
       </div>

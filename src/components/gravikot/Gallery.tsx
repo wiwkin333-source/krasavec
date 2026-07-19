@@ -10,6 +10,9 @@ import { categories as catalogCategories } from "@/lib/catalog-data";
 // Allow CSS custom properties in React style objects
 type CustomCSS = CSSProperties & Record<`--${string}`, string | number>;
 
+// Allow CSS custom properties in React style objects
+type CustomCSS = CSSProperties & Record<`--${string}`, string | number>;
+
 type VideoMode = "hero" | "click" | "poster";
 
 type OrbPhase = "idle" | "entering-back" | "entering-front" | "front" | "leaving-front" | "leaving-back";
