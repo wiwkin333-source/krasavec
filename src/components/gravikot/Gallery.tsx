@@ -3,59 +3,21 @@
 import { useEffect, useRef, useState, useCallback, type CSSProperties } from "react";
 import { getHeroVideoUrl, getClickVideoUrl, resolveVideoUrl } from "./Preloader";
 import { GiftMaketButton } from "./GiftMaketButton";
+import Link from "next/link";
 import { createPortal } from "react-dom";
+import { categories as catalogCategories } from "@/lib/catalog-data";
 
 // Allow CSS custom properties in React style objects
 type CustomCSS = CSSProperties & Record<`--${string}`, string | number>;
 
 type VideoMode = "hero" | "click" | "poster";
 
-// Product images map
-const productImages: Record<number, string> = {
-  2: "/assets/products/p2.webp",
-  3: "/assets/products/p3.webp",
-  5: "/assets/products/p5.webp",
-  6: "/assets/products/p6.webp",
-  7: "/assets/products/p7.webp",
-  8: "/assets/products/p8.webp",
-  9: "/assets/products/p9.webp",
-  10: "/assets/products/p10.webp",
-};
-const img = (n: number) => productImages[n];
-
-// Import product gallery images
-const glass1 = "/assets/products/glass-1.webp";
-const glass2 = "/assets/products/glass-2.webp";
-const flute1 = "/assets/products/flute-1.webp";
-const flute2 = "/assets/products/flute-2.webp";
-const dresden1 = "/assets/products/dresden-1.webp";
-const dresden2 = "/assets/products/dresden-2.webp";
-const gramine1 = "/assets/products/gramine-1.webp";
-const gramine2 = "/assets/products/gramine-2.webp";
-const gramine3 = "/assets/products/gramine-3.webp";
-const gramine4 = "/assets/products/gramine-4.webp";
-const gramine5 = "/assets/products/gramine-5.webp";
-const gramine6 = "/assets/products/gramine-6.webp";
-const gramine7 = "/assets/products/gramine-7.webp";
-const maag1 = "/assets/products/maag-1.webp";
-const maag2 = "/assets/products/maag-2.webp";
-const maag3 = "/assets/products/maag-3.webp";
-const maag4 = "/assets/products/maag-4.webp";
-const maag5 = "/assets/products/maag-5.webp";
-const maag6 = "/assets/products/maag-6.webp";
-const collins1 = "/assets/products/collins-1.webp";
-const collins2 = "/assets/products/collins-2.webp";
-const collins3 = "/assets/products/collins-3.webp";
-const collins4 = "/assets/products/collins-4.webp";
-
 type OrbPhase = "idle" | "entering-back" | "entering-front" | "front" | "leaving-front" | "leaving-back";
 
 function OrbCard({
   o,
-  onClick,
 }: {
   o: (typeof orbits)[number];
-  onClick: () => void;
 }) {
   const [phase, setPhase] = useState<OrbPhase>("idle");
   const timers = useRef<number[]>([]);
@@ -101,8 +63,8 @@ function OrbCard({
       onMouseEnter={handleEnter}
       onMouseLeave={handleLeave}
     >
-      <button
-        onClick={onClick}
+      <Link
+        href={`/catalog/${o.slug}`}
         className={`card-emerge-orb relative block w-full h-full rounded-2xl glass conic-border overflow-hidden text-left ${
           isEntering ? "is-entering" : ""
         } ${isLeaving ? "is-leaving" : ""} ${isFrontFinal ? "is-front-final" : ""}`}
@@ -130,38 +92,25 @@ function OrbCard({
           className="absolute inset-0 pointer-events-none"
           style={{ background: `radial-gradient(circle, ${o.color}22, transparent 70%)` }}
         />
-      </button>
+      </Link>
     </div>
   );
 }
 
-export interface Product { name?: string; desc: string; price: string; src?: string; gallery?: string[] }
+// Re-export Product type for backward compatibility
+export type { Product } from "@/lib/catalog-data";
 
-const categories: Record<string, { title: string; accent: string; products: Product[] }> = {
-  vision: {
-    title: "ВИЖН",
-    accent: "#29e3ff",
-    products: [
-      { name: "Грамине", desc: "Теплый свет для теплых напитков.", price: "2499 ₽", src: img(5), gallery: [gramine1, gramine2, gramine3, gramine4, gramine5, gramine6, gramine7] },
-      { name: "МААГ", desc: "Когда твой вайб получает подсветку.", price: "2599 ₽", src: img(6), gallery: [maag1, maag2, maag3, maag4, maag5, maag6] },
-      { name: "Коллинз", desc: "Ваш коктейль. Ваш стиль. Ваш стакан.", price: "2399 ₽", src: img(7), gallery: [collins1, collins2, collins3, collins4] },
-    ],
-  },
-  clear: {
-    title: "КЛИАР",
-    accent: "#ff2bd6",
-    products: [
-      { name: "Гласс", desc: "Для тех, кто любит быть в центре внимания.", price: "2599 ₽", src: img(8), gallery: [glass1, glass2] },
-      { name: "ФЛЮТЕ", desc: "Превращает каждый тост в событие.", price: "2399 ₽", src: img(9), gallery: [flute1, flute2] },
-      { name: "ДРЕЗДЕН", desc: "Для хорошего пива и отличных историй.", price: "2999 ₽", src: img(10), gallery: [dresden1, dresden2] },
-    ],
-  },
-};
-
-const orbits = [
-  { key: "vision", label: "ВИЖН", color: "#29e3ff", corner: "tl", tilt: "-6deg", delay: "0s", dur: "9s", image: img(2) },
-  { key: "clear", label: "КЛИАР", color: "#ff2bd6", corner: "tr", tilt: "5deg", delay: "1.2s", dur: "10s", image: img(3) },
-] as const;
+const orbits = catalogCategories.map((c) => ({
+  key: c.key,
+  slug: c.slug,
+  label: c.title,
+  color: c.accent,
+  corner: c.key === "vision" ? "tl" : "tr",
+  tilt: c.key === "vision" ? "-6deg" : "5deg",
+  delay: c.key === "vision" ? "0s" : "1.2s",
+  dur: c.key === "vision" ? "9s" : "10s",
+  image: c.key === "vision" ? "/assets/products/p2.webp" : "/assets/products/p3.webp",
+}));
 
 // ===== Lightbox =====
 function Lightbox({
@@ -417,102 +366,8 @@ function Lightbox({
   );
 }
 
-// ===== CategoryOverlay =====
-function CategoryOverlay({
-  open, onClose, title, products, accent, onOrder,
-}: { open: boolean; onClose: () => void; title: string; products: Product[]; accent: string; onOrder?: () => void }) {
-  const [lightbox, setLightbox] = useState<{ images: string[]; index: number; title: string } | null>(null);
-  const lightboxRef = useRef<{ images: string[]; index: number; title: string } | null>(null);
-
-  useEffect(() => {
-    lightboxRef.current = lightbox;
-  }, [lightbox]);
-
-  useEffect(() => {
-    if (!open) return;
-    // Save scroll position before locking body scroll
-    const savedScrollY = window.scrollY;
-    const prevOverflow = document.body.style.overflow;
-    const prevPosition = document.body.style.position;
-    const prevTop = document.body.style.top;
-    const prevWidth = document.body.style.width;
-    // Lock body scroll: overflow hidden + fixed position to prevent background scroll on iOS
-    document.body.style.overflow = "hidden";
-    document.body.style.position = "fixed";
-    document.body.style.top = `-${savedScrollY}px`;
-    document.body.style.width = "100%";
-    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape" && !lightboxRef.current) onClose(); };
-    window.addEventListener("keydown", onKey);
-    return () => {
-      document.body.style.overflow = prevOverflow;
-      document.body.style.position = prevPosition;
-      document.body.style.top = prevTop;
-      document.body.style.width = prevWidth;
-      window.removeEventListener("keydown", onKey);
-      // Restore scroll position to prevent page jump
-      window.scrollTo(0, savedScrollY);
-    };
-  }, [open, onClose]);
-
-  if (!open || typeof document === "undefined") return null;
-
-  const gridCols = products.length === 3 ? "grid-cols-1 md:grid-cols-3" : "grid-cols-1 md:grid-cols-2";
-
-  return createPortal(
-    <div className="fixed inset-0 z-[60] bg-background/85 backdrop-blur-xl animate-in fade-in duration-300 flex flex-col p-3 sm:p-6 md:p-12 overflow-y-auto overflow-x-clip overscroll-y-contain"
-      onClick={onClose}>
-      <div className="flex items-center justify-between mb-6 md:mb-10" onClick={(e) => e.stopPropagation()}>
-        <h2 className="font-display text-2xl sm:text-3xl md:text-5xl text-foreground break-words">{title}</h2>
-        <button onClick={(e) => { e.stopPropagation(); onClose(); }}
-          className="font-tech uppercase tracking-[.18em] text-xs px-4 py-2 rounded-full glass hover:scale-105 transition">
-          Закрыть &times;
-        </button>
-      </div>
-      <div className={`flex-1 grid gap-6 md:gap-10 ${gridCols}`} onClick={(e) => e.stopPropagation()}>
-        {products.map((p, idx) => {
-          const images = [p.src, ...(p.gallery ?? [])].filter(Boolean) as string[];
-          return (
-            <div key={idx}
-              className="relative rounded-2xl overflow-hidden glass text-left flex flex-col animate-in fade-in zoom-in-75 slide-in-from-bottom-8"
-              style={{ boxShadow: `0 20px 80px -10px ${accent}cc, 0 0 0 1px ${accent}55`, animationDelay: `${idx * 90}ms`, animationDuration: "600ms", animationFillMode: "both" }}>
-              <button type="button"
-                onClick={(e) => { e.stopPropagation(); setLightbox({ images, index: 0, title: p.name ?? "" }); }}
-                className="relative bg-transparent border-0 p-0 cursor-zoom-in text-left block"
-                aria-label={`Открыть ${p.name}`}>
-                <img src={p.src} alt={`Гравировка на стекле — ${p.name}, ${p.desc}`}
-                  className="block w-full h-auto object-contain" loading="lazy" decoding="async"
-                  style={{ background: "radial-gradient(ellipse at center, rgba(20,10,40,0.6) 0%, rgba(5,5,16,0.9) 100%)" }} />
-              </button>
-              <div className="px-4 sm:px-6 py-4 sm:py-5 bg-black/80 backdrop-blur-sm">
-                <div className="text-sm sm:text-base md:text-lg font-tech uppercase tracking-[.1em] sm:tracking-[.14em] text-sky-200 break-words">{p.name}</div>
-                <div className="text-sm sm:text-base text-foreground/70 leading-snug mt-1 break-words">{p.desc}</div>
-                <div className="flex items-center justify-between gap-3 mt-2">
-                  <div className="text-lg sm:text-xl md:text-2xl font-display text-foreground">{p.price}</div>
-                  {onOrder && (
-                    <button type="button" onClick={(e) => { e.stopPropagation(); onOrder(); }} aria-label="Заказать"
-                      className="shrink-0 bg-transparent border-0 p-0 cursor-pointer transition-transform duration-300 hover:scale-110 focus:outline-none rounded-xl">
-                      <img src="/assets/cart-button.webp" alt="Заказать" className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 select-none"
-                        style={{ filter: "drop-shadow(0 0 12px rgba(139,92,246,.55)) drop-shadow(0 0 20px rgba(41,227,255,.35))" }}
-                        draggable={false} />
-                    </button>
-                  )}
-                </div>
-              </div>
-            </div>
-          );
-        })}
-      </div>
-      {lightbox && (
-        <Lightbox images={lightbox.images} startIndex={lightbox.index} accent={accent} title={lightbox.title} onClose={() => setLightbox(null)} />
-      )}
-    </div>,
-    document.body
-  );
-}
-
 // ===== Gallery =====
 export function Gallery({ onOrder, canPlay }: { onOrder: () => void; canPlay?: boolean }) {
-  const [open, setOpen] = useState<string | null>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const modeRef = useRef<VideoMode>("hero");
   const [showPoster, setShowPoster] = useState(false);
@@ -646,7 +501,7 @@ export function Gallery({ onOrder, canPlay }: { onOrder: () => void; canPlay?: b
             style={{ background: "radial-gradient(circle, rgba(139,92,246,.4), rgba(255,43,214,.3) 40%, transparent 70%)" }} />
 
           {orbits.map((o) => (
-            <OrbCard key={o.key} o={o} onClick={() => setOpen(o.key)} />
+            <OrbCard key={o.key} o={o} />
           ))}
 
           {/* central window wrapper */}
@@ -701,9 +556,9 @@ export function Gallery({ onOrder, canPlay }: { onOrder: () => void; canPlay?: b
       <section className="md:hidden px-4 pb-6 -mt-2">
         <div className="flex flex-col gap-4 max-w-md mx-auto">
           {orbits.map((o) => (
-            <button
+            <Link
               key={o.key}
-              onClick={() => setOpen(o.key)}
+              href={`/catalog/${o.slug}`}
               className="relative block w-full rounded-2xl glass conic-border text-left aspect-[4/3]"
               style={{ boxShadow: `0 12px 60px -20px ${o.color}` }}>
               <span className="absolute inset-0 block rounded-2xl overflow-hidden">
@@ -716,22 +571,11 @@ export function Gallery({ onOrder, canPlay }: { onOrder: () => void; canPlay?: b
               {(o.key === "vision" || o.key === "clear") && (
                 <span aria-hidden="true" className={`sparkle-trace ${o.key === "clear" ? "reverse" : ""}`} />
               )}
-            </button>
+            </Link>
           ))}
         </div>
       </section>
 
-      {Object.entries(categories).map(([key, c]) => (
-        <CategoryOverlay
-          key={key}
-          open={open === key}
-          onClose={() => setOpen(null)}
-          title={c.title}
-          products={c.products}
-          accent={c.accent}
-          onOrder={onOrder}
-        />
-      ))}
     </>
   );
 }
