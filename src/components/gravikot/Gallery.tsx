@@ -287,6 +287,12 @@ function Lightbox({
         backgroundColor: `rgba(0,0,0,${Math.max(0.4, 0.95 - dragY / 600)})`,
         backdropFilter: "blur(16px)",
         WebkitBackdropFilter: "blur(16px)",
+        // Critical: disable the browser's default touch handling (scroll,
+        // pinch-zoom) so touch events go to our JS pan/swipe handlers and
+        // not to the underlying CategoryOverlay that has overflow-y-auto.
+        // Without this, after zoom-in the page underneath scrolls instead
+        // of the image panning.
+        touchAction: "none",
       }}
     >
       <div className="absolute top-0 left-0 right-0 z-10 flex justify-center px-2 pointer-events-none" onClick={(e) => e.stopPropagation()}>

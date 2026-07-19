@@ -224,13 +224,45 @@
 
   .text-luxury-glow { animation: luxury-flicker 4s ease-in-out infinite; }
 
-  /* Subtle neon shimmer — slow, breathing glow layered onto the luxe-title
-     gradient. Kept deliberately gentle: low opacity, long durations,
-     slight drift between two glow colors. No hard flicker, no flashing. */
+  /* Neon-tube flicker for headlines.
+     Replaces the gradient of .luxe-title with a brighter, more luminous
+     "tube" gradient (white core + cyan/violet/magenta halo), then layers
+     multiple drop-shadows to build a real neon glow. The flicker animation
+     keeps the glow at full intensity most of the time but inserts brief,
+     sharp dips — exactly the way a real neon sign glitches once or twice
+     per cycle. Modern, luxury, alive — but not strobe-y. */
   .neon-title-soft {
+    background: linear-gradient(90deg,
+      #ffffff 0%,
+      #d6faff 16%,
+      #29e3ff 36%,
+      #c9a8ff 56%,
+      #ff8be0 76%,
+      #ffffff 100%);
+    background-size: 220% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    filter:
+      drop-shadow(0 0 3px rgba(255,255,255,.85))
+      drop-shadow(0 0 10px rgba(41,227,255,.65))
+      drop-shadow(0 0 22px rgba(41,227,255,.45))
+      drop-shadow(0 0 34px rgba(255,43,214,.32))
+      drop-shadow(0 0 50px rgba(255,43,214,.20));
     animation:
       shimmer 8s linear infinite,
-      neon-soft-breathe 6s ease-in-out infinite;
+      neon-tube-flicker 7s ease-in-out infinite;
+  }
+
+  @media (max-width: 640px) {
+    .neon-title-soft {
+      filter:
+        drop-shadow(0 0 2px rgba(255,255,255,.8))
+        drop-shadow(0 0 7px rgba(41,227,255,.55))
+        drop-shadow(0 0 14px rgba(41,227,255,.38))
+        drop-shadow(0 0 22px rgba(255,43,214,.26))
+        drop-shadow(0 0 32px rgba(255,43,214,.16));
+    }
   }
 
   .divider-beam {
@@ -363,14 +395,60 @@
   0%,100% { text-shadow: 0 0 12px rgba(41,227,255,.4); }
   50% { text-shadow: 0 0 24px rgba(255,43,214,.5), 0 0 32px rgba(139,92,246,.4); }
 }
-/* Subtle neon breathing — gentle pulsation of the title's own drop-shadow.
-   No hard flicker, no flashing; just a slow drift in glow intensity. */
-@keyframes neon-soft-breathe {
-  0%, 100% {
-    filter: drop-shadow(0 0 18px rgba(41,227,255,.18)) drop-shadow(0 0 26px rgba(255,43,214,.12));
+/* Neon-tube flicker — full glow most of the time, with two brief glitch
+   moments per cycle (one short, one slightly longer). Mimics the way a
+   real neon sign's intensity dips for a frame or two before recovering.
+   Stable at 100% intensity everywhere except the glitch keyframes. */
+@keyframes neon-tube-flicker {
+  0%, 17%, 19%, 22%, 24%, 26%, 58%, 62%, 64%, 66%, 68%, 100% {
+    filter:
+      drop-shadow(0 0 3px rgba(255,255,255,.85))
+      drop-shadow(0 0 10px rgba(41,227,255,.65))
+      drop-shadow(0 0 22px rgba(41,227,255,.45))
+      drop-shadow(0 0 34px rgba(255,43,214,.32))
+      drop-shadow(0 0 50px rgba(255,43,214,.20));
   }
-  50% {
-    filter: drop-shadow(0 0 26px rgba(41,227,255,.26)) drop-shadow(0 0 36px rgba(255,43,214,.20));
+  /* First glitch — quick double-flicker around 18% */
+  18% {
+    filter:
+      drop-shadow(0 0 2px rgba(255,255,255,.5))
+      drop-shadow(0 0 5px rgba(41,227,255,.30))
+      drop-shadow(0 0 10px rgba(41,227,255,.18))
+      drop-shadow(0 0 16px rgba(255,43,214,.12))
+      drop-shadow(0 0 24px rgba(255,43,214,.07));
+  }
+  23%, 25% {
+    filter:
+      drop-shadow(0 0 1px rgba(255,255,255,.3))
+      drop-shadow(0 0 3px rgba(41,227,255,.18))
+      drop-shadow(0 0 6px rgba(41,227,255,.10))
+      drop-shadow(0 0 10px rgba(255,43,214,.06))
+      drop-shadow(0 0 14px rgba(255,43,214,.03));
+  }
+  /* Slow "breathing" dim later in the cycle — luxury feel */
+  60%, 65% {
+    filter:
+      drop-shadow(0 0 2px rgba(255,255,255,.55))
+      drop-shadow(0 0 7px rgba(41,227,255,.42))
+      drop-shadow(0 0 14px rgba(41,227,255,.28))
+      drop-shadow(0 0 22px rgba(255,43,214,.18))
+      drop-shadow(0 0 32px rgba(255,43,214,.10));
+  }
+  63% {
+    filter:
+      drop-shadow(0 0 1px rgba(255,255,255,.35))
+      drop-shadow(0 0 4px rgba(41,227,255,.22))
+      drop-shadow(0 0 8px rgba(41,227,255,.14))
+      drop-shadow(0 0 12px rgba(255,43,214,.08))
+      drop-shadow(0 0 18px rgba(255,43,214,.04));
+  }
+  67% {
+    filter:
+      drop-shadow(0 0 2px rgba(255,255,255,.7))
+      drop-shadow(0 0 8px rgba(41,227,255,.5))
+      drop-shadow(0 0 16px rgba(41,227,255,.34))
+      drop-shadow(0 0 24px rgba(255,43,214,.22))
+      drop-shadow(0 0 34px rgba(255,43,214,.14));
   }
 }
 @keyframes border-spin {
