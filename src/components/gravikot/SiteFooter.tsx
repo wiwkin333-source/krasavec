@@ -8,10 +8,10 @@ export function SiteFooter() {
     <footer className="border-t border-white/10 py-6 sm:py-8 px-4">
       <div className="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8">
         <div>
-          <div className="font-display font-black uppercase text-2xl animate-pulse-glow flex items-center">
-            <span className="shimmer-text">ГРАВИК</span>
-            <PawPrint className="w-6 h-6 mx-0.5" style={{ color: "#ff2bd6", filter: "drop-shadow(0 0 8px #ff2bd6)" }} aria-hidden="true" />
-            <span className="shimmer-text">Т</span>
+          <div className="font-display font-black uppercase text-2xl flex items-center">
+            <span className="neon-title-soft">ГРАВИК</span>
+            <PawPrint className="w-6 h-6 mx-0.5" style={{ color: "#ff2bd6", filter: "drop-shadow(0 0 6px rgba(255,43,214,.6)) drop-shadow(0 0 12px rgba(255,43,214,.35))" }} aria-hidden="true" />
+            <span className="neon-title-soft">Т</span>
           </div>
         </div>
         <nav aria-label="Контакты">

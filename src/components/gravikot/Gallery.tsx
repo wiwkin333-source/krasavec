@@ -265,12 +265,33 @@ function Lightbox({
   // Reset pan when zoom changes to 1
   useEffect(() => {
     if (zoom <= 1) setPan({ x: 0, y: 0 });
+    // Defensive: whenever zoom changes, make sure we're not stuck in
+    // "panning" state from a previous zoomed interaction. This matters
+    // because a tap that closes the zoom (onClick) doesn't go through
+    // onTouchEnd, so isPanning could remain true and confuse later swipes.
+    isPanning.current = false;
   }, [zoom]);
 
   // Reset pan when image changes
   useEffect(() => {
     setPan({ x: 0, y: 0 });
   }, [idx]);
+
+  // Native non-passive touchmove listener: hard-prevent the browser from
+  // scrolling the underlying CategoryOverlay (which has overflow-y-auto)
+  // when the user touches anything inside the Lightbox. React's onTouchMove
+  // is passive by default and cannot preventDefault reliably, especially on
+  // iOS Safari, so we attach our own non-passive listener here. This is the
+  // root-cause fix for "after zoom-out, the page underneath scrolls".
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const preventScroll = (e: TouchEvent) => {
+      if (e.cancelable) e.preventDefault();
+    };
+    el.addEventListener("touchmove", preventScroll, { passive: false });
+    return () => el.removeEventListener("touchmove", preventScroll);
+  }, []);
 
   const hasMany = images.length > 1;
 
@@ -321,7 +342,15 @@ function Lightbox({
       <div className="relative flex-1 min-h-0 overflow-hidden pt-14 md:pt-16"
         onClick={(e) => { e.stopPropagation(); if (zoom > 1) setZoom(1); }}
         onTouchStart={onTouchStart} onTouchMove={onTouchMove} onTouchEnd={onTouchEnd}
-        style={{ transform: `translateY(${dragY}px)`, transition: dragY === 0 ? "transform 250ms ease-out" : "none", opacity: Math.max(0.3, 1 - dragY / 500) }}>
+        style={{
+          transform: `translateY(${dragY}px)`,
+          transition: dragY === 0 ? "transform 250ms ease-out" : "none",
+          opacity: Math.max(0.3, 1 - dragY / 500),
+          // Belt-and-suspenders: also set touch-action: none directly on the
+          // image area (where the touch handlers live), in case the parent
+          // container's value doesn't inherit through the portal reliably.
+          touchAction: "none",
+        }}>
         {images.map((src, i) => {
           const active = i === idx;
           return (
