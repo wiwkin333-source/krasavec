@@ -98,7 +98,7 @@ export function CategoryPageClient({ cat, showBackButton }: { cat: Category; sho
       <div className="max-w-5xl mx-auto px-4 sm:px-6 py-10 text-center">
         <button
           type="button"
-          onClick={() => { sessionStorage.setItem("__gravikot_skip_preload__", "1"); router.back(); }}
+          onClick={() => router.back()}
           className="inline-flex items-center gap-2 px-6 py-3 rounded-xl glass text-sky-300 hover:text-white hover:scale-105 transition font-tech text-sm"
         >
           &larr; Вернуться на главную

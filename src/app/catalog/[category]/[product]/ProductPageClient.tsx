@@ -47,7 +47,6 @@ export function ProductPageClient({ cat, prod }: { cat: Category; prod: Product 
   }, [images.length]);
 
   const goBack = useCallback(() => {
-    sessionStorage.setItem("__gravikot_skip_preload__", "1");
     router.back();
   }, [router]);
 

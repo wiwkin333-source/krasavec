@@ -14,44 +14,28 @@ import { CtaSocial } from "@/components/gravikot/CtaSocial";
 import { SiteFooter } from "@/components/gravikot/SiteFooter";
 import { OrderForm } from "@/components/gravikot/OrderForm";
 
+/**
+ * Module-level flag: persists across client-side navigations (router.back()),
+ * but resets on full page reload (F5 / Ctrl+R) because the JS bundle is
+ * re-evaluated. This is exactly the behaviour we need:
+ *   - First visit: false → show preloader
+ *   - Preloader done: true → skip on soft nav back
+ *   - F5 reload: JS re-evaluated → false → show preloader again
+ */
+let _preloaderCompleted = false;
+
 export default function Home() {
-  const PRELOADER_KEY = "__gravikot_preloaded_session__";
-  const SKIP_KEY = "__gravikot_skip_preload__";
   const [preloading, setPreloading] = useState<boolean>(() => {
     if (typeof window === "undefined") return false;
-    try {
-      // Soft navigation back (router.back()) sets skip flag → no preloader
-      if (sessionStorage.getItem(SKIP_KEY) === "1") {
-        sessionStorage.removeItem(SKIP_KEY);
-        sessionStorage.setItem(PRELOADER_KEY, "1");
-        return false;
-      }
-      // Show preloader on: first visit (no flag) OR page reload (F5 / Ctrl+R)
-      const done = sessionStorage.getItem(PRELOADER_KEY) === "1";
-      if (done) {
-        // Preloader already completed this session — check if this is a reload
-        const navEntry = performance.getEntriesByType?.("navigation")?.[0] as PerformanceNavigationTiming | undefined;
-        if (navEntry?.type === "reload") return true; // F5 → show preloader again
-        return false; // soft navigation within session → skip
-      }
-      return true; // first visit → show preloader
-    } catch {
-      return true;
-    }
+    // If preloader already completed in this JS session, skip it
+    if (_preloaderCompleted) return false;
+    return true;
   });
 
   const [siteVisible, setSiteVisible] = useState(() => {
     if (typeof window === "undefined") return false;
-    try {
-      // Site visible immediately if: soft nav back, or preloader done & not a reload
-      if (sessionStorage.getItem(SKIP_KEY) === "1") return true;
-      const done = sessionStorage.getItem(PRELOADER_KEY) === "1";
-      if (!done) return false;
-      const navEntry = performance.getEntriesByType?.("navigation")?.[0] as PerformanceNavigationTiming | undefined;
-      return navEntry?.type !== "reload";
-    } catch {
-      return false;
-    }
+    // Site visible immediately if preloader was already completed
+    return _preloaderCompleted;
   });
   const [orderOpen, setOrderOpen] = useState(false);
 
@@ -66,9 +50,7 @@ export default function Home() {
   }, [preloading]);
 
   const handlePreloaderComplete = useCallback(() => {
-    try {
-      sessionStorage.setItem(PRELOADER_KEY, "1");
-    } catch {}
+    _preloaderCompleted = true;
     setPreloading(false);
     // Double rAF to let DOM settle before starting the fade-in
     requestAnimationFrame(() => {
