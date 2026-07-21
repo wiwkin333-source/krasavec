@@ -84,13 +84,8 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
       {
-        source: "/about",
-        destination: "/",
-        permanent: true,
-      },
-      {
         source: "/contacts",
-        destination: "/",
+        destination: "/about",
         permanent: true,
       },
       {
@@ -106,6 +101,16 @@ const nextConfig: NextConfig = {
       {
         source: "/checkout",
         destination: "/",
+        permanent: true,
+      },
+      {
+        source: "/oplata",
+        destination: "/delivery",
+        permanent: true,
+      },
+      {
+        source: "/dostavka",
+        destination: "/delivery",
         permanent: true,
       },
       {

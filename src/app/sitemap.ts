@@ -84,6 +84,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "yearly",
       priority: 0.3,
     },
+    {
+      url: `${BASE_URL}/about`,
+      lastModified: BUILD_TIME,
+      changeFrequency: "monthly",
+      priority: 0.5,
+    },
+    {
+      url: `${BASE_URL}/delivery`,
+      lastModified: BUILD_TIME,
+      changeFrequency: "monthly",
+      priority: 0.5,
+    },
   ];
 
   // Category pages — register the category cover image + all product
