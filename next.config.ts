@@ -6,6 +6,8 @@ const nextConfig: NextConfig = {
     ignoreBuildErrors: true,
   },
   reactStrictMode: false,
+  // Remove X-Powered-By: Next.js header
+  poweredByHeader: false,
   // Enable gzip compression
   compress: true,
   // Optimize images
@@ -118,9 +120,68 @@ const nextConfig: NextConfig = {
       },
     ];
   },
-  // Headers for caching and SEO
+  // Security headers + caching
   async headers() {
     return [
+      // ==========================================
+      // 🔐 SECURITY HEADERS — all routes
+      // ==========================================
+      {
+        source: "/(.*)",
+        headers: [
+          // Protection against MIME-type sniffing
+          {
+            key: "X-Content-Type-Options",
+            value: "nosniff",
+          },
+          // Protection against clickjacking — same origin only
+          {
+            key: "X-Frame-Options",
+            value: "SAMEORIGIN",
+          },
+          // Enable browser XSS filter
+          {
+            key: "X-XSS-Protection",
+            value: "1; mode=block",
+          },
+          // Control Referer header leakage
+          {
+            key: "Referrer-Policy",
+            value: "strict-origin-when-cross-origin",
+          },
+          // Disable sensitive browser APIs not used by this site
+          {
+            key: "Permissions-Policy",
+            value: "camera=(), microphone=(), geolocation=(), payment=()",
+          },
+          // Content Security Policy — adapted for this site:
+          // - Google Fonts (fonts.googleapis.com, fonts.gstatic.com)
+          // - Next.js requires 'unsafe-inline' + 'unsafe-eval' for scripts
+          // - Inline styles from Tailwind and dynamic CSS need 'unsafe-inline'
+          {
+            key: "Content-Security-Policy",
+            value: [
+              "default-src 'self'",
+              "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
+              "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+              "img-src 'self' data: https: blob:",
+              "font-src 'self' data: https://fonts.gstatic.com",
+              "connect-src 'self'",
+              "frame-ancestors 'self'",
+              "base-uri 'self'",
+              "form-action 'self'",
+            ].join("; "),
+          },
+          // Force HTTPS — 1 year with subdomains and preload list
+          {
+            key: "Strict-Transport-Security",
+            value: "max-age=31536000; includeSubDomains; preload",
+          },
+        ],
+      },
+      // ==========================================
+      // 📦 CACHING HEADERS — per route type
+      // ==========================================
       // Static assets — long cache
       {
         source: "/assets/:path*",
