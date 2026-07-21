@@ -54,28 +54,17 @@ export default async function CategoryPage({ params }: Props) {
 
   return (
     <main className="min-h-screen bg-[#050510] text-foreground">
-      {/* Header with breadcrumbs & brand — visually hidden (opacity 0) but kept in DOM for SEO.
-          Area shrunk 500% vertically (py-3 → h-[2px]) to reclaim space. */}
-      <div className="sticky top-0 z-30 bg-[#050510]/90 backdrop-blur-xl border-b border-white/5" style={{ height: 2, overflow: "hidden" }}>
-        <div className="max-w-5xl mx-auto flex items-center justify-between px-4 sm:px-6" style={{ opacity: 0, pointerEvents: "none" }}>
-          <div style={{ transform: "scale(0.2)", transformOrigin: "left center" }}>
-            <Breadcrumbs
-              items={[
-                { name: "Главная", href: "/" },
-                { name: "Каталог", href: "/catalog" },
-                { name: cat.title },
-              ]}
-              currentUrl={canonicalUrl}
-            />
-          </div>
-          <span
-            className="font-display text-sm tracking-[.08em]"
-            style={{ transform: "scale(0.2)", transformOrigin: "right center", display: "inline-block" }}
-          >
-            ГРАВИКОТ
-          </span>
-        </div>
-      </div>
+      {/* SEO: BreadcrumbList JSON-LD only — no visible DOM to avoid cloaking risk.
+          Search engines get structured data; users see the category title as navigation. */}
+      <Breadcrumbs
+        items={[
+          { name: "Главная", href: "/" },
+          { name: "Каталог", href: "/catalog" },
+          { name: cat.title },
+        ]}
+        currentUrl={canonicalUrl}
+        visible={false}
+      />
 
       {/* Category title — strictly one H1 per page */}
       <section className="max-w-5xl mx-auto px-4 sm:px-6 pt-4 pb-4">

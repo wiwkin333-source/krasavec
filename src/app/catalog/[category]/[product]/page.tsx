@@ -98,23 +98,8 @@ export default async function ProductPage({ params }: Props) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }}
       />
 
-      {/* SEO: H1 hidden visually but present in DOM */}
-      <h1 className="sr-only">{prod.name} — светящаяся гравировка на стекле</h1>
-
-      {/* SEO: BreadcrumbList microdata — hidden visually */}
-      <div className="sr-only">
-        <Breadcrumbs
-          items={[
-            { name: "Главная", href: "/" },
-            { name: "Каталог", href: "/catalog" },
-            { name: cat.title, href: categoryUrl(cat) },
-            { name: prod.name },
-          ]}
-          currentUrl={canonicalUrl}
-        />
-      </div>
-
-      {/* Fullscreen gallery — the only visible content */}
+      {/* SEO: H1 rendered as visible text inside ProductPageClient top bar.
+          The product name in the gallery title bar IS the H1 — no cloaking. */}
       <ProductPageClient cat={cat} prod={prod} />
     </>
   );

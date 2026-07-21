@@ -29,8 +29,28 @@ const items: { q: string; a: string }[] = [
 
 export function Faq() {
   const [open, setOpen] = useState<number | null>(null);
+
+  // SEO: FAQPage structured data for Google rich results
+  const faqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: items.map((it) => ({
+      "@type": "Question",
+      name: it.q,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: it.a,
+      },
+    })),
+  };
+
   return (
     <section className="relative pt-2 pb-14 px-4" aria-label="Частые вопросы о гравировке">
+      {/* SEO: FAQPage JSON-LD */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+      />
       <div className="max-w-3xl mx-auto">
         <Reveal>
           <div className="text-center mb-10">

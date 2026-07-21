@@ -9,6 +9,7 @@ import { useEffect, useRef, useState } from "react";
  */
 export function YandexMap() {
   const mapRef = useRef<HTMLDivElement>(null);
+  const mapInstanceRef = useRef<any>(null);
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
@@ -62,6 +63,7 @@ export function YandexMap() {
           );
 
           map.geoObjects.add(placemark);
+          mapInstanceRef.current = map;
           setLoaded(true);
         }).catch(() => {
           // Fallback: init map with approximate coords if geocoder fails
@@ -86,14 +88,18 @@ export function YandexMap() {
           );
 
           map.geoObjects.add(placemark);
+          mapInstanceRef.current = map;
           setLoaded(true);
         });
       });
     }
 
     return () => {
-      // Cleanup: destroy map instance to prevent memory leaks
-      // (script stays in DOM — Yandex Maps API doesn't support unloading)
+      // Destroy map instance to prevent memory leaks
+      if (mapInstanceRef.current) {
+        try { mapInstanceRef.current.destroy(); } catch {}
+        mapInstanceRef.current = null;
+      }
     };
   }, []);
 

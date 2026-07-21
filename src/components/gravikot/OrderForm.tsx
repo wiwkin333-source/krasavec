@@ -32,7 +32,7 @@ export function OrderForm({ open, onClose }: { open: boolean; onClose: () => voi
       <div className="relative neon-border rounded-3xl max-w-lg w-full p-6 sm:p-8 md:p-10"
         onClick={(e) => e.stopPropagation()}
         style={{ boxShadow: "0 0 60px -10px #29e3ff, 0 0 100px -20px #ff2bd6" }}>
-        <button onClick={onClose} aria-label="Close"
+        <button onClick={onClose} aria-label="Закрыть"
           className="absolute top-4 right-4 p-2 rounded-full glass hover:scale-110 transition">
           <X className="w-5 h-5" />
         </button>

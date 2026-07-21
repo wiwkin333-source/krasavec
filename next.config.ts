@@ -161,17 +161,18 @@ const nextConfig: NextConfig = {
           },
           // Content Security Policy — adapted for this site:
           // - Google Fonts (fonts.googleapis.com, fonts.gstatic.com)
+          // - Yandex Maps API (api-maps.yandex.ru)
           // - Next.js requires 'unsafe-inline' + 'unsafe-eval' for scripts
           // - Inline styles from Tailwind and dynamic CSS need 'unsafe-inline'
           {
             key: "Content-Security-Policy",
             value: [
               "default-src 'self'",
-              "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
+              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://api-maps.yandex.ru",
               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
               "img-src 'self' data: https: blob:",
               "font-src 'self' data: https://fonts.gstatic.com",
-              "connect-src 'self'",
+              "connect-src 'self' https://api-maps.yandex.ru",
               "frame-ancestors 'self'",
               "base-uri 'self'",
               "form-action 'self'",

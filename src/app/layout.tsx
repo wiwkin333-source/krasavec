@@ -73,7 +73,7 @@ export const metadata: Metadata = {
     ],
   },
   twitter: {
-    card: "summary",
+    card: "summary_large_image",
     title: "ГРАВИКОТ - Кружка со светящейся гравировкой по фото",
     description: "Кружки и бокалы со светящейся гравировкой по вашему фото. Уникальные сувениры с подсветкой. Доставка по России.",
     images: ["/og-image.webp?v=4"],

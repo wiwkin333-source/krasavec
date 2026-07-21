@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { Category, Product } from "@/lib/catalog-data";
+import { Breadcrumbs } from "@/components/gravikot/Breadcrumbs";
 
 /**
  * Full-screen product gallery.
@@ -19,6 +20,14 @@ import type { Category, Product } from "@/lib/catalog-data";
 
 export function ProductPageClient({ cat, prod }: { cat: Category; prod: Product }) {
   const images = [prod.src, ...(prod.gallery ?? [])].filter(Boolean) as string[];
+
+  // SEO: BreadcrumbList JSON-LD (invisible — no cloaking)
+  const breadcrumbItems = [
+    { name: "Главная", href: "/" },
+    { name: "Каталог", href: "/catalog" },
+    { name: cat.title, href: `/catalog/${cat.slug}` },
+    { name: prod.name },
+  ];
   const [idx, setIdx] = useState(0);
   const [zoom, setZoom] = useState(1);
   const [pan, setPan] = useState({ x: 0, y: 0 });
@@ -166,7 +175,10 @@ export function ProductPageClient({ cat, prod }: { cat: Category; prod: Product 
         WebkitBackdropFilter: "blur(16px)",
       }}
     >
-      {/* Top bar: title + zoom + close — dark translucent, visible on any background */}
+      {/* SEO: BreadcrumbList JSON-LD — invisible, no cloaking */}
+      <Breadcrumbs items={breadcrumbItems} visible={false} />
+
+      {/* Top bar: H1 title + zoom + close — dark translucent, visible on any background */}
       <div className="absolute top-4 left-0 right-0 flex justify-center pointer-events-none z-10">
         <div
           className="pointer-events-auto flex items-center gap-4 md:gap-5 px-5 py-2.5 rounded-full"
@@ -175,9 +187,9 @@ export function ProductPageClient({ cat, prod }: { cat: Category; prod: Product 
             boxShadow: "0 4px 24px rgba(0,0,0,0.4)",
           }}
         >
-          <div className="font-tech text-[11px] tracking-[.14em] text-white/80 truncate max-w-[42vw] md:max-w-[280px]">
+          <h1 className="font-tech text-[11px] tracking-[.14em] text-white/80 truncate max-w-[42vw] md:max-w-[280px]">
             {prod.name}
-          </div>
+          </h1>
           <div className="flex items-center gap-1">
             <button
               type="button"
