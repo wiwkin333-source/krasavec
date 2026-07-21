@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { Category, Product } from "@/lib/catalog-data";
 import { Breadcrumbs } from "@/components/gravikot/Breadcrumbs";
+import { ProductQA } from "@/components/gravikot/ProductQA";
 
 /**
  * Full-screen product gallery.
@@ -311,6 +312,9 @@ export function ProductPageClient({ cat, prod }: { cat: Category; prod: Product 
             Каждое изделие уникально, поэтому может слегка отличаться от фото
           </span>
         </div>
+
+        {/* Q&A panel */}
+        <ProductQA productSlug={prod.slug} productName={prod.name} />
       </div>
     </div>
   );
