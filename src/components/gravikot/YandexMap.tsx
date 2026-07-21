@@ -35,28 +35,59 @@ export function YandexMap() {
       if (!ymaps || !mapRef.current) return;
 
       ymaps.ready(() => {
-        const map = new ymaps.Map(mapRef.current, {
-          center: [53.1959, 50.1002], // Самара, центр города
-          zoom: 14,
-          controls: ["zoomControl", "fullscreenControl"],
+        // Geocode the exact address for accurate placement
+        ymaps.geocode("Самара, Советской Армии 23").then((res: any) => {
+          const firstGeoObject = res.geoObjects.get(0);
+          const coords = firstGeoObject
+            ? firstGeoObject.geometry.getCoordinates()
+            : [53.1838, 50.2293]; // fallback: approximate coords for ул. Советской Армии 23
+
+          const map = new ymaps.Map(mapRef.current, {
+            center: coords,
+            zoom: 16,
+            controls: ["zoomControl", "fullscreenControl"],
+          });
+
+          const placemark = new ymaps.Placemark(
+            coords,
+            {
+              balloonContentHeader: "ГРАВИКОТ",
+              balloonContentBody: "г. Самара, ул. Советской Армии, 23<br/>Самовывоз — время встречи согласовываем",
+              hintContent: "ГРАВИКОТ — ул. Советской Армии, 23",
+            },
+            {
+              preset: "islands#violetDotIconWithCaption",
+              iconCaption: "ГРАВИКОТ",
+            }
+          );
+
+          map.geoObjects.add(placemark);
+          setLoaded(true);
+        }).catch(() => {
+          // Fallback: init map with approximate coords if geocoder fails
+          const coords = [53.1838, 50.2293];
+          const map = new ymaps.Map(mapRef.current, {
+            center: coords,
+            zoom: 16,
+            controls: ["zoomControl", "fullscreenControl"],
+          });
+
+          const placemark = new ymaps.Placemark(
+            coords,
+            {
+              balloonContentHeader: "ГРАВИКОТ",
+              balloonContentBody: "г. Самара, ул. Советской Армии, 23<br/>Самовывоз — время встречи согласовываем",
+              hintContent: "ГРАВИКОТ — ул. Советской Армии, 23",
+            },
+            {
+              preset: "islands#violetDotIconWithCaption",
+              iconCaption: "ГРАВИКОТ",
+            }
+          );
+
+          map.geoObjects.add(placemark);
+          setLoaded(true);
         });
-
-        // Placemark — мастерская ГРАВИКОТ
-        const placemark = new ymaps.Placemark(
-          [53.1959, 50.1002],
-          {
-            balloonContentHeader: "ГРАВИКОТ",
-            balloonContentBody: "Самовывоз — место встречи согласовываем индивидуально",
-            hintContent: "ГРАВИКОТ — самовывоз в Самаре",
-          },
-          {
-            preset: "islands#violetDotIconWithCaption",
-            iconCaption: "ГРАВИКОТ",
-          }
-        );
-
-        map.geoObjects.add(placemark);
-        setLoaded(true);
       });
     }
 
