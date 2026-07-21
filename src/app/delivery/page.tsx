@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { YandexMap } from "@/components/gravikot/YandexMap";
 
 export const metadata = {
   title: "Доставка и оплата — ГРАВИКОТ",
@@ -107,6 +108,9 @@ export default function DeliveryPage() {
             <p>
               Возможен самовывоз в городе Самаре. Удобно, если вы находитесь в городе или планируете быть проездом — сэкономите на доставке и получите изделие лично в руки. Место и время встречи согласовываем индивидуально.
             </p>
+            <div className="mt-4">
+              <YandexMap />
+            </div>
           </section>
 
           {/* Повреждение */}
