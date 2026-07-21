@@ -232,6 +232,20 @@ const nextConfig: NextConfig = {
           },
         ],
       },
+      // Admin pages — noindex, no cache
+      {
+        source: "/admin/:path*",
+        headers: [
+          {
+            key: "X-Robots-Tag",
+            value: "noindex, nofollow",
+          },
+          {
+            key: "Cache-Control",
+            value: "no-store, no-cache, must-revalidate",
+          },
+        ],
+      },
       // _next internal — noindex
       {
         source: "/_next/:path*",

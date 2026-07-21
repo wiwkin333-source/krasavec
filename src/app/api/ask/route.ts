@@ -120,6 +120,22 @@ export async function POST(req: NextRequest) {
 export async function GET(req: NextRequest) {
   try {
     const slug = req.nextUrl.searchParams.get("product");
+    const token = req.nextUrl.searchParams.get("token");
+    const isAdmin = token === process.env.ADMIN_TOKEN;
+
+    // Admin mode: return ALL questions for all products
+    if (isAdmin && !slug) {
+      const data = await readQA();
+      return NextResponse.json(data);
+    }
+
+    // Admin mode: return ALL questions for one product (including unanswered)
+    if (isAdmin && slug) {
+      const data = await readQA();
+      return NextResponse.json(data[slug] || []);
+    }
+
+    // Public mode: only answered questions for a specific product
     if (!slug) {
       return NextResponse.json({ error: "Missing product slug" }, { status: 400 });
     }
@@ -127,7 +143,6 @@ export async function GET(req: NextRequest) {
     const data = await readQA();
     const entries = data[slug] || [];
 
-    // Only return questions that have an answer (public)
     const publicQA = entries
       .filter((e) => e.a && e.a.trim().length > 0)
       .map(({ q, a, date }) => ({ q, a: a!, date }));
@@ -135,6 +150,68 @@ export async function GET(req: NextRequest) {
     return NextResponse.json(publicQA);
   } catch (err) {
     console.error("Ask API GET error:", err);
+    return NextResponse.json({ error: "Ошибка сервера" }, { status: 500 });
+  }
+}
+
+/** Admin: answer a question */
+export async function PATCH(req: NextRequest) {
+  try {
+    const body = await req.json();
+    const { productSlug, index, answer, token } = body;
+
+    if (token !== process.env.ADMIN_TOKEN) {
+      return NextResponse.json({ error: "Доступ запрещён" }, { status: 403 });
+    }
+
+    if (!productSlug || index == null || !answer || typeof answer !== "string" || answer.trim().length < 1) {
+      return NextResponse.json({ error: "Некорректные данные" }, { status: 400 });
+    }
+
+    const data = await readQA();
+    const entries = data[productSlug];
+
+    if (!entries || !entries[index]) {
+      return NextResponse.json({ error: "Вопрос не найден" }, { status: 404 });
+    }
+
+    entries[index].a = answer.trim();
+    await writeQA(data);
+
+    return NextResponse.json({ ok: true });
+  } catch (err) {
+    console.error("Ask API PATCH error:", err);
+    return NextResponse.json({ error: "Ошибка сервера" }, { status: 500 });
+  }
+}
+
+/** Admin: delete a question */
+export async function DELETE(req: NextRequest) {
+  try {
+    const body = await req.json();
+    const { productSlug, index, token } = body;
+
+    if (token !== process.env.ADMIN_TOKEN) {
+      return NextResponse.json({ error: "Доступ запрещён" }, { status: 403 });
+    }
+
+    if (!productSlug || index == null) {
+      return NextResponse.json({ error: "Некорректные данные" }, { status: 400 });
+    }
+
+    const data = await readQA();
+    const entries = data[productSlug];
+
+    if (!entries || !entries[index]) {
+      return NextResponse.json({ error: "Вопрос не найден" }, { status: 404 });
+    }
+
+    entries.splice(index, 1);
+    await writeQA(data);
+
+    return NextResponse.json({ ok: true });
+  } catch (err) {
+    console.error("Ask API DELETE error:", err);
     return NextResponse.json({ error: "Ошибка сервера" }, { status: 500 });
   }
 }

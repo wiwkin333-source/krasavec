@@ -14,16 +14,19 @@ User-agent: Googlebot
 Allow: /
 Allow: /_next/static/
 Disallow: /api
+Disallow: /admin
 
 User-agent: Bingbot
 Allow: /
 Allow: /_next/static/
 Disallow: /api
+Disallow: /admin
 
 User-agent: YandexBot
 Allow: /
 Allow: /_next/static/
 Disallow: /api
+Disallow: /admin
 
 User-agent: Twitterbot
 Allow: /
@@ -37,6 +40,7 @@ User-agent: *
 Allow: /
 Allow: /_next/static/
 Disallow: /api
+Disallow: /admin
 
 # Sitemap (auto-generated, always in sync with the catalog)
 Sitemap: https://gravikot.ru/sitemap.xml
