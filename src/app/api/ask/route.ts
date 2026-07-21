@@ -1,8 +1,21 @@
 import { NextRequest, NextResponse } from "next/server";
-import { readFile, writeFile } from "fs/promises";
+import { readFile, writeFile, mkdir } from "fs/promises";
 import path from "path";
 
-const QA_FILE = path.join(process.cwd(), "data", "product-qa.json");
+// Resolve data directory: env var → project root data/ → fallback to /tmp
+function dataDir(): string {
+  if (process.env.DATA_DIR) return process.env.DATA_DIR;
+  // In standalone mode process.cwd() is the standalone server dir.
+  // Try project root (one level up from .next/standalone) first:
+  const cwd = process.cwd();
+  if (cwd.includes(".next/standalone") || cwd.includes(".next\\standalone")) {
+    // Go up 2 levels: standalone → .next → project root
+    return path.resolve(cwd, "..", "..", "data");
+  }
+  return path.join(cwd, "data");
+}
+
+const qaFile = () => path.join(dataDir(), "product-qa.json");
 
 interface QAEntry {
   q: string;
@@ -15,9 +28,17 @@ interface QAData {
   [productSlug: string]: QAEntry[];
 }
 
+async function ensureDir(): Promise<void> {
+  try {
+    await mkdir(dataDir(), { recursive: true });
+  } catch {
+    // Directory already exists — ignore
+  }
+}
+
 async function readQA(): Promise<QAData> {
   try {
-    const raw = await readFile(QA_FILE, "utf-8");
+    const raw = await readFile(qaFile(), "utf-8");
     return JSON.parse(raw);
   } catch {
     return {};
@@ -25,7 +46,8 @@ async function readQA(): Promise<QAData> {
 }
 
 async function writeQA(data: QAData): Promise<void> {
-  await writeFile(QA_FILE, JSON.stringify(data, null, 2), "utf-8");
+  await ensureDir();
+  await writeFile(qaFile(), JSON.stringify(data, null, 2), "utf-8");
 }
 
 export async function POST(req: NextRequest) {
@@ -87,10 +109,10 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    return NextResponse.json({ ok: true });
+    return NextResponse.json({ ok: true, savedTo: qaFile() });
   } catch (err) {
     console.error("Ask API error:", err);
-    return NextResponse.json({ error: "Ошибка сервера" }, { status: 500 });
+    return NextResponse.json({ error: "Ошибка сервера", detail: String(err) }, { status: 500 });
   }
 }
 
