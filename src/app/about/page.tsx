@@ -78,10 +78,23 @@ export default function AboutPage() {
           {/* Плачу налоги */}
           <section>
             <h2 className="font-display font-bold text-xl text-foreground mb-3">Налоговая прозрачность</h2>
-            <p className="text-sky-100/70 text-sm mb-4">Выписка из ФНС — подтверждение статуса самозанятого</p>
+            <a
+              href="/images/fns-extract.webp"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-3 glass rounded-2xl px-5 py-4 hover-lift transition border border-white/10 group mb-5"
+            >
+              <span className="w-12 h-12 rounded-full flex items-center justify-center bg-emerald-500/15 border border-emerald-400/30 text-emerald-400 text-xl font-bold shrink-0">
+                &fnof;
+              </span>
+              <div>
+                <div className="font-display font-bold text-foreground group-hover:text-emerald-300 transition">Плачу налоги</div>
+                <div className="text-sky-100/60 text-sm mt-0.5">Выписка из ФНС — открыть в полном размере</div>
+              </div>
+            </a>
             <div className="glass rounded-2xl p-4 border border-white/10">
               <Image
-                src="/images/fns-extract.png"
+                src="/images/fns-extract.webp"
                 alt="Выписка из ФНС — подтверждение статуса самозанятого Курипта Д.В."
                 width={1200}
                 height={1706}
