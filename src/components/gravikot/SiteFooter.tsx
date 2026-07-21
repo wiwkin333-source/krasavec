@@ -17,7 +17,7 @@ export function SiteFooter() {
           <p className="text-sky-100/90 text-sm mt-3 font-tech">Кружки и бокалы со светящейся гравировкой по фото</p>
           {/* Плачу налоги */}
           <a
-            href="https://www.nalog.gov.ru/rn63/ip/591037681770/"
+            href="/images/fns-extract.webp"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 mt-3 px-3 py-1.5 rounded-lg bg-emerald-500/10 border border-emerald-400/20 hover:bg-emerald-500/20 transition text-xs"
