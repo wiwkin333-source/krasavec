@@ -4,9 +4,8 @@ import { useState } from "react";
 import { OrderForm } from "@/components/gravikot/OrderForm";
 
 /**
- * Image-as-button for product cards.
- * The uploaded image itself IS the clickable button — no glow, no text.
- * Gold light-wave sweep masked to the image silhouette only.
+ * Luxury "Хочу своё" button for product cards.
+ * Gold-accented glass morphism with shimmer text and light-wave sweep.
  * Opens the order form when clicked.
  */
 export function SvoyButton() {
@@ -18,30 +17,30 @@ export function SvoyButton() {
         type="button"
         onClick={() => setOrderOpen(true)}
         aria-label="Хочу своё — заказать с своим изображением"
-        className="relative shrink-0 overflow-hidden group border-0 bg-transparent p-0 cursor-pointer"
+        className="relative shrink-0 rounded-xl px-4 sm:px-5 py-2 sm:py-2.5 group border border-amber-400/25 hover:border-amber-400/40 transition-all duration-300 hover:scale-[1.04]"
+        style={{
+          background: "linear-gradient(135deg, rgba(255,215,0,0.06) 0%, rgba(255,180,0,0.03) 50%, rgba(20,20,40,0.8) 100%)",
+          boxShadow: "0 0 12px -3px rgba(255,215,0,.18), inset 0 1px 0 rgba(255,215,0,.08)",
+        }}
       >
-        {/* The image IS the button */}
-        <img
-          src="/images/svoy-btn.webp"
-          alt="Хочу своё"
-          className="block h-[36px] sm:h-[44px] w-auto object-contain transition-transform duration-500 group-hover:scale-[1.04]"
-        />
-
-        {/* Gold light wave — masked to the image silhouette via CSS mask-image */}
+        {/* Gold shimmer text */}
         <span
-          className="absolute inset-0 pointer-events-none"
+          className="font-display font-semibold uppercase tracking-[.08em] sm:tracking-[.12em] text-xs sm:text-sm bg-clip-text text-transparent group-hover:brightness-110 transition-all duration-300"
           style={{
-            background: "linear-gradient(90deg, transparent 0%, rgba(255,215,0,0.35) 45%, rgba(255,180,0,0.18) 55%, transparent 100%)",
+            backgroundImage: "linear-gradient(90deg, #ffd700 0%, #fff4c0 30%, #ffd700 50%, #ffaa00 80%, #ffd700 100%)",
+            backgroundSize: "200% 100%",
+            animation: "shimmerText 3s linear infinite",
+          }}
+        >
+          хочу своё
+        </span>
+
+        {/* Gold light wave sweep */}
+        <span
+          className="absolute inset-0 pointer-events-none rounded-xl overflow-hidden"
+          style={{
+            background: "linear-gradient(90deg, transparent 0%, rgba(255,215,0,0.15) 45%, rgba(255,180,0,0.08) 55%, transparent 100%)",
             animation: "contactWave 4.5s ease-in-out infinite",
-            /* Mask the wave to the image silhouette — transparent areas of the PNG mask clip the wave */
-            WebkitMaskImage: "url('/images/svoy-btn-mask.png')",
-            maskImage: "url('/images/svoy-btn-mask.png')",
-            WebkitMaskSize: "100% 100%",
-            maskSize: "100% 100%",
-            WebkitMaskRepeat: "no-repeat",
-            maskRepeat: "no-repeat",
-            WebkitMaskPosition: "center",
-            maskPosition: "center",
           }}
         />
       </button>

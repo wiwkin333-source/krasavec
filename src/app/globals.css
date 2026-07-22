@@ -797,6 +797,12 @@
   85% { opacity: 1; }
   100% { transform: translateX(150%); opacity: 0; }
 }
+
+/* ===== Gold shimmer text sweep ===== */
+@keyframes shimmerText {
+  0% { background-position: 200% center; }
+  100% { background-position: -200% center; }
+}
 .cat-wizard:hover .cat-aura { animation-duration: 2s; }
 
 /* ===== Heart burst ===== */
