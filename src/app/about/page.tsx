@@ -50,11 +50,7 @@ export default function AboutPage() {
               </div>
               <div className="flex justify-between gap-4">
                 <span className="text-sky-100/60">Город:</span>
-                <span className="text-foreground font-semibold">Самара</span>
-              </div>
-              <div className="flex justify-between gap-4">
-                <span className="text-sky-100/60">В нише с:</span>
-                <span className="text-foreground font-semibold">2026 года</span>
+                <span className="text-foreground font-semibold">Самара, Советской Армии 23</span>
               </div>
             </div>
           </section>
