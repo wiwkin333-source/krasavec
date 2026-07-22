@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, useCallback, type CSSProperties } from "react";
+// OrbCard no longer needs useRef for timers
 import { getHeroVideoUrl, getClickVideoUrl, resolveVideoUrl } from "./Preloader";
 import { GiftMaketButton } from "./GiftMaketButton";
 import Link from "next/link";
@@ -10,44 +11,21 @@ import { categories as catalogCategories } from "@/lib/catalog-data";
 // Allow CSS custom properties in React style objects
 type CustomCSS = CSSProperties & Record<`--${string}`, string | number>;
 
-// Allow CSS custom properties in React style objects
-type CustomCSS = CSSProperties & Record<`--${string}`, string | number>;
-
 type VideoMode = "hero" | "click" | "poster";
-
-type OrbPhase = "idle" | "entering-back" | "entering-front" | "front" | "leaving-front" | "leaving-back";
 
 function OrbCard({
   o,
 }: {
   o: (typeof orbits)[number];
 }) {
-  const [phase, setPhase] = useState<OrbPhase>("idle");
-  const timers = useRef<number[]>([]);
-  const clearTimers = () => {
-    timers.current.forEach((t) => window.clearTimeout(t));
-    timers.current = [];
-  };
-  useEffect(() => () => clearTimers(), []);
+  const [isFront, setIsFront] = useState(false);
 
   const handleEnter = () => {
-    clearTimers();
-    setPhase("entering-back");
-    timers.current.push(window.setTimeout(() => setPhase("entering-front"), 450));
-    timers.current.push(window.setTimeout(() => setPhase("front"), 900));
+    setIsFront(true);
   };
   const handleLeave = () => {
-    clearTimers();
-    setPhase("leaving-front");
-    timers.current.push(window.setTimeout(() => setPhase("leaving-back"), 450));
-    timers.current.push(window.setTimeout(() => setPhase("idle"), 900));
+    setIsFront(false);
   };
-
-  const isFrontLayer =
-    phase === "entering-front" || phase === "front" || phase === "leaving-front";
-  const isEntering = phase === "entering-back" || phase === "entering-front";
-  const isLeaving = phase === "leaving-front" || phase === "leaving-back";
-  const isFrontFinal = phase === "front";
 
   const isRight = o.corner.endsWith("r");
   const isBottom = o.corner.startsWith("b");
@@ -56,7 +34,7 @@ function OrbCard({
 
   return (
     <div
-      className={`orb-wrapper hidden md:block absolute w-[42%] h-[32%] ${isFrontLayer ? "is-front" : ""}`}
+      className={`orb-wrapper hidden md:block absolute w-[42%] h-[32%] ${isFront ? "is-front" : ""}`}
       style={{
         top: isBottom ? "auto" : vOffset,
         bottom: isBottom ? vOffset : "auto",
@@ -69,14 +47,14 @@ function OrbCard({
       <Link
         href={`/catalog/${o.slug}`}
         className={`card-emerge-orb relative block w-full h-full rounded-2xl glass conic-border overflow-hidden text-left ${
-          isEntering ? "is-entering" : ""
-        } ${isLeaving ? "is-leaving" : ""} ${isFrontFinal ? "is-front-final" : ""}`}
+          isFront ? "is-front-final" : ""
+        }`}
         style={{
           ["--orb-rot"]: o.tilt,
           ["--orb-shadow"]: o.color,
           ["--tilt"]: o.tilt,
           animation:
-            phase === "idle"
+            !isFront
               ? `float-slow ${o.dur} ease-in-out ${o.delay} infinite`
               : undefined,
           boxShadow: `0 12px 60px -20px ${o.color}`,
