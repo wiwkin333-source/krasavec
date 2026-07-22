@@ -6,7 +6,6 @@ import { categoryUrl, productUrl } from "@/lib/catalog-data";
 import type { Category } from "@/lib/catalog-data";
 import { useState } from "react";
 import { SvoyButton } from "@/components/gravikot/SvoyButton";
-import { HelpButton } from "@/components/gravikot/HelpButton";
 
 export function CategoryPageClient({ cat, showBackButton }: { cat: Category; showBackButton?: boolean }) {
   const [lightbox, setLightbox] = useState<{ images: string[]; index: number; title: string } | null>(null);
@@ -65,10 +64,7 @@ export function CategoryPageClient({ cat, showBackButton }: { cat: Category; sho
                   <div className="text-lg sm:text-xl md:text-2xl font-display text-foreground">
                     {p.price}
                   </div>
-                  <div className="flex items-center gap-2">
-                    <SvoyButton />
-                    <HelpButton />
-                  </div>
+                  <SvoyButton />
                 </div>
               </div>
             </div>
