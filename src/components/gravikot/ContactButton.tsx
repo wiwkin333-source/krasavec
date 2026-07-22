@@ -20,7 +20,7 @@ export function ContactButton() {
         aria-label="Заказать"
         className="relative shrink-0 w-11 h-11 sm:w-12 sm:h-12 rounded-xl overflow-hidden group"
         style={{
-          boxShadow: "0 0 16px -4px rgba(139,92,246,.4), 0 0 32px -8px rgba(41,227,255,.2)",
+          boxShadow: "0 0 14px -3px rgba(255,215,0,.35), 0 0 28px -6px rgba(255,180,0,.15)",
         }}
       >
         {/* Button image */}
@@ -34,7 +34,7 @@ export function ContactButton() {
         <span
           className="absolute inset-0 pointer-events-none"
           style={{
-            background: "linear-gradient(90deg, transparent 0%, rgba(41,227,255,0.25) 45%, rgba(255,43,214,0.15) 55%, transparent 100%)",
+            background: "linear-gradient(90deg, transparent 0%, rgba(255,215,0,0.25) 45%, rgba(255,180,0,0.12) 55%, transparent 100%)",
             animation: "contactWave 4.5s ease-in-out infinite",
           }}
         />

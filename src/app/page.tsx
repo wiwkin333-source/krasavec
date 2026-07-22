@@ -29,12 +29,14 @@ export default function Home() {
     if (typeof window === "undefined") return false;
     // If preloader already completed in this JS session, skip it
     if (_preloaderCompleted) return false;
+    // If returning from category page (sessionStorage flag), skip preloader
+    try { if (sessionStorage.getItem('gravikot_skip_preloader') === '1') { sessionStorage.removeItem('gravikot_skip_preloader'); _preloaderCompleted = true; return false; } } catch {}
     return true;
   });
 
   const [siteVisible, setSiteVisible] = useState(() => {
     if (typeof window === "undefined") return false;
-    // Site visible immediately if preloader was already completed
+    // Site visible immediately if preloader was already completed or skipped via sessionStorage
     return _preloaderCompleted;
   });
   const [orderOpen, setOrderOpen] = useState(false);

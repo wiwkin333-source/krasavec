@@ -5,8 +5,8 @@ import { useRouter } from "next/navigation";
 import { categoryUrl, productUrl } from "@/lib/catalog-data";
 import type { Category } from "@/lib/catalog-data";
 import { useState } from "react";
-import { ContactButton } from "@/components/gravikot/ContactButton";
 import { SvoyButton } from "@/components/gravikot/SvoyButton";
+import { HelpButton } from "@/components/gravikot/HelpButton";
 
 export function CategoryPageClient({ cat, showBackButton }: { cat: Category; showBackButton?: boolean }) {
   const [lightbox, setLightbox] = useState<{ images: string[]; index: number; title: string } | null>(null);
@@ -67,7 +67,7 @@ export function CategoryPageClient({ cat, showBackButton }: { cat: Category; sho
                   </div>
                   <div className="flex items-center gap-2">
                     <SvoyButton />
-                    <ContactButton />
+                    <HelpButton />
                   </div>
                 </div>
               </div>
@@ -88,12 +88,16 @@ export function CategoryPageClient({ cat, showBackButton }: { cat: Category; sho
       )}
     </section>
 
-    {/* Back button — uses router.back() for smooth client-side navigation to close 2nd level */}
+    {/* Back button — navigate directly to homepage, skip preloader */}
     {showBackButton && (
       <div className="max-w-5xl mx-auto px-4 sm:px-6 py-10 text-center">
         <button
           type="button"
-          onClick={() => router.back()}
+          onClick={() => {
+            // Flag: skip preloader when returning from category page
+            try { sessionStorage.setItem('gravikot_skip_preloader', '1'); } catch {}
+            router.push('/');
+          }}
           className="inline-flex items-center gap-2 px-6 py-3 rounded-xl glass text-sky-300 hover:text-white hover:scale-105 transition font-tech text-sm"
         >
           &larr; Вернуться на главную
