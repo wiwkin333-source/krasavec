@@ -21,8 +21,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const productNames = cat.products.map((p) => p.name).join(", ");
   const minPrice = minCategoryPrice(cat);
-  const title = `Коллекция ${cat.title} — светящаяся гравировка | ГРАВИКОТ`;
-  const description = `Коллекция ${cat.title}: ${productNames}. Светящаяся гравировка на стекле от ГРАВИКОТ. Цены от ${minPrice} ₽. Доставка по России.`;
+  const productType = cat.key === 'vision' ? 'кружки' : 'бокалы';
+  const title = `${productType} со светящейся гравировкой — коллекция ${cat.title} | ГРАВИКОТ`;
+  const description = `Коллекция ${cat.title}: ${productNames}. ${productType} со светящейся гравировкой по фото от ГРАВИКОТ. Уникальные подарки и сувениры с подсветкой. Цены от ${minPrice} ₽. Доставка по России.`;
   const canonicalUrl = `${SITE_URL}${categoryUrl(cat)}`;
 
   return {
@@ -39,7 +40,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       locale: "ru_RU",
       siteName: "ГРАВИКОТ",
       images: cat.products[0]?.src
-        ? [{ url: cat.products[0].src, width: 800, height: 800, alt: `Коллекция ${cat.title}` }]
+        ? [{ url: cat.products[0].src, width: 800, height: 800, alt: `${productType} со светящейся гравировкой — коллекция ${cat.title}` }]
         : [],
     },
   };

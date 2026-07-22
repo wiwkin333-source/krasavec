@@ -20,16 +20,18 @@ export async function generateStaticParams() {
   return params;
 }
 
-function buildProductJsonLd(cat: { slug: string; title: string; accent: string }, prod: { name: string; desc: string; price: string; src?: string; slug: string }) {
+function buildProductJsonLd(cat: { slug: string; title: string; accent: string; key: string }, prod: { name: string; desc: string; price: string; src?: string; slug: string }) {
   const url = `${SITE_URL}${productUrl(cat as any, prod as any)}`;
   const priceNum = extractPrice(prod.price);
+  const productType = cat.key === 'vision' ? 'Кружка' : 'Бокал';
   return {
     "@context": "https://schema.org",
     "@type": "Product",
-    name: prod.name,
-    description: prod.desc,
+    name: `${productType} ${prod.name} со светящейся гравировкой`,
+    description: `${productType} ${prod.name} со светящейся гравировкой по фото. ${prod.desc}`,
     url,
     image: prod.src ? `${SITE_URL}${prod.src}` : undefined,
+    category: productType,
     brand: {
       "@type": "Brand",
       name: "ГРАВИКОТ",
@@ -55,9 +57,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!prod) return {};
 
   const priceNum = extractPrice(prod.price);
-  const title = `Купить ${prod.name}, цена от ${priceNum} ₽ | ГРАВИКОТ`;
+  // SEO: include product type (кружка/бокал/стакан) in title for generic search queries
+  const productType = cat.key === 'vision' ? 'кружка' : 'бокал';
+  const title = `Купить ${productType} ${prod.name} со светящейся гравировкой, цена от ${priceNum} ₽ | ГРАВИКОТ`;
   const cleanDesc = prod.desc.replace(/\.\s*$/, "");
-  const description = `Купить ${prod.name} — ${cleanDesc}. Коллекция ${cat.title}. Цена ${prod.price}. Светящаяся гравировка на стекле. Доставка по России.`;
+  const description = `${productType} ${prod.name} со светящейся гравировкой по фото — ${cleanDesc}. Коллекция ${cat.title}. Цена ${prod.price}. Уникальный подарок с подсветкой. Доставка по России.`;
   const canonicalUrl = `${SITE_URL}${productUrl(cat, prod)}`;
 
   return {
@@ -74,7 +78,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       locale: "ru_RU",
       siteName: "ГРАВИКОТ",
       images: prod.src
-        ? [{ url: prod.src, width: 800, height: 800, alt: `${prod.name} — гравировка на стекле` }]
+        ? [{ url: prod.src, width: 800, height: 800, alt: `${productType} ${prod.name} со светящейся гравировкой` }]
         : [],
     },
   };
