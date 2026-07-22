@@ -6,6 +6,7 @@ import { categoryUrl, productUrl } from "@/lib/catalog-data";
 import type { Category } from "@/lib/catalog-data";
 import { useState } from "react";
 import { ContactButton } from "@/components/gravikot/ContactButton";
+import { SvoyButton } from "@/components/gravikot/SvoyButton";
 
 export function CategoryPageClient({ cat, showBackButton }: { cat: Category; showBackButton?: boolean }) {
   const [lightbox, setLightbox] = useState<{ images: string[]; index: number; title: string } | null>(null);
@@ -34,7 +35,7 @@ export function CategoryPageClient({ cat, showBackButton }: { cat: Category; sho
               <Link href={productUrl(cat, p)} className="relative bg-transparent border-0 p-0 text-left block group">
                 <img
                   src={p.src}
-                  alt={`${p.name} — ${p.desc} Коллекция ${cat.title}. Светящаяся гравировка на стекле ГРАВИКОТ, фото 1`}
+                  alt={`${p.name} — ${p.desc} Коллекция ${cat.title}. Кружка, чашка, бокал, фужер, стакан со светящейся гравировкой на стекле ГРАВИКОТ, фото 1`}
                   title={`${p.name} — ${p.price}`}
                   className="block w-full h-auto object-contain transition-transform duration-300 group-hover:scale-[1.02]"
                   loading="lazy"
@@ -60,11 +61,14 @@ export function CategoryPageClient({ cat, showBackButton }: { cat: Category; sho
                 <div className="text-sm sm:text-base text-foreground/70 leading-snug mt-1 break-words">
                   {p.desc}
                 </div>
-                <div className="flex items-center justify-between gap-3 mt-2">
+                <div className="flex items-center justify-between gap-2 mt-2 flex-wrap">
                   <div className="text-lg sm:text-xl md:text-2xl font-display text-foreground">
                     {p.price}
                   </div>
-                  <ContactButton />
+                  <div className="flex items-center gap-2">
+                    <SvoyButton />
+                    <ContactButton />
+                  </div>
                 </div>
               </div>
             </div>

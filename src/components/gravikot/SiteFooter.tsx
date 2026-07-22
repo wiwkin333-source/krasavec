@@ -14,7 +14,7 @@ export function SiteFooter() {
             <PawPrint className="w-6 h-6 mx-0.5" style={{ color: "#ff2bd6", filter: "drop-shadow(0 0 8px #ff2bd6)" }} aria-hidden="true" />
             <span className="shimmer-text">Т</span>
           </div>
-          <p className="text-sky-100/90 text-sm mt-3 font-tech">Кружки и бокалы со светящейся гравировкой по фото</p>
+          <p className="text-sky-100/90 text-sm mt-3 font-tech">Лазерное ателье</p>
           {/* Плачу налоги */}
           <a
             href="/images/fns-extract.webp"
@@ -56,7 +56,6 @@ export function SiteFooter() {
         {/* Реквизиты */}
         <div className="text-sky-100/60 text-sm space-y-1.5">
           <div className="font-display font-semibold text-sky-100/70 mb-2">Реквизиты:</div>
-          <div>Самозанятый</div>
           <div>Курипта Д. В.</div>
           <div>ИНН 501721586348</div>
           <div className="pt-4 text-sky-100/40">

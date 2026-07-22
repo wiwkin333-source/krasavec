@@ -136,3 +136,29 @@ Stage Summary:
 - Progressive mobile breakpoints: 640px → 479px → 414px → 374px
 - All changes backward compatible with fallbacks
 - Build verified: 0 errors
+---
+Task ID: 1
+Agent: main
+Task: SEO keywords + footer updates + "хочу своё" button on product cards
+
+Work Log:
+- Added SEO keywords (кружка, чашка, фужер, стакан) to metadata descriptions in layout.tsx, catalog/page.tsx, category page.tsx, product page.tsx
+- Added keywords meta tag to layout.tsx and catalog/page.tsx
+- Updated Organization JSON-LD description with expanded keywords
+- Updated OG/Twitter descriptions with expanded keywords
+- Updated OG image alt text with expanded keywords
+- Added hidden SEO text blocks (sr-only) on homepage and category pages
+- Updated image alt text on product cards with expanded keywords
+- Updated product JSON-LD descriptions with "Также доступны" expanded keywords
+- Changed footer text from "Кружки и бокалы со светящейся гравировкой по фото" → "Лазерное ателье"
+- Removed "Самозанятый" from footer (kept in About page content since it's legal info)
+- Removed "Самозанятый" from About page metadata description
+- Resized uploaded image (1536x1024 → 300x200) and saved as svoy-btn.webp/png
+- Created SvoyButton component with uploaded image + "хочу своё" text overlay
+- Added SvoyButton next to ContactButton on product cards (CategoryPageClient.tsx)
+
+Stage Summary:
+- All SEO keywords (кружка, чашка, фужер, стакан) added invisibly to users via meta tags, alt texts, JSON-LD, and sr-only blocks
+- Footer updated: "Лазерное ателье" text, "Самозанятый" removed
+- "хочу своё" button with uploaded image added on product cards
+- Build passes successfully

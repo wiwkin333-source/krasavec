@@ -22,8 +22,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const productNames = cat.products.map((p) => p.name).join(", ");
   const minPrice = minCategoryPrice(cat);
   const productType = cat.key === 'vision' ? 'кружки' : 'бокалы';
+  const productTypeAlt = cat.key === 'vision' ? 'кружки, чашки' : 'бокалы, фужеры, стаканы';
   const title = `${productType} со светящейся гравировкой — коллекция ${cat.title} | ГРАВИКОТ`;
-  const description = `Коллекция ${cat.title}: ${productNames}. ${productType} со светящейся гравировкой по фото от ГРАВИКОТ. Уникальные подарки и сувениры с подсветкой. Цены от ${minPrice} ₽. Доставка по России.`;
+  const description = `Коллекция ${cat.title}: ${productNames}. ${productTypeAlt} со светящейся гравировкой по фото от ГРАВИКОТ. Уникальные подарки и сувениры с подсветкой. Цены от ${minPrice} ₽. Доставка по России.`;
   const canonicalUrl = `${SITE_URL}${categoryUrl(cat)}`;
 
   return {
@@ -86,6 +87,14 @@ export default async function CategoryPage({ params }: Props) {
 
       {/* Products grid + back button (client component) */}
       <CategoryPageClient cat={cat} showBackButton />
+
+      {/* SEO: hidden text block for search engines — not visible to users */}
+      <div className="sr-only" aria-hidden="true">
+        {cat.key === 'vision'
+          ? 'Кружки и чашки со светящейся гравировкой по фото от ГРАВИКОТ. Кружка с гравировкой, чашка с гравировкой — уникальные светящиеся сувениры и подарки. Лазерная гравировка на кружках и чашках.'
+          : 'Бокалы, фужеры и стаканы со светящейся гравировкой по фото от ГРАВИКОТ. Бокал с гравировкой, фужер с гравировкой, стакан с гравировкой — уникальные светящиеся сувениры и подарки. Лазерная гравировка на бокалах, фужерах и стаканах.'
+        }
+      </div>
     </main>
   );
 }

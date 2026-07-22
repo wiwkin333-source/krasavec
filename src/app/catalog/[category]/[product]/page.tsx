@@ -24,11 +24,12 @@ function buildProductJsonLd(cat: { slug: string; title: string; accent: string; 
   const url = `${SITE_URL}${productUrl(cat as any, prod as any)}`;
   const priceNum = extractPrice(prod.price);
   const productType = cat.key === 'vision' ? 'Кружка' : 'Бокал';
+  const productTypeAlt = cat.key === 'vision' ? 'кружка, чашка' : 'бокал, фужер, стакан';
   return {
     "@context": "https://schema.org",
     "@type": "Product",
     name: `${productType} ${prod.name} со светящейся гравировкой`,
-    description: `${productType} ${prod.name} со светящейся гравировкой по фото. ${prod.desc}`,
+    description: `${productType} ${prod.name} со светящейся гравировкой по фото. ${prod.desc}. Также доступны: ${productTypeAlt}.`,
     url,
     image: prod.src ? `${SITE_URL}${prod.src}` : undefined,
     category: productType,
@@ -57,11 +58,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!prod) return {};
 
   const priceNum = extractPrice(prod.price);
-  // SEO: include product type (кружка/бокал/стакан) in title for generic search queries
+  // SEO: include product type (кружка/чашка/бокал/фужер/стакан) in title for generic search queries
   const productType = cat.key === 'vision' ? 'кружка' : 'бокал';
+  const productTypeAlt = cat.key === 'vision' ? 'кружка, чашка' : 'бокал, фужер, стакан';
   const title = `Купить ${productType} ${prod.name} со светящейся гравировкой, цена от ${priceNum} ₽ | ГРАВИКОТ`;
   const cleanDesc = prod.desc.replace(/\.\s*$/, "");
-  const description = `${productType} ${prod.name} со светящейся гравировкой по фото — ${cleanDesc}. Коллекция ${cat.title}. Цена ${prod.price}. Уникальный подарок с подсветкой. Доставка по России.`;
+  const description = `${productTypeAlt} ${prod.name} со светящейся гравировкой по фото — ${cleanDesc}. Коллекция ${cat.title}. Цена ${prod.price}. Уникальный подарок с подсветкой. Доставка по России.`;
   const canonicalUrl = `${SITE_URL}${productUrl(cat, prod)}`;
 
   return {
