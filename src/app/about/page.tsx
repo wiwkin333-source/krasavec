@@ -41,10 +41,6 @@ export default function AboutPage() {
             <h2 className="font-display font-bold text-xl text-foreground mb-3">Реквизиты</h2>
             <div className="glass rounded-2xl p-5 space-y-2 text-sm">
               <div className="flex justify-between gap-4">
-                <span className="text-sky-100/60">Статус:</span>
-                <span className="text-foreground font-semibold">Самозанятый</span>
-              </div>
-              <div className="flex justify-between gap-4">
                 <span className="text-sky-100/60">ФИО:</span>
                 <span className="text-foreground font-semibold">Курипта Дмитрий Викторович</span>
               </div>

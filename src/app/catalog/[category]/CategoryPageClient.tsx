@@ -36,7 +36,7 @@ export function CategoryPageClient({ cat, showBackButton }: { cat: Category; sho
                   src={p.src}
                   alt={`${p.name} — ${p.desc} Коллекция ${cat.title}. Кружка, чашка, бокал, фужер, стакан со светящейся гравировкой на стекле ГРАВИКОТ, фото 1`}
                   title={`${p.name} — ${p.price}`}
-                  className="absolute inset-0 w-full h-full object-contain md:object-cover transition-transform duration-300 group-hover:scale-[1.02]"
+                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-300 group-hover:scale-[1.02]"
                   loading="lazy"
                   decoding="async"
                   style={{
