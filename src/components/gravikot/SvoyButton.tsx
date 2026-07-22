@@ -5,7 +5,7 @@ import { OrderForm } from "@/components/gravikot/OrderForm";
 
 /**
  * Luxury "Хочу своё" button for product cards.
- * Gold-accented glass morphism with shimmer text and light-wave sweep.
+ * Gold-accented glass morphism with shimmer text.
  * Opens the order form when clicked.
  */
 export function SvoyButton() {
@@ -23,7 +23,7 @@ export function SvoyButton() {
           boxShadow: "0 0 12px -3px rgba(255,215,0,.18), inset 0 1px 0 rgba(255,215,0,.08)",
         }}
       >
-        {/* Gold shimmer text */}
+        {/* Gold shimmer text — no wave */}
         <span
           className="font-display font-semibold uppercase tracking-[.08em] sm:tracking-[.12em] text-xs sm:text-sm bg-clip-text text-transparent group-hover:brightness-110 transition-all duration-300"
           style={{
@@ -34,15 +34,6 @@ export function SvoyButton() {
         >
           хочу своё
         </span>
-
-        {/* Gold light wave sweep */}
-        <span
-          className="absolute inset-0 pointer-events-none rounded-xl overflow-hidden"
-          style={{
-            background: "linear-gradient(90deg, transparent 0%, rgba(255,215,0,0.15) 45%, rgba(255,180,0,0.08) 55%, transparent 100%)",
-            animation: "contactWave 4.5s ease-in-out infinite",
-          }}
-        />
       </button>
 
       <OrderForm open={orderOpen} onClose={() => setOrderOpen(false)} />

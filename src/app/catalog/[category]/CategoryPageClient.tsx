@@ -30,13 +30,13 @@ export function CategoryPageClient({ cat, showBackButton }: { cat: Category; sho
                 animationFillMode: "both",
               }}
             >
-              {/* Product image — clickable for lightbox AND links to product page */}
-              <Link href={productUrl(cat, p)} className="relative bg-transparent border-0 p-0 text-left block group">
+              {/* Product image — fixed aspect ratio container prevents description overlap */}
+              <Link href={productUrl(cat, p)} className="relative aspect-[4/3] bg-transparent border-0 p-0 text-left block group overflow-hidden">
                 <img
                   src={p.src}
                   alt={`${p.name} — ${p.desc} Коллекция ${cat.title}. Кружка, чашка, бокал, фужер, стакан со светящейся гравировкой на стекле ГРАВИКОТ, фото 1`}
                   title={`${p.name} — ${p.price}`}
-                  className="block w-full h-auto object-contain transition-transform duration-300 group-hover:scale-[1.02]"
+                  className="absolute inset-0 w-full h-full object-contain transition-transform duration-300 group-hover:scale-[1.02]"
                   loading="lazy"
                   decoding="async"
                   style={{
