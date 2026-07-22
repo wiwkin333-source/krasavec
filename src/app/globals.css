@@ -790,6 +790,13 @@
 .cat-aura { animation: cat-aura-pulse 3.5s ease-in-out infinite; }
 .cat-float { animation: cat-float 4.5s ease-in-out infinite; }
 .cat-firefly { animation: cat-firefly 4s ease-in-out infinite; }
+/* Light wave sweep for contact button — thin line moving L→R */
+@keyframes contactWave {
+  0% { transform: translateX(-150%); opacity: 0; }
+  15% { opacity: 1; }
+  85% { opacity: 1; }
+  100% { transform: translateX(150%); opacity: 0; }
+}
 .cat-wizard:hover .cat-aura { animation-duration: 2s; }
 
 /* ===== Heart burst ===== */

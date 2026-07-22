@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { categoryUrl, productUrl } from "@/lib/catalog-data";
 import type { Category } from "@/lib/catalog-data";
 import { useState } from "react";
+import { ContactButton } from "@/components/gravikot/ContactButton";
 
 export function CategoryPageClient({ cat, showBackButton }: { cat: Category; showBackButton?: boolean }) {
   const [lightbox, setLightbox] = useState<{ images: string[]; index: number; title: string } | null>(null);
@@ -63,17 +64,7 @@ export function CategoryPageClient({ cat, showBackButton }: { cat: Category; sho
                   <div className="text-lg sm:text-xl md:text-2xl font-display text-foreground">
                     {p.price}
                   </div>
-                  {/* Quick gallery button */}
-                  {images.length > 1 && (
-                    <button
-                      type="button"
-                      onClick={() => setLightbox({ images, index: 0, title: p.name })}
-                      aria-label={`Фото ${p.name}`}
-                      className="shrink-0 text-foreground/50 hover:text-sky-300 transition font-tech text-xs uppercase tracking-wider"
-                    >
-                      {images.length} фото
-                    </button>
-                  )}
+                  <ContactButton />
                 </div>
               </div>
             </div>
