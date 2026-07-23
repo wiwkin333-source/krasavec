@@ -40,7 +40,9 @@ function OrbCard({
         bottom: isBottom ? vOffset : "auto",
         left: isRight ? "auto" : hOffset,
         right: isRight ? hOffset : "auto",
-      }}
+        animation: `float-slow ${o.dur} ease-in-out ${o.delay} infinite`,
+        animationPlayState: isFront ? "paused" : "running",
+      } as CustomCSS}
       onMouseEnter={handleEnter}
       onMouseLeave={handleLeave}
     >
@@ -50,13 +52,7 @@ function OrbCard({
           isFront ? "is-front-final" : ""
         }`}
         style={{
-          ["--orb-rot"]: o.tilt,
           ["--orb-shadow"]: o.color,
-          ["--tilt"]: o.tilt,
-          animation:
-            !isFront
-              ? `float-slow ${o.dur} ease-in-out ${o.delay} infinite`
-              : undefined,
           boxShadow: `0 12px 60px -20px ${o.color}`,
         } as CustomCSS}
       >
