@@ -6,6 +6,10 @@ export const metadata = {
   robots: {
     index: false,
     follow: false,
+    googleBot: {
+      index: false,
+      follow: false,
+    },
   },
   // Override the inherited root canonical (https://gravikot.ru) with an
   // empty value. A 404 must NOT claim to be a canonical copy of the

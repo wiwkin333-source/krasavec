@@ -18,10 +18,12 @@ import { categories, categoryUrl, productUrl } from "@/lib/catalog-data";
  *   when the content actually might change.
  *
  * Image sitemap (Google Images / Яндекс.Картинки):
- *   Each catalog URL also carries an `images` array listing the product
- *   photos associated with that page. This registers them with image
- *   search — additional traffic from Yandex.Images and Google Images.
- *   Image URLs are absolute (https://gravikot.ru/...).
+ *   Next.js 16's sitemap serializer only supports string URLs in the
+ *   `images` array — objects with {url, title, caption} get rendered as
+ *   "[object Object]" in <image:loc>, breaking the XML. So we use
+ *   plain absolute URL strings here. Google/Yandex will still register
+ *   the images in image search; the title/caption come from the page's
+ *   own <meta> and alt attributes at crawl time.
  *
  * Submit this sitemap in:
  *   - Yandex.Webmaster: https://webmaster.yandex.ru/site/https:gravikot.ru/
@@ -46,31 +48,17 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: BUILD_TIME,
       changeFrequency: "weekly",
       priority: 1.0,
-      // Register the hero poster image with image search.
-      images: [
-        {
-          url: `${BASE_URL}/assets/gravikot-poster.webp`,
-          title: "ГРАВИКОТ — светящаяся гравировка на стекле по фото",
-          caption:
-            "Кружки и бокалы со светящейся гравировкой от мастерской ГРАВИКОТ.",
-        },
-      ],
+      images: [`${BASE_URL}/assets/gravikot-poster.webp`],
     },
     {
       url: `${BASE_URL}/catalog`,
       lastModified: BUILD_TIME,
       changeFrequency: "weekly",
       priority: 0.9,
-      // One cover image per category — gives the catalog index image
-      // search presence for the top-level collections.
       images: categories
         .map((c) => c.products[0]?.src)
         .filter(Boolean)
-        .map((src, i) => ({
-          url: absImg(src)!,
-          title: `Коллекция ${categories[i].title} — ГРАВИКОТ`,
-          caption: `Светящаяся гравировка на стекле, коллекция ${categories[i].title}`,
-        })),
+        .map((src) => absImg(src)!),
     },
     {
       url: `${BASE_URL}/about`,
@@ -84,11 +72,22 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly",
       priority: 0.5,
     },
+    {
+      url: `${BASE_URL}/privacy`,
+      lastModified: BUILD_TIME,
+      changeFrequency: "yearly",
+      priority: 0.3,
+    },
+    {
+      url: `${BASE_URL}/terms`,
+      lastModified: BUILD_TIME,
+      changeFrequency: "yearly",
+      priority: 0.3,
+    },
   ];
 
-  // Category pages — register the category cover image + all product
-  // primary images so each collection has its full visual footprint in
-  // image search.
+  // Category pages — register all product primary images so each
+  // collection has its full visual footprint in image search.
   const categoryPages: MetadataRoute.Sitemap = categories.map((cat) => ({
     url: `${BASE_URL}${categoryUrl(cat)}`,
     lastModified: BUILD_TIME,
@@ -97,11 +96,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     images: cat.products
       .map((p) => p.src)
       .filter(Boolean)
-      .map((src, i) => ({
-        url: absImg(src)!,
-        title: `${cat.products[i].name} — коллекция ${cat.title}, фото 1`,
-        caption: `${cat.products[i].name}. ${cat.products[i].desc} Светящаяся гравировка на стекле ГРАВИКОТ, ${cat.products[i].price}`,
-      })),
+      .map((src) => absImg(src)!),
   }));
 
   // Product pages — register ALL images (primary + gallery) so each
@@ -117,11 +112,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
         lastModified: BUILD_TIME,
         changeFrequency: "monthly" as const,
         priority: 0.7,
-        images: allImages.map((src, i) => ({
-          url: absImg(src)!,
-          title: `${prod.name} — фото ${i + 1} светящаяся гравировка ГРАВИКОТ`,
-          caption: `${prod.name}. ${prod.desc} Коллекция ${cat.title}. Цена: ${prod.price}.`,
-        })),
+        images: allImages.map((src) => absImg(src)!),
       };
     }),
   );
