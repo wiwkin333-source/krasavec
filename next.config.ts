@@ -188,6 +188,25 @@ const nextConfig: NextConfig = {
       // ==========================================
       // 📦 CACHING HEADERS — per route type
       // ==========================================
+      // Sitemap & robots — NEVER cache, always serve fresh
+      {
+        source: "/sitemap.xml",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "no-store, no-cache, must-revalidate, proxy-revalidate",
+          },
+        ],
+      },
+      {
+        source: "/robots.txt",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "no-store, no-cache, must-revalidate, proxy-revalidate",
+          },
+        ],
+      },
       // Static assets — long cache
       {
         source: "/assets/:path*",
