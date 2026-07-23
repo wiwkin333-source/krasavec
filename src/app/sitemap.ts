@@ -43,6 +43,10 @@ function absImg(path?: string): string | undefined {
 // Force fresh generation on every request — never serve stale cached version.
 // Without this, CDN or Next.js ISR may cache an old sitemap for days/weeks.
 export const revalidate = 0;
+// Force-dynamic bypasses ISR cache completely — even if a stale entry
+// persists on the server's persistent storage (Amvera volume), this
+// directive tells Next.js to skip the cache lookup and regenerate.
+export const dynamic = "force-dynamic";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   // Static pages
