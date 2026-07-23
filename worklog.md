@@ -162,3 +162,29 @@ Stage Summary:
 - Footer updated: "Лазерное ателье" text, "Самозанятый" removed
 - "хочу своё" button with uploaded image added on product cards
 - Build passes successfully
+
+---
+Task ID: 6
+Agent: Main Agent
+Task: Live site QA check — verify all features on running site
+
+Work Log:
+- Started dev server, verified HTTP 200 on all pages
+- Ran comprehensive browser QA on 6 pages: homepage, catalog, category, product, about, mobile 375px
+- Checked: preloader, hero video, gallery, advantages, FAQ, CTA, footer, breadcrumbs, "хочу своё" button, mobile layout
+- All core features confirmed working correctly
+
+QA Findings (ALL INTENTIONALLY LEFT AS-IS per user decision):
+1. Product page = gallery overlay only (no standalone detail page) — BY DESIGN
+2. GiftMaketButton hidden on mobile (hidden md:flex) — BY DESIGN
+3. No visible breadcrumbs for users (only JSON-LD) — BY DESIGN
+4. Hero video paused initially (browser autoplay policy) — BY DESIGN
+5. Footer "ГРАВИКОТ" split in accessibility tree — BY DESIGN
+6. "Плачу налоги" badge in footer — BY DESIGN
+
+User Decision: **НИЧЕГО НЕ ИСПРАВЛЯТЬ. ЗАКРЕПИТЬ КАК IS.** All findings are intentional design choices.
+
+Stage Summary:
+- Full QA completed, all pages functional
+- 6 findings documented as intentional design decisions — DO NOT FIX
+- Footer: "Лазерное ателье" ✅, "хочу своё" button ✅, no horizontal scroll on mobile ✅
