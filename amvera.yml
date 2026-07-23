@@ -1,0 +1,4 @@
+program:
+  type: docker
+  dockerfile: Dockerfile
+  port: 80
