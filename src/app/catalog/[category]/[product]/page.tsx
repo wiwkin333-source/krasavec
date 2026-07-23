@@ -29,7 +29,7 @@ function buildProductJsonLd(cat: { slug: string; title: string; accent: string; 
     "@context": "https://schema.org",
     "@type": "Product",
     name: `${productType} ${prod.name} со светящейся гравировкой`,
-    description: `${productType} ${prod.name} со светящейся гравировкой по фото. ${prod.desc}. Также доступны: ${productTypeAlt}.`,
+    description: `${productType} ${prod.name} со светящейся гравировкой по фото. ${prod.desc.replace(/\.\s*$/, "")}. Также доступны: ${productTypeAlt}.`,
     url,
     image: prod.src ? `${SITE_URL}${prod.src}` : undefined,
     category: productType,

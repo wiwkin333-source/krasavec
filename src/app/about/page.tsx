@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 export const metadata = {
-  title: "О компании — ГРАВИКОТ",
+  title: "О компании ГРАВИКОТ — лазерное ателье в Самаре",
   description: "ГРАВИКОТ — лазерное ателье светящейся гравировки. Курипта Дмитрий Викторович. ИНН 501721586348. Самара.",
   alternates: {
     canonical: "https://gravikot.ru/about",

@@ -2,7 +2,7 @@ import Link from "next/link";
 import { YandexMap } from "@/components/gravikot/YandexMap";
 
 export const metadata = {
-  title: "Доставка и оплата — ГРАВИКОТ",
+  title: "Доставка и оплата — СДЭК, Почта, СБП | ГРАВИКОТ Самара",
   description: "Доставка светящейся гравировки по России: Почта, СДЭК, Озон, Яндекс. Способы оплаты: СБП, Сбербанк, Т-банк, наличные. Самовывоз в Самаре.",
   alternates: {
     canonical: "https://gravikot.ru/delivery",

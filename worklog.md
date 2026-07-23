@@ -188,3 +188,24 @@ Stage Summary:
 - Full QA completed, all pages functional
 - 6 findings documented as intentional design decisions — DO NOT FIX
 - Footer: "Лазерное ателье" ✅, "хочу своё" button ✅, no horizontal scroll on mobile ✅
+
+---
+Task ID: 7
+Agent: Main Agent
+Task: SEO fixes — Organization JSON-LD, titles, double period, sitemap check, infra notes
+
+Work Log:
+- Fixed Organization JSON-LD in layout.tsx: added telephone, email, addressLocality (Самара), streetAddress (Советской Армии 23), openingHours (Mo-Su 09:00-23:00), sameAs (Telegram + VK)
+- Expanded /about title: "О компании — ГРАВИКОТ" → "О компании ГРАВИКОТ — лазерное ателье в Самаре" (~50 chars)
+- Expanded /delivery title: "Доставка и оплата — ГРАВИКОТ" → "Доставка и оплата — СДЭК, Почта, СБП | ГРАВИКОТ Самара" (~60 chars)
+- Fixed double period in Product JSON-LD description: prod.desc ends with "." + concatenated "." → "..". Added .replace(/\.\s*$/, "") to strip trailing period before concatenation
+- Confirmed /privacy and /terms already in sitemap.ts code (priority 0.3, yearly changeFrequency)
+- Noted: HTTP→HTTPS 308 redirect and CDN s-maxage=31536000 are infrastructure (Cloudflare/Caddy), not Next.js code — cannot fix in code
+
+Stage Summary:
+- Organization JSON-LD: complete with contact info, address, hours, social links
+- Titles: expanded with keywords and location
+- Double period: eliminated with .replace(/\.\s*$/, "")
+- Sitemap: /privacy and /terms already present in code
+- Infra issues (308 redirect, CDN cache) noted as outside code scope
+- Build: 0 errors

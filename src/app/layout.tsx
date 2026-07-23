@@ -105,11 +105,19 @@ export default function RootLayout({
     url: "https://gravikot.ru",
     logo: "https://gravikot.ru/favicon.svg",
     description: "ГРАВИКОТ — лазерное ателье. Кружки, чашки, бокалы, фужеры, стаканы со светящейся гравировкой по вашему фото. Уникальные сувениры с подсветкой. Доставка по России.",
+    telephone: "+79258343045",
+    email: "kyriptor@yandex.ru",
     address: {
       "@type": "PostalAddress",
       addressCountry: "RU",
+      addressLocality: "Самара",
+      streetAddress: "Советской Армии 23",
     },
-    sameAs: [],
+    openingHours: "Mo-Su 09:00-23:00",
+    sameAs: [
+      "https://t.me/gravikotik",
+      "https://vk.com/club239806069",
+    ],
   };
 
   return (
