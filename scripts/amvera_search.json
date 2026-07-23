@@ -1,0 +1,92 @@
+[
+  {
+    "url": "https://amvera.ru/doc-configfile",
+    "name": "Cоздание конфигурационного файла amvera.yaml",
+    "snippet": "Для настройки сборки и запуска проекта можно создать файл `amvera.yml` или `amvera.yaml` в корне репозитория. Если файл конфигурации отсутствует, то Amvera ... Missing: nextjs | Show results with: nextjs",
+    "host_name": "amvera.ru",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.reddit.com/r/nextjs/comments/1gsnha9/dockerized_nextjs_with_multiple_environments_and/?tl=ru",
+    "name": "Dockerized NextJS с несколькими окружениями (и свойствами",
+    "snippet": "Я работаю над приложением Next.js в Docker и ищу лучший способ управления несколькими окружениями (например, локальное, разработка, продакшн) ... Missing: amvera. yml meta",
+    "host_name": "www.reddit.com",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://docs.amvera.ru/applications/environments/nodejs-server.html",
+    "name": "Node.JS Server",
+    "snippet": "Секция meta¶. Секция meta файла amvera.yml будет выглядеть следующим образом: meta: environment: node toolchain: name: npm version: 18. Из параметров, которые ... Missing: nextjs | Show results with: nextjs",
+    "host_name": "docs.amvera.ru",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.reddit.com/r/nextjs/comments/1jxlm8d/need_help_for_a_dockerfile_for_nextjs/?tl=ru",
+    "name": "Нужна помощь с Dockerfile для NextJS - Reddit",
+    "snippet": "Dockerfile для NextJS. Официальный пример: https://github.com/nextjs/deploy-digitalocean/blob/main/Dockerfile bernoullistokes Missing: amvera. yml конфигурация meta",
+    "host_name": "www.reddit.com",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://docs.amvera.ru/applications/configuration/config-file.html",
+    "name": "amvera.yaml - Файл конфигурации",
+    "snippet": "Секция meta определяет общую информацию о сборке, такую как окружение и инструменты сборки. Со списком поддерживаемых окружений и подробным их описанием можно ... Missing: nextjs | Show results with: nextjs\nФайл конфигурации ¶ Для настройки сборки и запуска проекта можно создать файл amvera.yml или amvera.yaml в корне репозитория. Альтернативой является использование Dockerfile. Создать amvera.yaml лучше всего в интерфейсе приложения в ...",
+    "host_name": "docs.amvera.ru",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.reddit.com/r/nextjs/comments/nu9ftm/what_i_learned_last_week_deploying_a_nextjs_app/?tl=ru",
+    "name": "Развертывание приложения Next.js в контейнере Docker (Эффективно!)",
+    "snippet": "Отличная статья! Но вот вопрос: как настроить переменные окружения через docker compose, чтобы они не были доступны во время сборки? Missing: amvera. yml конфигурация meta пример",
+    "host_name": "www.reddit.com",
+    "rank": 5,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://amvera.ru/doc_docker",
+    "name": "Документация по использованию Docker - Amvera Cloud",
+    "snippet": "Для сборки и развертывания своего приложения в контейнере Docker можно вообще не писать файл `amvera.yml`. Достаточно написать `Dockerfile`. Missing: nextjs | Show results with: nextjs\nДокументация Amvera Cloud по запуску с Docker Полная документация Amvera Cloud по ссылке https://docs.amvera.ru/ В разделе собрана базовая документация для быстрого ознакомления с процессом развертывания на время восстановления основного ...",
+    "host_name": "amvera.ru",
+    "rank": 6,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.reddit.com/r/nextjs/comments/1hgb3m0/frontend_nextjs_docker_does_not_use_variables_in/?tl=ru",
+    "name": "Frontend Next.js docker не использует переменные в .env.prod",
+    "snippet": "Вот пример для NextJS в докере с несколькими окружениями. https://github.com/vercel/next.js/tree/canary/examples/with-docker-multi-env. [удалено]. Missing: amvera. meta",
+    "host_name": "www.reddit.com",
+    "rank": 7,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://docs.amvera.ru/applications/build.html",
+    "name": "Сборка",
+    "snippet": "Облако Amvera считывает раздел meta из файла конфигурации amvera.yaml и ищет подходящий инструмент для сборки в списке поддерживаемых окружений. Под ... Missing: yml nextjs",
+    "host_name": "docs.amvera.ru",
+    "rank": 8,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://github.com/vercel/next.js/blob/canary/examples/with-docker/Dockerfile",
+    "name": "next.js/examples/with-docker/Dockerfile at canary · vercel",
+    "snippet": "The React Framework. Contribute to vercel/next.js development by creating an account on GitHub.",
+    "host_name": "github.com",
+    "rank": 9,
+    "date": "",
+    "favicon": ""
+  }
+]
