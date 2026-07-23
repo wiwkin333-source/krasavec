@@ -40,6 +40,10 @@ function absImg(path?: string): string | undefined {
   return `${BASE_URL}${path.startsWith("/") ? "" : "/"}${path}`;
 }
 
+// Force fresh generation on every request — never serve stale cached version.
+// Without this, CDN or Next.js ISR may cache an old sitemap for days/weeks.
+export const revalidate = 0;
+
 export default function sitemap(): MetadataRoute.Sitemap {
   // Static pages
   const staticPages: MetadataRoute.Sitemap = [
