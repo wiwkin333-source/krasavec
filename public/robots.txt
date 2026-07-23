@@ -7,8 +7,10 @@
 #  - /api/* is disallowed — internal endpoints, not for indexing.
 #  - No `Host:` directive — Yandex now uses 301 redirects for mirror
 #    consolidation. www → non-www is handled by a 301 in next.config.ts.
-#  - Sitemap is auto-generated at /sitemap.xml from src/app/sitemap.ts
+#  - Sitemap is served at /sitemap-raw (API route that bypasses ISR cache)
 #    and stays in sync with the catalog data (no stale/404 URLs).
+#    The standard /sitemap.xml route is cached by ISR on some hosts;
+#    /sitemap-raw is guaranteed fresh on every request.
 
 User-agent: Googlebot
 Allow: /
@@ -38,5 +40,5 @@ Allow: /
 Allow: /_next/static/
 Disallow: /api
 
-# Sitemap (auto-generated, always in sync with the catalog)
-Sitemap: https://gravikot.ru/sitemap.xml
+# Sitemap (guaranteed fresh — bypasses ISR cache)
+Sitemap: https://gravikot.ru/sitemap-raw
