@@ -123,6 +123,16 @@ const nextConfig: NextConfig = {
         destination: "/terms",
         permanent: true,
       },
+      // Stale /sitemap.xml (ISR-cached 3-URL version) → fresh /sitemap-raw
+      // Next.js metadata-route sitemap.ts is pre-rendered at build time and
+      // cached via ISR; on Amvera the 3-URL stale version persists even with
+      // force-dynamic. /sitemap-raw is a Route Handler that never caches and
+      // always returns the current 14 URLs.
+      {
+        source: "/sitemap.xml",
+        destination: "/sitemap-raw",
+        permanent: true,
+      },
     ];
   },
   // Security headers + caching
